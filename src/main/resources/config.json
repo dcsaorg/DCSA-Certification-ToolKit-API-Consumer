@@ -1,0 +1,412 @@
+{
+  "testConfig": [
+    {
+      "route": "/proxy/event-subscriptions",
+      "variants": {
+        "POST": [
+          {
+            "httpCode": 201,
+            "description": "Backward compatibility check-response with empty body",
+            "category": "POST /event-subscriptions",
+            "responseDecorator": {
+              "body": {
+              }
+            }
+          },
+          {
+            "httpCode": 201,
+            "description": "Backward compatibility check-response with additional enum",
+            "category": "POST /event-subscriptions",
+            "responseDecorator": {
+              "patch": {
+                "eventType": [
+                  "DUMMY"
+                ]
+              }
+            }
+          },
+          {
+            "httpCode": 201,
+            "description": "Backward compatibility check-response with optional field",
+            "category": "POST /event-subscriptions",
+            "responseDecorator": {
+              "patch": {
+                "DummyField": "DummyValue"
+              }
+            }
+          },
+          {
+            "httpCode": 400,
+            "description": "Response with httpCode 400",
+            "category": "POST /event-subscriptions",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "BadRequest",
+                  "message": "Invalid field value"
+                },
+                "statusCode": 400,
+                "statusCodeText": "Bad request"
+              }
+            }
+          },
+          {
+            "httpCode": 500,
+            "description": "Response with httpCode 500",
+            "category": "POST /event-subscriptions",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "InternalServerException",
+                  "message": "Internal Server Exception"
+                },
+                "statusCode": 500,
+                "statusCodeText": "Internal Server Exception"
+              }
+            }
+          }
+        ],
+        "GET": [
+          {
+            "httpCode": 200,
+            "description": "Backward compatibility check-response with additional enum",
+            "category": "GET /event-subscriptions",
+            "responseDecorator": {
+              "patch": {
+                "eventType": [
+                  "DUMMY"
+                ]
+              }
+            }
+          },
+          {
+            "httpCode": 404,
+            "description": "Response with httpCode 404",
+            "category": "GET /event-subscriptions",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "No Subscription found",
+                  "message": "No EventSubscription was found for given id"
+                },
+                "statusCode": 404,
+                "statusCodeText": "No Subscription found"
+              }
+            }
+          },
+          {
+            "httpCode": 200,
+            "description": "Request with sorting parameter",
+            "category": "GET /event-subscriptions",
+            "requestMatcher": {
+              "queryParameter": [
+                "sort"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "description": "Request with limit parameter",
+            "category": "GET /event-subscriptions",
+            "requestMatcher": {
+              "queryParameter": [
+                "limit"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "description": "Request with cursor parameter",
+            "category": "GET /event-subscriptions",
+            "requestMatcher": {
+              "queryParameter": [
+                "cursor"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "description": "Request with header API-Version",
+            "category": "GET /event-subscriptions",
+            "requestMatcher": {
+              "header": [
+                "API-Version"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "route": "/proxy/event-subscriptions/{id}",
+      "variants": {
+        "PUT": [
+          {
+            "httpCode": 201,
+            "description": "Backward compatibility check-response with additional enum",
+            "category": "PUT /event-subscriptions",
+            "responseDecorator": {
+              "patch": {
+                "eventType": [
+                  "DUMMY"
+                ]
+              }
+            }
+          },
+          {
+            "httpCode": 201,
+            "description": "Backward compatibility check-response with optional field",
+            "category": "PUT /event-subscriptions",
+            "responseDecorator": {
+              "header": {
+                "API-Version": "2.2.0"
+              },
+              "patch": {
+                "DummyField": "DummyValue"
+              }
+            }
+          },
+          {
+            "httpCode": 400,
+            "description": "Response with httpCode 400",
+            "category": "PUT /event-subscriptions",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "BadRequest",
+                  "message": "Bad request"
+                },
+                "statusCode": 400,
+                "statusCodeText": "Bad request"
+              }
+            }
+          },
+          {
+            "httpCode": 404,
+            "description": "Response with httpCode 404",
+            "category": "PUT /event-subscriptions",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "NotFound",
+                  "message": "No EventSubscription was found for given id"
+                },
+                "statusCode": 404,
+                "statusCodeText": "Not Found"
+              }
+            }
+          }
+        ],
+        "GET": [
+          {
+            "httpCode": 200,
+            "description": "Backward compatibility check-response with additional enum",
+            "category": "GET /event-subscriptions/{id}",
+            "responseDecorator": {
+              "header": {
+                "API-Version": "2.2.0"
+              },
+              "patch": {
+                "eventType": [
+                  "DUMMY"
+                ]
+              }
+            }
+          },
+          {
+            "httpCode": 404,
+            "description": "Response with httpCode 404",
+            "category": "GET /event-subscriptions/{id}",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "NotFound",
+                  "message": "No EventSubscription was found for given id"
+                },
+                "statusCode": 404,
+                "statusCodeText": "Not Found"
+              }
+            }
+          }
+        ],
+        "DELETE": [
+          {
+            "httpCode": 404,
+            "description": "Response with httpCode 404",
+            "category": "DELETE /event-subscriptions",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "NotFound",
+                  "message": "No EventSubscription was found for given id"
+                },
+                "statusCode": 400,
+                "statusCodeText": "Not Found"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "route": "/proxy/event-subscriptions/{id}/secret",
+      "variants": {
+        "PUT": [
+          {
+            "httpCode": 400,
+            "description": "Response with httpCode 400",
+            "category": "PUT /event-subscriptions/{id}/secret",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "BadRequest",
+                  "message": "Bad request"
+                },
+                "statusCode": 400,
+                "statusCodeText": "Bad request"
+              }
+            }
+          },
+          {
+            "httpCode": 404,
+            "description": "Response with httpCode 404",
+            "category": "PUT /event-subscriptions/{id}/secret",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "NotFound",
+                  "message": "Not Found"
+                },
+                "statusCode": 404,
+                "statusCodeText": "Not Found"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "route": "/proxy/events",
+      "variants": {
+        "GET": [
+          {
+            "httpCode": 200,
+            "description": "GET /events request with Query Parameters eventType",
+            "category": "GET /events",
+            "requestMatcher": {
+              "queryParameter": [
+                "eventType"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "description": "Backward compatibility check-response with optional field",
+            "category": "GET /events",
+            "responseDecorator": {
+              "patch": {
+                "DummyField": "DummyValue"
+              }
+            }
+          },
+          {
+            "httpCode": 200,
+            "description": "Backward compatibility check-response with timeStamp without millisecond",
+            "category": "GET /events",
+            "responseDecorator": {
+              "format": {
+                "date": {
+                  "eventCreatedDateTime": "yyyy-MM-dd'T'HH:mm:ss",
+                  "eventDateTime": "yyyy-MM-dd'T'HH:mm:ss"
+                }
+              }
+            }
+          },
+          {
+            "httpCode": 200,
+            "description": "Backward compatibility check-response with timeStamp with millisecond",
+            "category": "GET /events",
+            "responseDecorator": {
+              "format": {
+                "date": {
+                  "eventCreatedDateTime": "yyyy-MM-dd'T'HH:mm:ss:SSS",
+                  "eventDateTime": "yyyy-MM-dd'T'HH:mm:ss:SSS"
+                }
+              }
+            }
+          },
+          {
+            "httpCode": 400,
+            "description": "Response with httpCode 400",
+            "category": "GET /events",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "BadRequest",
+                  "message": "Bad request"
+                },
+                "statusCode": 400,
+                "statusCodeText": "Bad request"
+              }
+            }
+          },
+          {
+            "httpCode": 500,
+            "description": "Response with httpCode 500",
+            "category": "GET /events",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "InternalServerError",
+                  "message": "Internal Server Error"
+                },
+                "statusCode": 500,
+                "statusCodeText": "Internal Server Error"
+              }
+            }
+          },
+          {
+            "httpCode": 200,
+            "description": "Request with sorting parameter",
+            "category": "GET /events",
+            "requestMatcher": {
+              "queryParameter": [
+                "sort"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "description": "Request with limit parameter",
+            "category": "GET /events",
+            "requestMatcher": {
+              "queryParameter": [
+                "limit"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "description": "Request with cursor parameter",
+            "category": "GET /events",
+            "requestMatcher": {
+              "queryParameter": [
+                "cursor"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "description": "Request with header API-Version",
+            "category": "GET /events",
+            "requestMatcher": {
+              "header": [
+                "API-Version"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

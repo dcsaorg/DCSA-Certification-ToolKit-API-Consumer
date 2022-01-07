@@ -1,0 +1,25 @@
+version: '3.5'
+services:
+    ctk:
+        environment:
+             - DB_HOSTNAME=db
+             - AUTH0_ENABLED=true
+        container_name: ctk-consumer
+        build:
+            .
+        volumes:
+            - C:\workspace\abc\ctk\reports:/ctk/reports
+        ports:
+            - 9090:9090
+        logging:
+            options:
+                max-file: '10'
+                max-size: 200k
+    db:
+        container_name: dcsa_db_ctk
+        environment:
+            POSTGRES_PASSWORD: "change_this_password"
+        build:
+            DCSA-Information-Model/datamodel/
+        ports:
+            - 5432:5432
