@@ -112,9 +112,9 @@ public class TNTEventSubscriptionTOControllerProxy {
     }
     @GetMapping(value="/report/download",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> download() throws IOException {
-        String fileName= customReporter.generateTestReport("report") ;
+        String fileName= customReporter.generateTestReport("reports") ;
 
-                ByteArrayResource resource  = FileUtility.getFile("report/" +
+                ByteArrayResource resource  = FileUtility.getFile("reports/" +
                         fileName);
         HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileName);
