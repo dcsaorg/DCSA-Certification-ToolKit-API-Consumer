@@ -4,6 +4,7 @@ services:
         environment:
              - DB_HOSTNAME=db
              - AUTH0_ENABLED=true
+             - SERVER_PORT=9090
         container_name: ctk-consumer
         build:
             .

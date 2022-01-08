@@ -1,5 +1,5 @@
 @echo off
-call mvn clean package
+call mvn -Dmaven.test.skip=true clean package
 set version=2.2.0
 set package=Consumer-v%version%
 rmdir /S /Q %package%

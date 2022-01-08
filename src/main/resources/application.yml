@@ -62,7 +62,7 @@ springdoc:
     path: /docs
 
 server:
-  port: 9090
+  port: ${SERVER_PORT}
 
 
 
