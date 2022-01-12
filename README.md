@@ -27,3 +27,27 @@ OR using **docker-compose**
 ```
 docker-compose up -d -V --build
 ```
+**Publish the docker images using github package**
+
+Along with Consumer Compatibility kit, we need a running database intance loaded with test data. Hence, we need below two docker images to publish.
+
+Assuming you have docker images availabe at your local and github repo created
+1. Consumer Compatibility kit: 
+```
+docker tag <image_name >:latest docker.pkg.github.com/<user_name>/<repo_name>/ctk-consumer:<tagname>
+docker push docker.pkg.github.com/<user_name>/<repo_name>/ctk-consumer:<tagname>
+```
+
+2. Reference database
+```
+docker tag <image_name>:latest docker.pkg.github.com/<user_name>/<repo_name>/ctk-db:<tagname>
+docker push docker.pkg.github.com/<user_name>/<repo_name>/ctk-db:<tagname>
+```
+We have already a repo for this, we can cintinue to use the same 
+https://github.com/deepakdcsa/ctk-docker-registry.git
+
+Referenc: 
+
+https://faun.pub/how-to-setup-your-first-github-packages-docker-repository-2cda078e6836
+
+
