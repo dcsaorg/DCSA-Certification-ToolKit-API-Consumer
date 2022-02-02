@@ -1,11 +1,13 @@
 package org.dcsa.ctk.consumer.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.Value;
 import org.dcsa.ctk.consumer.mock.service.impl.ConfigService;
 import org.dcsa.ctk.consumer.mock.service.CustomLogger;
 import org.dcsa.ctk.consumer.mock.service.EventControllerService;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -19,7 +21,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-@RequestMapping(value = "/proxy/events", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = "/v2/events", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class EventControllerProxy {
    @Autowired
    EventControllerService eventControllerService;
@@ -28,7 +30,6 @@ public class EventControllerProxy {
    ConfigService configService;
    @Autowired
    CustomLogger customLogger;
-
 
     @GetMapping
     public List<Map<String, Object>>  findAll(
@@ -61,7 +62,7 @@ public class EventControllerProxy {
             ServerHttpResponse response,
             ServerHttpRequest request
     ) throws ExecutionException, InterruptedException, JsonProcessingException {
-        String route="/proxy/events";
+        String route="/events";
         CheckListItem checkListItem=configService.getNextCheckListItem(route,response,request);
         customLogger.init(null,response,request,checkListItem, route);
         List<Map<String, Object>> result =

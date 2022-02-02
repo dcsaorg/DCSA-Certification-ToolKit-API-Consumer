@@ -1,7 +1,7 @@
 {
   "testConfig": [
     {
-      "route": "/proxy/event-subscriptions",
+      "route": "/event-subscriptions",
       "variants": {
         "POST": [
           {
@@ -138,7 +138,7 @@
       }
     },
     {
-      "route": "/proxy/event-subscriptions/{id}",
+      "route": "/event-subscriptions/{id}",
       "variants": {
         "PUT": [
           {
@@ -249,7 +249,7 @@
       }
     },
     {
-      "route": "/proxy/event-subscriptions/{id}/secret",
+      "route": "/event-subscriptions/{id}/secret",
       "variants": {
         "PUT": [
           {
@@ -286,7 +286,7 @@
       }
     },
     {
-      "route": "/proxy/events",
+      "route": "/events",
       "variants": {
         "GET": [
           {
