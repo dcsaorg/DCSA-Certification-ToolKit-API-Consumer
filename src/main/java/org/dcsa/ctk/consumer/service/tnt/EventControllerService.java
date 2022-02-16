@@ -1,4 +1,4 @@
-package org.dcsa.ctk.consumer.mock.service;
+package org.dcsa.ctk.consumer.service.tnt;
 
 import org.dcsa.core.events.model.enums.EquipmentEventTypeCode;
 import org.dcsa.core.events.model.enums.ShipmentEventTypeCode;

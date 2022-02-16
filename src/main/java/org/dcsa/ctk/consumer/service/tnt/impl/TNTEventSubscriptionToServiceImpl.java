@@ -1,12 +1,12 @@
-package org.dcsa.ctk.consumer.mock.service.impl;
+package org.dcsa.ctk.consumer.service.tnt.impl;
 
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
-import org.dcsa.ctk.consumer.constants.CheckListStatus;
-import org.dcsa.ctk.consumer.constants.ResponseMockType;
-import org.dcsa.ctk.consumer.exceptions.DecoratorException;
-import org.dcsa.ctk.consumer.mock.service.Decorator;
-import org.dcsa.ctk.consumer.mock.service.MockService;
-import org.dcsa.ctk.consumer.mock.service.TNTEventSubscriptionToService;
+import org.dcsa.ctk.consumer.constant.CheckListStatus;
+import org.dcsa.ctk.consumer.constant.ResponseMockType;
+import org.dcsa.ctk.consumer.exception.DecoratorException;
+import org.dcsa.ctk.consumer.service.decorator.Decorator;
+import org.dcsa.ctk.consumer.service.mock.MockService;
+import org.dcsa.ctk.consumer.service.tnt.TNTEventSubscriptionToService;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.util.APIUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;
@@ -62,7 +62,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
         List<Map<String, Object>> responseList = null;
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             List<TNTEventSubscriptionTO> actualResponse = tntServer.findAll(response, request).collectList().toFuture().get();
-
+            if(actualResponse.size()==0) checkListItem=null;
             responseList = listDecorator.decorate(JsonUtility.convertToList(actualResponse), response, request, checkListItem);
             if (checkListItem != null)
                 checkListItem.setStatus(CheckListStatus.COVERED);

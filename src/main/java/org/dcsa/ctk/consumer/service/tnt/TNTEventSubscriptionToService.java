@@ -1,4 +1,4 @@
-package org.dcsa.ctk.consumer.mock.service;
+package org.dcsa.ctk.consumer.service.tnt;
 
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.ctk.consumer.model.CheckListItem;

@@ -1,4 +1,4 @@
-package org.dcsa.ctk.consumer.mock.service.impl;
+package org.dcsa.ctk.consumer.service.tnt.impl;
 
 import org.dcsa.core.events.model.Event;
 import org.dcsa.core.events.model.enums.EquipmentEventTypeCode;
@@ -7,12 +7,12 @@ import org.dcsa.core.events.model.enums.TransportDocumentTypeCode;
 import org.dcsa.core.events.model.enums.TransportEventTypeCode;
 import org.dcsa.core.validator.EnumSubset;
 import org.dcsa.core.validator.ValidEnum;
-import org.dcsa.ctk.consumer.constants.CheckListStatus;
-import org.dcsa.ctk.consumer.constants.ResponseMockType;
-import org.dcsa.ctk.consumer.exceptions.DecoratorException;
-import org.dcsa.ctk.consumer.mock.service.Decorator;
-import org.dcsa.ctk.consumer.mock.service.EventControllerService;
-import org.dcsa.ctk.consumer.mock.service.MockService;
+import org.dcsa.ctk.consumer.constant.CheckListStatus;
+import org.dcsa.ctk.consumer.constant.ResponseMockType;
+import org.dcsa.ctk.consumer.exception.DecoratorException;
+import org.dcsa.ctk.consumer.service.decorator.Decorator;
+import org.dcsa.ctk.consumer.service.tnt.EventControllerService;
+import org.dcsa.ctk.consumer.service.mock.MockService;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.util.APIUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;

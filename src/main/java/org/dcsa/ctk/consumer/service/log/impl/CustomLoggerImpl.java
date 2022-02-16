@@ -1,8 +1,9 @@
-package org.dcsa.ctk.consumer.mock.service.impl;
+package org.dcsa.ctk.consumer.service.log.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
-import org.dcsa.ctk.consumer.mock.service.CustomLogger;
+import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
+import org.dcsa.ctk.consumer.service.log.CustomLogger;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.model.CustomerLogger;
 import org.dcsa.ctk.consumer.util.APIUtility;

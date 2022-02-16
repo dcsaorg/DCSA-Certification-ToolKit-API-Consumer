@@ -1,4 +1,4 @@
-package org.dcsa.ctk.consumer.exceptions;
+package org.dcsa.ctk.consumer.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
@@ -6,9 +6,9 @@ import org.dcsa.core.exception.CreateException;
 import org.dcsa.core.exception.DeleteException;
 import org.dcsa.core.exception.NotFoundException;
 import org.dcsa.core.exception.UpdateException;
-import org.dcsa.ctk.consumer.constants.CheckListStatus;
-import org.dcsa.ctk.consumer.mock.service.impl.ConfigService;
-import org.dcsa.ctk.consumer.mock.service.CustomLogger;
+import org.dcsa.ctk.consumer.constant.CheckListStatus;
+import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
+import org.dcsa.ctk.consumer.service.log.CustomLogger;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.model.ErrorResponse;
 import org.dcsa.ctk.consumer.util.JsonUtility;
@@ -41,7 +41,6 @@ public class ExceptionControllerAdvise {
         log.info(JsonUtility.beautify(customLogger.log(responseMap, response, request)));
         return new ResponseEntity<>(responseMap, Objects.requireNonNull(response.getStatusCode()));
     }
-
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Map<String, Object>> handle(Exception ex, ServerHttpResponse response, ServerHttpRequest request) throws JsonProcessingException {

@@ -1,6 +1,6 @@
-package org.dcsa.ctk.consumer.mock.service.impl;
+package org.dcsa.ctk.consumer.service.config.impl;
 
-import org.dcsa.ctk.consumer.constants.CheckListStatus;
+import org.dcsa.ctk.consumer.constant.CheckListStatus;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.model.RequestMatcher;
 import org.dcsa.ctk.consumer.model.TestConfig;
@@ -8,17 +8,17 @@ import org.dcsa.ctk.consumer.util.APIUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-@Service
-public class ConfigService {
+public interface ConfigService {
+    TestConfig testConfig = JsonUtility.loadTestConfig("config.json");
+    Map<String, List<CheckListItem>> checkListItemMap = APIUtility.populateCheckList(testConfig);
 
-    private static TestConfig testConfig = JsonUtility.loadTestConfig("config.json");
-    public static Map<String, List<CheckListItem>> checkListItemMap = APIUtility.populateCheckList(testConfig);
-
-    public static CheckListItem getCheckListItem(String key) {
+    static CheckListItem getCheckListItem(String key) {
         Collection<List<CheckListItem>> checkListItems = checkListItemMap.values();
         for (List<CheckListItem> items : checkListItems) {
             for (CheckListItem item : items) {
@@ -29,7 +29,7 @@ public class ConfigService {
         return null;
     }
 
-    public CheckListItem getNextCheckListItem(String route, ServerHttpResponse response, ServerHttpRequest request) {
+    static CheckListItem getNextCheckListItem(String route, ServerHttpResponse response, ServerHttpRequest request) {
         CheckListItem listItem = null;
         List<CheckListItem> checkListItemList = checkListItemMap.get(APIUtility.generateKey(route, request.getMethod().name()));
         if (checkListItemList != null) {
@@ -37,7 +37,7 @@ public class ConfigService {
             if (listItem != null)
                 return listItem;
             for (CheckListItem item : checkListItemList) {
-                if (item.getStatus().equals(CheckListStatus.NOT_COVERED)) {
+                if (item.getStatus().equals(CheckListStatus.NOT_COVERED) && item.getResponseDecoratorWrapper().getRequestMatcher()==null) {
                     listItem = item;
                     break;
                 }
@@ -46,7 +46,7 @@ public class ConfigService {
         return listItem;
     }
 
-    public CheckListItem getRequestMatcher(String route, ServerHttpResponse response, ServerHttpRequest request) {
+    private static CheckListItem getRequestMatcher(String route, ServerHttpResponse response, ServerHttpRequest request) {
         CheckListItem listItem = null;
         boolean headerMatch = false;
         boolean queryMatch = false;
@@ -80,7 +80,7 @@ public class ConfigService {
         return listItem;
     }
 
-    public static CheckListItem getCheckListItemForHttpCode(String routeKey, int httpCode) {
+     static CheckListItem getCheckListItemForHttpCode(String routeKey, int httpCode) {
         CheckListItem listItem = null;
         List<CheckListItem> checkListItemList = checkListItemMap.get(routeKey);
         if (checkListItemList != null) {

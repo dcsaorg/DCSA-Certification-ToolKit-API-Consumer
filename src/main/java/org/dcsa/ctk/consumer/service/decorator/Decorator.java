@@ -1,4 +1,4 @@
-package org.dcsa.ctk.consumer.mock.service;
+package org.dcsa.ctk.consumer.service.decorator;
 
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.springframework.http.server.reactive.ServerHttpRequest;

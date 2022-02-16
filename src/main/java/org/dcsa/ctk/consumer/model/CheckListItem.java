@@ -1,7 +1,7 @@
 package org.dcsa.ctk.consumer.model;
 
 import lombok.Data;
-import org.dcsa.ctk.consumer.constants.CheckListStatus;
+import org.dcsa.ctk.consumer.constant.CheckListStatus;
 
 import java.util.UUID;
 

@@ -3,10 +3,11 @@ package org.dcsa.ctk.consumer.reporter.impl;
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
-import org.dcsa.ctk.consumer.constants.CheckListStatus;
-import org.dcsa.ctk.consumer.mock.service.impl.ConfigService;
+import org.dcsa.ctk.consumer.constant.CheckListStatus;
+import org.dcsa.ctk.consumer.constant.TestRequirement;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.reporter.CustomReporter;
+import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
 import org.dcsa.ctk.consumer.util.JsonUtility;
 import org.springframework.stereotype.Component;
 
@@ -18,15 +19,15 @@ import java.util.*;
 
 @Component
 public class ExcelReporter implements CustomReporter {
-    public  String generateTestReport(String outputDirectory) {
+    public String generateTestReport(String outputDirectory) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         Map<String, List<CheckListItem>> groupedCheckListItem = getGroupedCheckListItem(ConfigService.checkListItemMap);
         String fileName = ("TestResult_" + new Date().getTime() + ".xlsx");
         Map<String, Integer[]> resultSummary = getAggregatedResultSummary(groupedCheckListItem);
         XSSFCreationHelper createHelper = workbook.getCreationHelper();
 
-        Object[] header = new Object[]{"Test Name", "Total", "Covered", "Not Covered", ""};
-        XSSFSheet spreadsheetSummary = workbook.createSheet("TestResult");
+        Object[] header = new Object[]{"Requirement ID", "Requirement", "Total", "Covered", "Not Covered", ""};
+        XSSFSheet spreadsheetSummary = workbook.createSheet("TestSummary");
         Set<String> keyIds = resultSummary.keySet();
         List<String> testCaseList = new ArrayList<>(keyIds);
         Collections.sort(testCaseList);
@@ -42,13 +43,16 @@ public class ExcelReporter implements CustomReporter {
 
         int sheetNo = 1;
         for (String key : testCaseList) {
-            String sheetName = "TestGroup-" + sheetNo++;
+            String sheetName = "TestResult-" + sheetNo++;
             XSSFSheet spreadsheet = workbook.createSheet(sheetName);
             sheetRow = spreadsheetSummary.createRow(rowId++);
             Object[] objectArr = resultSummary.get(key);
             cellId = 0;
             Cell cell = sheetRow.createCell(cellId++);
             cell.setCellValue(key);
+            cell.setCellStyle(getCellStyle("normal", workbook));
+            cell = sheetRow.createCell(cellId++);
+            cell.setCellValue(TestRequirement.getRequirement(key));
             cell.setCellStyle(getCellStyle("normal", workbook));
             XSSFHyperlink link = createHelper.createHyperlink(HyperlinkType.FILE);
             link.setAddress(fileName);
@@ -77,7 +81,7 @@ public class ExcelReporter implements CustomReporter {
         return fileName;
     }
 
-    private  Map<String, Integer[]> getAggregatedResultSummary(Map<String, List<CheckListItem>> groupedCheckListItem) {
+    private Map<String, Integer[]> getAggregatedResultSummary(Map<String, List<CheckListItem>> groupedCheckListItem) {
         Map<String, Integer[]> resultSummary = new TreeMap<>();
         for (Map.Entry<String, List<CheckListItem>> entry : groupedCheckListItem.entrySet()) {
             String key = entry.getKey();
@@ -103,25 +107,25 @@ public class ExcelReporter implements CustomReporter {
         return resultSummary;
     }
 
-    private  Map<String, List<CheckListItem>> getGroupedCheckListItem(Map<String, List<CheckListItem>> checkListItemMap) {
+    private Map<String, List<CheckListItem>> getGroupedCheckListItem(Map<String, List<CheckListItem>> checkListItemMap) {
         Map<String, List<CheckListItem>> groupedCheckListItem = new TreeMap<>();
         for (Map.Entry<String, List<CheckListItem>> entry : checkListItemMap.entrySet()) {
             List<CheckListItem> checkListItems = entry.getValue();
             for (CheckListItem item : checkListItems) {
-                String category = item.getResponseDecoratorWrapper().getCategory();
-                if (groupedCheckListItem.containsKey(category)) {
-                    groupedCheckListItem.get(category).add(item);
+                String requirementID = item.getResponseDecoratorWrapper().getRequirementID();
+                if (groupedCheckListItem.containsKey(requirementID)) {
+                    groupedCheckListItem.get(requirementID).add(item);
                 } else {
                     List<CheckListItem> list = new ArrayList<>();
                     list.add(item);
-                    groupedCheckListItem.put(category, list);
+                    groupedCheckListItem.put(requirementID, list);
                 }
             }
         }
         return groupedCheckListItem;
     }
 
-    private  void fillWithTestResult(XSSFSheet spreadsheet, List<CheckListItem> checkListItemList, XSSFWorkbook workbook) {
+    private void fillWithTestResult(XSSFSheet spreadsheet, List<CheckListItem> checkListItemList, XSSFWorkbook workbook) {
 
         int rowId = 0;
         XSSFRow row;
@@ -151,8 +155,8 @@ public class ExcelReporter implements CustomReporter {
             for (Object obj : objectArr) {
                 cell = row.createCell(cellId++);
                 cell.setCellValue((String) obj);
-                if(cellId==2)
-                cell.setCellStyle(statusStyle);
+                if (cellId == 2)
+                    cell.setCellStyle(statusStyle);
                 else
                     cell.setCellStyle(getCellStyle("normal", workbook));
             }
@@ -160,7 +164,7 @@ public class ExcelReporter implements CustomReporter {
         }
     }
 
-    private  CellStyle getCellStyle(String type, XSSFWorkbook workbook) {
+    private CellStyle getCellStyle(String type, XSSFWorkbook workbook) {
 
         if (type.equals("link")) {
             XSSFCellStyle hlinkstyle = workbook.createCellStyle();
@@ -173,8 +177,7 @@ public class ExcelReporter implements CustomReporter {
             hlinkstyle.setBorderRight(BorderStyle.THIN);
             hlinkstyle.setBorderTop(BorderStyle.THIN);
             return hlinkstyle;
-        }
-        else if (type.equals("header")) {
+        } else if (type.equals("header")) {
             CellStyle borderStyle = workbook.createCellStyle();
             borderStyle.setBorderBottom(BorderStyle.THIN);
             borderStyle.setBorderLeft(BorderStyle.THIN);
@@ -188,16 +191,15 @@ public class ExcelReporter implements CustomReporter {
             borderStyle.setFont(font);
             return borderStyle;
         } else if (type.equals("covered")) {
-                CellStyle borderStyle = workbook.createCellStyle();
-                borderStyle.setBorderBottom(BorderStyle.THIN);
-                borderStyle.setBorderLeft(BorderStyle.THIN);
-                borderStyle.setBorderRight(BorderStyle.THIN);
-                borderStyle.setBorderTop(BorderStyle.THIN);
-                borderStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
-                borderStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-                return borderStyle;
-            }
-        else if (type.equals("notcovered")) {
+            CellStyle borderStyle = workbook.createCellStyle();
+            borderStyle.setBorderBottom(BorderStyle.THIN);
+            borderStyle.setBorderLeft(BorderStyle.THIN);
+            borderStyle.setBorderRight(BorderStyle.THIN);
+            borderStyle.setBorderTop(BorderStyle.THIN);
+            borderStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+            borderStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            return borderStyle;
+        } else if (type.equals("notcovered")) {
             CellStyle borderStyle = workbook.createCellStyle();
             borderStyle.setBorderBottom(BorderStyle.THIN);
             borderStyle.setBorderLeft(BorderStyle.THIN);
@@ -206,8 +208,7 @@ public class ExcelReporter implements CustomReporter {
             borderStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
             borderStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
             return borderStyle;
-        }
-        else {
+        } else {
             CellStyle borderStyle = workbook.createCellStyle();
             borderStyle.setBorderBottom(BorderStyle.THIN);
             borderStyle.setBorderLeft(BorderStyle.THIN);

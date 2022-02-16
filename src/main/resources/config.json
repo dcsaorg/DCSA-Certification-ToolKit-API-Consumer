@@ -6,8 +6,8 @@
         "POST": [
           {
             "httpCode": 201,
-            "description": "Backward compatibility check-response with empty body",
-            "category": "POST /event-subscriptions",
+            "requirementID": "TNT.2.2.SUB.CSM.2",
+            "description": "POST /event-subscriptions-response with empty body",
             "responseDecorator": {
               "body": {
               }
@@ -15,8 +15,8 @@
           },
           {
             "httpCode": 201,
-            "description": "Backward compatibility check-response with additional enum",
-            "category": "POST /event-subscriptions",
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "POST /event-subscriptions-response with additional enum",
             "responseDecorator": {
               "patch": {
                 "eventType": [
@@ -27,8 +27,8 @@
           },
           {
             "httpCode": 201,
-            "description": "Backward compatibility check-response with optional field",
-            "category": "POST /event-subscriptions",
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "POST /event-subscriptions-response with optional field",
             "responseDecorator": {
               "patch": {
                 "DummyField": "DummyValue"
@@ -37,8 +37,8 @@
           },
           {
             "httpCode": 400,
-            "description": "Response with httpCode 400",
-            "category": "POST /event-subscriptions",
+            "requirementID": "TNT.2.2.ERR.PRV.400",
+            "description": "POST /event-subscriptions-response with httpCode 400",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -52,8 +52,8 @@
           },
           {
             "httpCode": 500,
-            "description": "Response with httpCode 500",
-            "category": "POST /event-subscriptions",
+            "requirementID": "TNT.2.2.ERR.PRV.500",
+            "description": "POST /event-subscriptions-Response with httpCode 500",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -69,8 +69,8 @@
         "GET": [
           {
             "httpCode": 200,
-            "description": "Backward compatibility check-response with additional enum",
-            "category": "GET /event-subscriptions",
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "POST /event-subscriptions-response with additional enum",
             "responseDecorator": {
               "patch": {
                 "eventType": [
@@ -81,8 +81,8 @@
           },
           {
             "httpCode": 404,
-            "description": "Response with httpCode 404",
-            "category": "GET /event-subscriptions",
+            "requirementID": "TNT.2.2.ERR.PRV.404",
+            "description": "POST /event-subscriptions-Response with httpCode 404",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -96,8 +96,8 @@
           },
           {
             "httpCode": 200,
-            "description": "Request with sorting parameter",
-            "category": "GET /event-subscriptions",
+            "requirementID": "TNT.2.2.API.PRV.2",
+            "description": "GET /event-subscriptions-Request with sorting parameter",
             "requestMatcher": {
               "queryParameter": [
                 "sort"
@@ -106,8 +106,8 @@
           },
           {
             "httpCode": 200,
-            "description": "Request with limit parameter",
-            "category": "GET /event-subscriptions",
+            "requirementID": "TNT.2.2.API.PRV.2",
+            "description": "GET /event-subscriptions-request with limit parameter",
             "requestMatcher": {
               "queryParameter": [
                 "limit"
@@ -116,8 +116,8 @@
           },
           {
             "httpCode": 200,
-            "description": "Request with cursor parameter",
-            "category": "GET /event-subscriptions",
+            "requirementID": "TNT.2.2.API.PRV.2",
+            "description": "GET /event-subscriptions-request with cursor parameter",
             "requestMatcher": {
               "queryParameter": [
                 "cursor"
@@ -126,8 +126,8 @@
           },
           {
             "httpCode": 200,
-            "description": "Request with header API-Version",
-            "category": "GET /event-subscriptions",
+            "requirementID": "TNT.2.2.API.PRV.1",
+            "description": "GET /event-subscriptions-request with header API-Version",
             "requestMatcher": {
               "header": [
                 "API-Version"
@@ -143,8 +143,8 @@
         "PUT": [
           {
             "httpCode": 201,
-            "description": "Backward compatibility check-response with additional enum",
-            "category": "PUT /event-subscriptions",
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "PUT /event-subscriptions-response with additional enum",
             "responseDecorator": {
               "patch": {
                 "eventType": [
@@ -155,8 +155,8 @@
           },
           {
             "httpCode": 201,
-            "description": "Backward compatibility check-response with optional field",
-            "category": "PUT /event-subscriptions",
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "PUT /event-subscriptions-response with optional field",
             "responseDecorator": {
               "header": {
                 "API-Version": "2.2.0"
@@ -168,8 +168,8 @@
           },
           {
             "httpCode": 400,
-            "description": "Response with httpCode 400",
-            "category": "PUT /event-subscriptions",
+            "requirementID": "TNT.2.2.ERR.PRV.400",
+            "description": "PUT /event-subscriptions-response with httpCode 400",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -183,8 +183,8 @@
           },
           {
             "httpCode": 404,
-            "description": "Response with httpCode 404",
-            "category": "PUT /event-subscriptions",
+            "requirementID": "TNT.2.2.ERR.PRV.404",
+            "description": "PUT /event-subscriptions-response with httpCode 404",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -200,8 +200,8 @@
         "GET": [
           {
             "httpCode": 200,
-            "description": "Backward compatibility check-response with additional enum",
-            "category": "GET /event-subscriptions/{id}",
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "PUT /event-subscriptions-response with additional enum",
             "responseDecorator": {
               "header": {
                 "API-Version": "2.2.0"
@@ -215,8 +215,8 @@
           },
           {
             "httpCode": 404,
-            "description": "Response with httpCode 404",
-            "category": "GET /event-subscriptions/{id}",
+            "requirementID": "TNT.2.2.ERR.PRV.404",
+            "description": "GET /event-subscriptions/{id}-response with httpCode 404",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -232,8 +232,8 @@
         "DELETE": [
           {
             "httpCode": 404,
-            "description": "Response with httpCode 404",
-            "category": "DELETE /event-subscriptions",
+            "requirementID": "TNT.2.2.ERR.PRV.404",
+            "description": "DELETE /event-subscriptions-response with httpCode 404",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -254,8 +254,8 @@
         "PUT": [
           {
             "httpCode": 400,
-            "description": "Response with httpCode 400",
-            "category": "PUT /event-subscriptions/{id}/secret",
+            "requirementID": "TNT.2.2.ERR.PRV.400",
+            "description": "PUT /event-subscriptions/{id}/secret-response with httpCode 400",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -269,8 +269,8 @@
           },
           {
             "httpCode": 404,
-            "description": "Response with httpCode 404",
-            "category": "PUT /event-subscriptions/{id}/secret",
+            "requirementID": "TNT.2.2.ERR.PRV.404",
+            "description": "PUT /event-subscriptions/{id}/secret-response with httpCode 404",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -291,8 +291,8 @@
         "GET": [
           {
             "httpCode": 200,
-            "description": "GET /events request with Query Parameters eventType",
-            "category": "GET /events",
+            "requirementID": "TNT.2.2.EVN.PRV.1",
+            "description": "GET /events-request with Query Parameters eventType",
             "requestMatcher": {
               "queryParameter": [
                 "eventType"
@@ -301,8 +301,8 @@
           },
           {
             "httpCode": 200,
-            "description": "Backward compatibility check-response with optional field",
-            "category": "GET /events",
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "GET /events-response with optional field",
             "responseDecorator": {
               "patch": {
                 "DummyField": "DummyValue"
@@ -311,8 +311,8 @@
           },
           {
             "httpCode": 200,
-            "description": "Backward compatibility check-response with timeStamp without millisecond",
-            "category": "GET /events",
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "GET /events-response with timeStamp without millisecond",
             "responseDecorator": {
               "format": {
                 "date": {
@@ -324,8 +324,8 @@
           },
           {
             "httpCode": 200,
-            "description": "Backward compatibility check-response with timeStamp with millisecond",
-            "category": "GET /events",
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "GET /events-response with timeStamp with millisecond",
             "responseDecorator": {
               "format": {
                 "date": {
@@ -337,8 +337,8 @@
           },
           {
             "httpCode": 400,
-            "description": "Response with httpCode 400",
-            "category": "GET /events",
+            "requirementID": "TNT.2.2.ERR.PRV.400",
+            "description": "GET /events-response with httpCode 400",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -352,8 +352,8 @@
           },
           {
             "httpCode": 500,
-            "description": "Response with httpCode 500",
-            "category": "GET /events",
+            "requirementID": "TNT.2.2.ERR.PRV.500",
+            "description": "GET /events-response with httpCode 500",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -367,8 +367,8 @@
           },
           {
             "httpCode": 200,
-            "description": "Request with sorting parameter",
-            "category": "GET /events",
+            "requirementID": "TNT.2.2.EVN.PRV.1",
+            "description": "GET /events-request with sorting parameter",
             "requestMatcher": {
               "queryParameter": [
                 "sort"
@@ -377,8 +377,8 @@
           },
           {
             "httpCode": 200,
-            "description": "Request with limit parameter",
-            "category": "GET /events",
+            "requirementID": "TNT.2.2.EVN.PRV.1",
+            "description": "GET /events-request with limit parameter",
             "requestMatcher": {
               "queryParameter": [
                 "limit"
@@ -387,8 +387,8 @@
           },
           {
             "httpCode": 200,
-            "description": "Request with cursor parameter",
-            "category": "GET /events",
+            "requirementID": "TNT.2.2.API.PRV.4",
+            "description": "GET /events-request with cursor parameter",
             "requestMatcher": {
               "queryParameter": [
                 "cursor"
@@ -397,8 +397,8 @@
           },
           {
             "httpCode": 200,
-            "description": "Request with header API-Version",
-            "category": "GET /events",
+            "requirementID": "TNT.2.2.API.PRV.1",
+            "description": "GET /events-request with header API-Version",
             "requestMatcher": {
               "header": [
                 "API-Version"

@@ -1,6 +1,6 @@
-package org.dcsa.ctk.consumer.mock.service;
+package org.dcsa.ctk.consumer.service.mock;
 
-import org.dcsa.ctk.consumer.constants.ResponseMockType;
+import org.dcsa.ctk.consumer.constant.ResponseMockType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 
 import java.util.Map;

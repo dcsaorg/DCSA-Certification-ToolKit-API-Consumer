@@ -24,10 +24,10 @@
     <root level="INFO">
         <appender-ref ref="Console" />
     </root>
-    <logger name="org.dcsa.ctk.consumer.mock.service.impl.CustomLoggerImpl" level="INFO" additivity="false">
+    <logger name="org.dcsa.ctk.consumer.service.log.impl.CustomLoggerImpl" level="INFO" additivity="false">
         <appender-ref ref="RollingFile" />
     </logger>
-    <logger name="org.dcsa.ctk.consumer.exceptions.ExceptionControllerAdvise" level="INFO" additivity="false">
+    <logger name="org.dcsa.ctk.consumer.exception.ExceptionControllerAdvise" level="INFO" additivity="false">
         <appender-ref ref="RollingFile" />
     </logger>
 </configuration>

@@ -1,13 +1,11 @@
 package org.dcsa.ctk.consumer.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.Value;
-import org.dcsa.ctk.consumer.mock.service.impl.ConfigService;
-import org.dcsa.ctk.consumer.mock.service.CustomLogger;
-import org.dcsa.ctk.consumer.mock.service.EventControllerService;
+import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
+import org.dcsa.ctk.consumer.service.log.CustomLogger;
+import org.dcsa.ctk.consumer.service.tnt.EventControllerService;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -26,8 +24,6 @@ public class EventControllerProxy {
    @Autowired
    EventControllerService eventControllerService;
 
-   @Autowired
-   ConfigService configService;
    @Autowired
    CustomLogger customLogger;
 
@@ -63,7 +59,7 @@ public class EventControllerProxy {
             ServerHttpRequest request
     ) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route="/events";
-        CheckListItem checkListItem=configService.getNextCheckListItem(route,response,request);
+        CheckListItem checkListItem= ConfigService.getNextCheckListItem(route,response,request);
         customLogger.init(null,response,request,checkListItem, route);
         List<Map<String, Object>> result =
                 eventControllerService.findAll(

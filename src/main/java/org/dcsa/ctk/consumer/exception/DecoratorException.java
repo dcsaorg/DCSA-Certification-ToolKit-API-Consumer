@@ -1,6 +1,4 @@
-package org.dcsa.ctk.consumer.exceptions;
-
-import org.dcsa.ctk.consumer.model.ErrorResponse;
+package org.dcsa.ctk.consumer.exception;
 
 import java.util.Map;
 

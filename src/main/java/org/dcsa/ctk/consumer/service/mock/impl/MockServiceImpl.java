@@ -1,12 +1,10 @@
-package org.dcsa.ctk.consumer.mock.service.impl;
+package org.dcsa.ctk.consumer.service.mock.impl;
 
-import org.dcsa.ctk.consumer.constants.ResponseMockType;
-import org.dcsa.ctk.consumer.mock.service.MockService;
-import org.dcsa.ctk.consumer.model.CheckListItem;
+import org.dcsa.ctk.consumer.constant.ResponseMockType;
+import org.dcsa.ctk.consumer.service.mock.MockService;
 import org.dcsa.ctk.consumer.model.ErrorResponse;
 import org.dcsa.ctk.consumer.util.JsonUtility;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -27,10 +25,5 @@ public class MockServiceImpl implements MockService {
         }
         return mockedResponse;
     }
-
-
-
-
-
 
 }

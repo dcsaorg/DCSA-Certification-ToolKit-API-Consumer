@@ -1,4 +1,4 @@
-package org.dcsa.ctk.consumer.constants;
+package org.dcsa.ctk.consumer.constant;
 
 public enum ResponseMockType {
 

@@ -5,9 +5,10 @@ import lombok.Data;
 @Data
 public class ResponseDecoratorWrapper {
     String id;
-    String description;
     int httpCode;
-    String category;
+    String requirementID;
+    String requirement;
+    String description;
     RequestMatcher requestMatcher;
     ResponseDecorator responseDecorator;
 }

@@ -1,4 +1,4 @@
-package org.dcsa.ctk.consumer.mock.service;
+package org.dcsa.ctk.consumer.service.log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.dcsa.ctk.consumer.model.CheckListItem;
