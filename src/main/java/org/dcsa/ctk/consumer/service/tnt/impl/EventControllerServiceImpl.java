@@ -1,5 +1,6 @@
 package org.dcsa.ctk.consumer.service.tnt.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.dcsa.core.events.model.Event;
 import org.dcsa.core.events.model.enums.EquipmentEventTypeCode;
 import org.dcsa.core.events.model.enums.ShipmentEventTypeCode;
@@ -31,19 +32,16 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 @Validated
+@RequiredArgsConstructor
 public class EventControllerServiceImpl implements EventControllerService {
 
-    @Autowired
-    EventController eventController;
+    final EventController eventController;
 
-    @Autowired
-    Decorator<Map<String, Object>>  mapDecorator;
+    final Decorator<Map<String, Object>>  mapDecorator;
 
-    @Autowired
-    Decorator<List<Map<String, Object>> >  listDecorator;
+    final Decorator<List<Map<String, Object>> >  listDecorator;
 
-    @Autowired
-    MockService mockService;
+    final MockService mockService;
 
     @Override
     public List<Map<String, Object>> findAll(

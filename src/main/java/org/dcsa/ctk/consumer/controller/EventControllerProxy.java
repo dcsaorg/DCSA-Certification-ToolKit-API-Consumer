@@ -1,6 +1,7 @@
 package org.dcsa.ctk.consumer.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.RequiredArgsConstructor;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
 import org.dcsa.ctk.consumer.service.log.CustomLogger;
 import org.dcsa.ctk.consumer.service.tnt.EventControllerService;
@@ -19,13 +20,13 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "/v2/events", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class EventControllerProxy {
-   @Autowired
-   EventControllerService eventControllerService;
 
-   @Autowired
-   CustomLogger customLogger;
+   final EventControllerService eventControllerService;
+
+   final CustomLogger customLogger;
 
     @GetMapping
     public List<Map<String, Object>>  findAll(

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.TimeUnit;
 
-@ServletComponentScan(basePackages="org.dcsa")
+//@ServletComponentScan(basePackages="org.dcsa")
 @SpringBootApplication
 @ComponentScan(basePackages="org.dcsa")
 public class CTKApplication {
