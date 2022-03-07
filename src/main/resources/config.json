@@ -1,6 +1,417 @@
 {
   "testConfig": [
-
-
+    {
+      "route": "/event-subscriptions",
+      "variants": {
+        "POST": [
+          {
+            "httpCode": 201,
+            "requirementID": "TNT.2.2.SUB.CSM.2",
+            "description": "POST /event-subscriptions-notification check"
+          },
+          {
+            "httpCode": 201,
+            "requirementID": "TNT.2.2.SUB.CSM.2",
+            "description": "POST /event-subscriptions-response with empty body",
+            "responseDecorator": {
+              "body": {
+              }
+            }
+          },
+          {
+            "httpCode": 201,
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "POST /event-subscriptions-response with additional enum",
+            "responseDecorator": {
+              "patch": {
+                "eventType": [
+                  "DUMMY"
+                ]
+              }
+            }
+          },
+          {
+            "httpCode": 201,
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "POST /event-subscriptions-response with optional field",
+            "responseDecorator": {
+              "patch": {
+                "DummyField": "DummyValue"
+              }
+            }
+          },
+          {
+            "httpCode": 400,
+            "requirementID": "TNT.2.2.ERR.PRV.400",
+            "description": "POST /event-subscriptions-response with httpCode 400",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "BadRequest",
+                  "message": "Invalid field value"
+                },
+                "statusCode": 400,
+                "statusCodeText": "Bad request"
+              }
+            }
+          },
+          {
+            "httpCode": 500,
+            "requirementID": "TNT.2.2.ERR.PRV.500",
+            "description": "POST /event-subscriptions-Response with httpCode 500",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "InternalServerException",
+                  "message": "Internal Server Exception"
+                },
+                "statusCode": 500,
+                "statusCodeText": "Internal Server Exception"
+              }
+            }
+          }
+        ],
+        "GET": [
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "POST /event-subscriptions-response with additional enum",
+            "responseDecorator": {
+              "patch": {
+                "eventType": [
+                  "DUMMY"
+                ]
+              }
+            }
+          },
+          {
+            "httpCode": 404,
+            "requirementID": "TNT.2.2.ERR.PRV.404",
+            "description": "POST /event-subscriptions-Response with httpCode 404",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "No Subscription found",
+                  "message": "No EventSubscription was found for given id"
+                },
+                "statusCode": 404,
+                "statusCodeText": "No Subscription found"
+              }
+            }
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.API.PRV.2",
+            "description": "GET /event-subscriptions-Request with sorting parameter",
+            "requestMatcher": {
+              "queryParameter": [
+                "sort"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.API.PRV.2",
+            "description": "GET /event-subscriptions-request with limit parameter",
+            "requestMatcher": {
+              "queryParameter": [
+                "limit"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.API.PRV.2",
+            "description": "GET /event-subscriptions-request with cursor parameter",
+            "requestMatcher": {
+              "queryParameter": [
+                "cursor"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.API.PRV.1",
+            "description": "GET /event-subscriptions-request with header API-Version",
+            "requestMatcher": {
+              "header": [
+                "API-Version"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "route": "/event-subscriptions/{id}",
+      "variants": {
+        "PUT": [
+          {
+            "httpCode": 201,
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "PUT /event-subscriptions-response with additional enum",
+            "responseDecorator": {
+              "patch": {
+                "eventType": [
+                  "DUMMY"
+                ]
+              }
+            }
+          },
+          {
+            "httpCode": 201,
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "PUT /event-subscriptions-response with optional field",
+            "responseDecorator": {
+              "header": {
+                "API-Version": "2.2.0"
+              },
+              "patch": {
+                "DummyField": "DummyValue"
+              }
+            }
+          },
+          {
+            "httpCode": 400,
+            "requirementID": "TNT.2.2.ERR.PRV.400",
+            "description": "PUT /event-subscriptions-response with httpCode 400",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "BadRequest",
+                  "message": "Bad request"
+                },
+                "statusCode": 400,
+                "statusCodeText": "Bad request"
+              }
+            }
+          },
+          {
+            "httpCode": 404,
+            "requirementID": "TNT.2.2.ERR.PRV.404",
+            "description": "PUT /event-subscriptions-response with httpCode 404",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "NotFound",
+                  "message": "No EventSubscription was found for given id"
+                },
+                "statusCode": 404,
+                "statusCodeText": "Not Found"
+              }
+            }
+          }
+        ],
+        "GET": [
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "PUT /event-subscriptions-response with additional enum",
+            "responseDecorator": {
+              "header": {
+                "API-Version": "2.2.0"
+              },
+              "patch": {
+                "eventType": [
+                  "DUMMY"
+                ]
+              }
+            }
+          },
+          {
+            "httpCode": 404,
+            "requirementID": "TNT.2.2.ERR.PRV.404",
+            "description": "GET /event-subscriptions/{id}-response with httpCode 404",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "NotFound",
+                  "message": "No EventSubscription was found for given id"
+                },
+                "statusCode": 404,
+                "statusCodeText": "Not Found"
+              }
+            }
+          }
+        ],
+        "DELETE": [
+          {
+            "httpCode": 404,
+            "requirementID": "TNT.2.2.ERR.PRV.404",
+            "description": "DELETE /event-subscriptions-response with httpCode 404",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "NotFound",
+                  "message": "No EventSubscription was found for given id"
+                },
+                "statusCode": 400,
+                "statusCodeText": "Not Found"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "route": "/event-subscriptions/{id}/secret",
+      "variants": {
+        "PUT": [
+          {
+            "httpCode": 400,
+            "requirementID": "TNT.2.2.ERR.PRV.400",
+            "description": "PUT /event-subscriptions/{id}/secret-response with httpCode 400",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "BadRequest",
+                  "message": "Bad request"
+                },
+                "statusCode": 400,
+                "statusCodeText": "Bad request"
+              }
+            }
+          },
+          {
+            "httpCode": 404,
+            "requirementID": "TNT.2.2.ERR.PRV.404",
+            "description": "PUT /event-subscriptions/{id}/secret-response with httpCode 404",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "NotFound",
+                  "message": "Not Found"
+                },
+                "statusCode": 404,
+                "statusCodeText": "Not Found"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "route": "/events",
+      "variants": {
+        "GET": [
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.EVN.PRV.1",
+            "description": "GET /events-request with Query Parameters eventType",
+            "requestMatcher": {
+              "queryParameter": [
+                "eventType"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "GET /events-response with optional field",
+            "responseDecorator": {
+              "patch": {
+                "DummyField": "DummyValue"
+              }
+            }
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "GET /events-response with timeStamp without millisecond",
+            "responseDecorator": {
+              "format": {
+                "date": {
+                  "eventCreatedDateTime": "yyyy-MM-dd'T'HH:mm:ss",
+                  "eventDateTime": "yyyy-MM-dd'T'HH:mm:ss"
+                }
+              }
+            }
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "GET /events-response with timeStamp with millisecond",
+            "responseDecorator": {
+              "format": {
+                "date": {
+                  "eventCreatedDateTime": "yyyy-MM-dd'T'HH:mm:ss:SSS",
+                  "eventDateTime": "yyyy-MM-dd'T'HH:mm:ss:SSS"
+                }
+              }
+            }
+          },
+          {
+            "httpCode": 400,
+            "requirementID": "TNT.2.2.ERR.PRV.400",
+            "description": "GET /events-response with httpCode 400",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "BadRequest",
+                  "message": "Bad request"
+                },
+                "statusCode": 400,
+                "statusCodeText": "Bad request"
+              }
+            }
+          },
+          {
+            "httpCode": 500,
+            "requirementID": "TNT.2.2.ERR.PRV.500",
+            "description": "GET /events-response with httpCode 500",
+            "responseDecorator": {
+              "patch": {
+                "errors": {
+                  "reason": "InternalServerError",
+                  "message": "Internal Server Error"
+                },
+                "statusCode": 500,
+                "statusCodeText": "Internal Server Error"
+              }
+            }
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.EVN.PRV.1",
+            "description": "GET /events-request with sorting parameter",
+            "requestMatcher": {
+              "queryParameter": [
+                "sort"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.EVN.PRV.1",
+            "description": "GET /events-request with limit parameter",
+            "requestMatcher": {
+              "queryParameter": [
+                "limit"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.API.PRV.4",
+            "description": "GET /events-request with cursor parameter",
+            "requestMatcher": {
+              "queryParameter": [
+                "cursor"
+              ]
+            }
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.API.PRV.1",
+            "description": "GET /events-request with header API-Version",
+            "requestMatcher": {
+              "header": [
+                "API-Version"
+              ]
+            }
+          }
+        ]
+      }
+    }
   ]
 }
