@@ -2,32 +2,27 @@ package org.dcsa.ctk.consumer.service.tnt.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
-import org.dcsa.ctk.consumer.config.callback.CallBackConfig;
 import org.dcsa.ctk.consumer.constant.CheckListStatus;
 import org.dcsa.ctk.consumer.constant.ResponseMockType;
 import org.dcsa.ctk.consumer.exception.DecoratorException;
+import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.service.callback.CallBackService;
 import org.dcsa.ctk.consumer.service.decorator.Decorator;
 import org.dcsa.ctk.consumer.service.mock.MockService;
 import org.dcsa.ctk.consumer.service.tnt.TNTEventSubscriptionToService;
-import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.util.APIUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;
 import org.dcsa.tnt.controller.TNTEventSubscriptionTOController;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 
 @Service
 @Validated

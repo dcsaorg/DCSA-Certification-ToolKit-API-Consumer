@@ -2,7 +2,6 @@ package org.dcsa.ctk.consumer.service.callback;
 
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
