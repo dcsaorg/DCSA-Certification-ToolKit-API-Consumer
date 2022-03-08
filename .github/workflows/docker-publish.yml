@@ -55,7 +55,7 @@ jobs:
         with:
           repository: dcsaorg/DCSA-TNT
           ref: master
-          token: ${{ secrets.DCSA_PACKAGES_PAT }}
+          token: ${{ secrets.REPO_ACCESS_PAT }}
           path: DCSA-TNT
           
       - name: Modify POM for DCSA-TNT
@@ -64,6 +64,7 @@ jobs:
           sed -i 's/<distributionManagement>/<!--distributionManagement>/' pom.xml && sed -i 's/<\/distributionManagement>/<\/distributionManagement-->/' pom.xml
           sed -i 's/<plugins>/<!--plugins>/' pom.xml && sed -i 's/<\/plugins>/<\/plugins-->/' pom.xml
           cat pom.xml 
+          echo ${{secrets.GITHUB_TOKEN}} 
          
       - name: Build DCSA-TNT
         run: cd DCSA-TNT && mvn install -DskipTests -X 
