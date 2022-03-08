@@ -64,7 +64,7 @@ jobs:
           sed -i 's/<distributionManagement>/<!--distributionManagement>/' pom.xml && sed -i 's/<\/distributionManagement>/<\/distributionManagement-->/' pom.xml
           sed -i 's/<plugins>/<!--plugins>/' pom.xml && sed -i 's/<\/plugins>/<\/plugins-->/' pom.xml
           cat pom.xml 
-          echo ${{secrets.GITHUB_TOKEN}} 
+          echo ${{github.actor}} 
          
       - name: Build DCSA-TNT
         run: cd DCSA-TNT && mvn install -DskipTests -X 
@@ -106,7 +106,7 @@ jobs:
           image: ctk-consumer
           registry: ghcr.io            
           githubOrg: dcsaorg
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: 'deepakdcsa'
+          password: ${{ secrets.USER_PACKAGES_PAT }}
           addLatest: ${{ true }}
 
