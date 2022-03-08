@@ -63,11 +63,10 @@ jobs:
           cd DCSA-TNT 
           sed -i 's/<distributionManagement>/<!--distributionManagement>/' pom.xml && sed -i 's/<\/distributionManagement>/<\/distributionManagement-->/' pom.xml
           sed -i 's/<plugins>/<!--plugins>/' pom.xml && sed -i 's/<\/plugins>/<\/plugins-->/' pom.xml
-      - name: Print POM
-        run: cd DCSA-TNT && cat pom.xml 
+          cat pom.xml 
          
       - name: Build DCSA-TNT
-        run: cd DCSA-TNT && mvn package -DskipTests -X 
+        run: cd DCSA-TNT && mvn install -DskipTests -X 
         
       - name: build Toolkit
         run:  mvn -B package -DskipTests -X
