@@ -98,14 +98,15 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
+      # Build and push Docker image
+      # https://github.com/marketplace/actions/docker-build-push-action
       - name: Build and push Docker image
-        id: build-and-push
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        with:
-          context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{env.TAG}}
-          labels: ${{ steps.meta.outputs.labels }}
+        uses: mr-smithers-excellent/docker-build-push@v5
+        with:          
+          image: ctk-consumer
+          registry: ghcr.io            
+          githubOrg: dcsaorg
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          addLatest: ${{ true }}
 
