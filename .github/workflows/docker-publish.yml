@@ -86,4 +86,4 @@ jobs:
           registry: ghcr.io            
           githubOrg: dcsaorg
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.USER_PACKAGES_PAT }}
