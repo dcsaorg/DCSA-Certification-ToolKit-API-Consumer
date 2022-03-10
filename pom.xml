@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.dcsa</groupId>
 	<artifactId>dcsa_ctk_consumer</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<packaging>jar</packaging>
 	<name>dcsa_ctk_consumer</name>
 	<description>dcsa ctk consumer</description>
