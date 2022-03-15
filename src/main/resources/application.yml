@@ -64,7 +64,7 @@ springdoc:
 server:
   port: ${SERVER_PORT}
 
-pubSubFlag: true
+pubSubFlag: false
 
 
 
