@@ -15,6 +15,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
@@ -22,7 +26,8 @@ public class ExcelReporter implements CustomReporter {
     public String generateTestReport(String outputDirectory) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         Map<String, List<CheckListItem>> groupedCheckListItem = getGroupedCheckListItem(ConfigService.checkListItemMap);
-        String fileName = ("TestResult_" + new Date().getTime() + ".xlsx");
+        DateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy_hh-mm-ss");
+        String fileName = ("TestResult_" +dateFormat.format(Calendar.getInstance().getTime()) + ".xlsx");
         Map<String, Integer[]> resultSummary = getAggregatedResultSummary(groupedCheckListItem);
         XSSFCreationHelper createHelper = workbook.getCreationHelper();
 
@@ -70,6 +75,7 @@ public class ExcelReporter implements CustomReporter {
         }
 
         try {
+            Files.createDirectories(Paths.get(outputDirectory));
             FileOutputStream out = new FileOutputStream(new File(outputDirectory + "/" + fileName));
             workbook.write(out);
             out.close();
