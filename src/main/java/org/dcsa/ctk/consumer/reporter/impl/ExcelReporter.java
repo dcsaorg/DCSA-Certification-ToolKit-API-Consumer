@@ -7,6 +7,7 @@ import org.dcsa.ctk.consumer.constant.CheckListStatus;
 import org.dcsa.ctk.consumer.constant.TestRequirement;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.reporter.CustomReporter;
+import org.dcsa.ctk.consumer.reporter.report.ExtentManager;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
 import org.dcsa.ctk.consumer.util.JsonUtility;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ import java.util.*;
 
 @Component
 public class ExcelReporter implements CustomReporter {
-    public String generateTestReport(String outputDirectory) {
+    public String generateExcelTestReport(String outputDirectory) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         Map<String, List<CheckListItem>> groupedCheckListItem = getGroupedCheckListItem(ConfigService.checkListItemMap);
         DateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy_hh-mm-ss");
@@ -87,6 +88,19 @@ public class ExcelReporter implements CustomReporter {
         return fileName;
     }
 
+    public String generateHtmlTestReport() {
+        Map<String, List<CheckListItem>> groupedCheckListItem = getGroupedCheckListItem(ConfigService.checkListItemMap);
+        for( Map.Entry<String, List<CheckListItem>> entry :  groupedCheckListItem.entrySet()){
+            List<CheckListItem> value = entry.getValue();
+            value.forEach( item -> {
+                if(item.getStatus().equals(CheckListStatus.NOT_COVERED)){
+                    ExtentManager.writeExtentTestReport(item);
+                }
+            });
+        }
+        return ExtentManager.getReportPath();
+    }
+
     private Map<String, Integer[]> getAggregatedResultSummary(Map<String, List<CheckListItem>> groupedCheckListItem) {
         Map<String, Integer[]> resultSummary = new TreeMap<>();
         for (Map.Entry<String, List<CheckListItem>> entry : groupedCheckListItem.entrySet()) {
@@ -113,7 +127,7 @@ public class ExcelReporter implements CustomReporter {
         return resultSummary;
     }
 
-    private Map<String, List<CheckListItem>> getGroupedCheckListItem(Map<String, List<CheckListItem>> checkListItemMap) {
+    public static Map<String, List<CheckListItem>> getGroupedCheckListItem(Map<String, List<CheckListItem>> checkListItemMap) {
         Map<String, List<CheckListItem>> groupedCheckListItem = new TreeMap<>();
         for (Map.Entry<String, List<CheckListItem>> entry : checkListItemMap.entrySet()) {
             List<CheckListItem> checkListItems = entry.getValue();

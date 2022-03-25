@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.reporter.CustomReporter;
+import org.dcsa.ctk.consumer.reporter.report.ExtentManager;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
 import org.dcsa.ctk.consumer.service.log.CustomLogger;
 import org.dcsa.ctk.consumer.service.tnt.TNTEventSubscriptionToService;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -34,6 +36,9 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 @RequestMapping(value = "/v2", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class TNTEventSubscriptionTOControllerProxy {
+
+    private static final String HTML = "html";
+    private static final String EXCEL = "excel";
 
     final TNTEventSubscriptionToService<Map<String, Object>> tntEventSubscriptionToService;
 
@@ -49,6 +54,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(obj, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
         customLogger.log(responseMap, response, request);
+        ExtentManager.writeExtentTestReport(checkListItem);
         return responseMap;
     }
 
@@ -60,6 +66,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(null, response, request, checkListItem, route);
         List<Map<String, Object>> responseList = tntEventSubscriptionToService.findAll(response, request, checkListItem);
         customLogger.log(responseList, response, request);
+        ExtentManager.writeExtentTestReport(checkListItem);
         return responseList;
     }
 
@@ -71,6 +78,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(obj, response, request, checkListItem, route);
         tntEventSubscriptionToService.updateSecret(UUID.fromString(id), JsonUtility.convertTo(EventSubscriptionSecretUpdateTO.class, obj), response, request, checkListItem);
         customLogger.log(null, response, request);
+        ExtentManager.writeExtentTestReport(checkListItem);
     }
 
     @GetMapping({"/event-subscriptions/{id}"})
@@ -81,6 +89,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(null, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.findById(UUID.fromString(id), response, request, checkListItem);
         customLogger.log(responseMap, response, request);
+        ExtentManager.writeExtentTestReport(checkListItem);
         return responseMap;
     }
 
@@ -92,6 +101,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(obj, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.update(UUID.fromString(id), JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
         customLogger.log(responseMap, response, request);
+        ExtentManager.writeExtentTestReport(checkListItem);
         return responseMap;
     }
 
@@ -103,17 +113,32 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(null, response, request, checkListItem, route);
         tntEventSubscriptionToService.delete(UUID.fromString(id), response, request, checkListItem);
         customLogger.log(null, response, request);
-
+        ExtentManager.writeExtentTestReport(checkListItem);
     }
 
-    @GetMapping(value = "/report/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Resource> download() throws IOException {
-        String fileName = customReporter.generateTestReport("reports");
-
-        ByteArrayResource resource = FileUtility.getFile("reports/" +
-                fileName);
+    @GetMapping(value = "/download/report/{reportType}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<Object> downloadReport(@PathVariable Optional<String> reportType) throws IOException {
+        String defaultReportType = HTML;
+        if(reportType.isPresent()){
+            defaultReportType = reportType.get();
+        }
+        String fileName = "";
         HttpHeaders header = new HttpHeaders();
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+        ByteArrayResource resource = null;
+        if(defaultReportType.equalsIgnoreCase(HTML)){
+            fileName = customReporter.generateHtmlTestReport();
+            resource = FileUtility.getFile(fileName);
+            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + ExtentManager.getReportName());
+
+        }else if(defaultReportType.equalsIgnoreCase(EXCEL)){
+            fileName = customReporter.generateExcelTestReport("reports");
+            resource = FileUtility.getFile("reports/" + fileName);
+            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Unknown report type. Only html or excel report type is supported.");
+        }
         header.add("Cache-Control", "no-cache, no-store, must-revalidate");
         header.add("Pragma", "no-cache");
         header.add("Expires", "0");
@@ -122,6 +147,5 @@ public class TNTEventSubscriptionTOControllerProxy {
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(resource);
     }
-
 
 }
