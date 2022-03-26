@@ -2,6 +2,7 @@ package org.dcsa.ctk.consumer.reporter.report;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
@@ -16,12 +17,11 @@ import org.dcsa.ctk.consumer.util.JsonUtility;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Properties;
 
 @Data
-public class ExtentManager {
+public class ExtentReportManager {
 
     private static ExtentReports extentReports;
     private static ExtentTest extentTest;
@@ -65,6 +65,11 @@ public class ExtentManager {
         getExtentReports().flush();
     }
 
+    public static void cleanup(){
+        extentReports = null;
+        extentTest = null;
+    }
+
     public static ExtentSparkReporter getExtentSparkReporter(){
         DateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy__hh-mm-ss");
         reportName = PropertyLoader.getInstance().getProperty("report.file.name") +
@@ -96,28 +101,27 @@ public class ExtentManager {
 
     public static ExtentTest getExtentTest(String name){
         if(name != null){
-            extentTest = ExtentManager.getExtentReports().createTest(name);
+            extentTest = ExtentReportManager.getExtentReports().createTest(name);
         }
         return extentTest;
     }
-
+    public static int counter = 0;
     public static void writeExtentTestReport(CheckListItem checkListItem){
         if (checkListItem != null){
-            ExtentTest extentTest = ExtentManager.getExtentTest(checkListItem.getResponseDecoratorWrapper().getRequirementID()+ " " +
+            ExtentTest extentTest = ExtentReportManager.getExtentTest(checkListItem.getResponseDecoratorWrapper().getRequirementID()+ " " +
                                     checkListItem.getResponseDecoratorWrapper().getDescription());
             extentTest.assignCategory(checkListItem.getResponseDecoratorWrapper().getRequirementID());
-            Markup markUp;
             if(checkListItem.getStatus().equals(CheckListStatus.COVERED)){
                 extentTest.pass(checkListItem.getResponseDecoratorWrapper().getDescription()+ " ");
                 extentTest.info(TestRequirement.getRequirement(checkListItem.getResponseDecoratorWrapper().getRequirementID()));
-                markUp = MarkupHelper.createLabel(checkListItem.getStatus().getName(), ExtentColor.GREEN);
+                Markup markUp = MarkupHelper.createLabel(checkListItem.getStatus().getName(), ExtentColor.GREEN);
+                extentTest.log(Status.INFO, markUp);
             }else{
                 extentTest.fail(checkListItem.getResponseDecoratorWrapper().getDescription()+ " ");
-                extentTest.info(TestRequirement.getRequirement(checkListItem.getResponseDecoratorWrapper().getRequirementID()));
-                markUp = MarkupHelper.createLabel(checkListItem.getStatus().getName(), ExtentColor.RED);
+                extentTest.log(Status.WARNING, TestRequirement.getRequirement(checkListItem.getResponseDecoratorWrapper().getRequirementID()));
+                Markup markUp = MarkupHelper.createLabel(checkListItem.getStatus().getName(), ExtentColor.RED);
+                extentTest.log(Status.WARNING, markUp);
             }
-            // add COVERED or NOT COVERED with color format
-            extentTest.info(markUp);
             // Truncate large log
             String testCaseDetails = JsonUtility.getStringFormat(checkListItem.getLog());
             if (testCaseDetails.length() > 32766){
@@ -127,7 +131,7 @@ public class ExtentManager {
             if(!testCaseDetails.isBlank()){
                 extentTest.info("DETAILS REQUEST LOG:  " + testCaseDetails);
             }
-            ExtentManager.flush();
+            ExtentReportManager.flush();
         }
     }
 }

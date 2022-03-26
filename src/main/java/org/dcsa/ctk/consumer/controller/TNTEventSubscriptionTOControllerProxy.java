@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.reporter.CustomReporter;
-import org.dcsa.ctk.consumer.reporter.report.ExtentManager;
+import org.dcsa.ctk.consumer.reporter.report.ExtentReportManager;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
 import org.dcsa.ctk.consumer.service.log.CustomLogger;
 import org.dcsa.ctk.consumer.service.tnt.TNTEventSubscriptionToService;
@@ -14,7 +14,6 @@ import org.dcsa.ctk.consumer.util.FileUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,7 +53,6 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(obj, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
         customLogger.log(responseMap, response, request);
-        ExtentManager.writeExtentTestReport(checkListItem);
         return responseMap;
     }
 
@@ -66,7 +64,6 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(null, response, request, checkListItem, route);
         List<Map<String, Object>> responseList = tntEventSubscriptionToService.findAll(response, request, checkListItem);
         customLogger.log(responseList, response, request);
-        ExtentManager.writeExtentTestReport(checkListItem);
         return responseList;
     }
 
@@ -78,7 +75,6 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(obj, response, request, checkListItem, route);
         tntEventSubscriptionToService.updateSecret(UUID.fromString(id), JsonUtility.convertTo(EventSubscriptionSecretUpdateTO.class, obj), response, request, checkListItem);
         customLogger.log(null, response, request);
-        ExtentManager.writeExtentTestReport(checkListItem);
     }
 
     @GetMapping({"/event-subscriptions/{id}"})
@@ -89,7 +85,6 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(null, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.findById(UUID.fromString(id), response, request, checkListItem);
         customLogger.log(responseMap, response, request);
-        ExtentManager.writeExtentTestReport(checkListItem);
         return responseMap;
     }
 
@@ -101,7 +96,6 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(obj, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.update(UUID.fromString(id), JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
         customLogger.log(responseMap, response, request);
-        ExtentManager.writeExtentTestReport(checkListItem);
         return responseMap;
     }
 
@@ -113,7 +107,6 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(null, response, request, checkListItem, route);
         tntEventSubscriptionToService.delete(UUID.fromString(id), response, request, checkListItem);
         customLogger.log(null, response, request);
-        ExtentManager.writeExtentTestReport(checkListItem);
     }
 
     @GetMapping(value = "/download/report/{reportType}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
@@ -128,7 +121,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         if(defaultReportType.equalsIgnoreCase(HTML)){
             fileName = customReporter.generateHtmlTestReport();
             resource = FileUtility.getFile(fileName);
-            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + ExtentManager.getReportName());
+            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + ExtentReportManager.getReportName());
 
         }else if(defaultReportType.equalsIgnoreCase(EXCEL)){
             fileName = customReporter.generateExcelTestReport("reports");

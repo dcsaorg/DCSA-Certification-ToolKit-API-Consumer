@@ -7,7 +7,8 @@ import org.dcsa.ctk.consumer.constant.CheckListStatus;
 import org.dcsa.ctk.consumer.constant.TestRequirement;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.reporter.CustomReporter;
-import org.dcsa.ctk.consumer.reporter.report.ExtentManager;
+import org.dcsa.ctk.consumer.reporter.report.ExtentReportManager;
+import org.dcsa.ctk.consumer.reporter.report.ExtentReportModifier;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
 import org.dcsa.ctk.consumer.util.JsonUtility;
 import org.springframework.stereotype.Component;
@@ -92,13 +93,11 @@ public class ExcelReporter implements CustomReporter {
         Map<String, List<CheckListItem>> groupedCheckListItem = getGroupedCheckListItem(ConfigService.checkListItemMap);
         for( Map.Entry<String, List<CheckListItem>> entry :  groupedCheckListItem.entrySet()){
             List<CheckListItem> value = entry.getValue();
-            value.forEach( item -> {
-                if(item.getStatus().equals(CheckListStatus.NOT_COVERED)){
-                    ExtentManager.writeExtentTestReport(item);
-                }
-            });
+            value.forEach(ExtentReportManager::writeExtentTestReport);
         }
-        return ExtentManager.getReportPath();
+        ExtentReportManager.cleanup();
+        ExtentReportModifier.modifyFile(ExtentReportManager.getReportPath());
+        return ExtentReportManager.getReportPath();
     }
 
     private Map<String, Integer[]> getAggregatedResultSummary(Map<String, List<CheckListItem>> groupedCheckListItem) {
