@@ -206,7 +206,7 @@
           {
             "httpCode": 200,
             "requirementID": "TNT.2.2.SUB.CSM.3",
-            "description": "PUT /event-subscriptions-response with additional enum",
+            "description": "GET /event-subscriptions-response with additional enum",
             "responseDecorator": {
               "header": {
                 "API-Version": "2.2.0"
