@@ -30,7 +30,6 @@ public class ExtentReportManager {
     private static final String COMPANY = "Company";
     private static final String AUTHOR = "Author";
     private static final String OS_NAME = "os.name";
-    private static final String USER_COUNTRY = "user.country";
     private static final String USER_LANGUAGE = "user.language";
     private static final String JAVA_RUNTIME = "java.runtime.name";
     private static final String JAVA_VERSION = "java.version";
@@ -51,8 +50,6 @@ public class ExtentReportManager {
         extentReports.setSystemInfo(AUTHOR.toUpperCase(), PropertyLoader.getInstance().getProperty("report.author"));
         extentReports.setSystemInfo(OS_NAME.toUpperCase().replaceAll("\\."," "),
                                                 (String)properties.get(OS_NAME));
-        extentReports.setSystemInfo(USER_COUNTRY.toUpperCase().replaceAll("\\."," "),
-                                                (String)properties.get(USER_COUNTRY));
         extentReports.setSystemInfo(USER_LANGUAGE.toUpperCase().replaceAll("\\."," "),
                                                 ((String)properties.get(USER_LANGUAGE)).toUpperCase());
         extentReports.setSystemInfo(JAVA_RUNTIME.toUpperCase().replaceAll("\\."," "),
@@ -105,7 +102,6 @@ public class ExtentReportManager {
         }
         return extentTest;
     }
-    public static int counter = 0;
     public static void writeExtentTestReport(CheckListItem checkListItem){
         if (checkListItem != null){
             ExtentTest extentTest = ExtentReportManager.getExtentTest(checkListItem.getResponseDecoratorWrapper().getRequirementID()+ " " +

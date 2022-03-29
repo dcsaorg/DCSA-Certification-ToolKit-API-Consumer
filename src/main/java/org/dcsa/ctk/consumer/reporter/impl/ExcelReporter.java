@@ -95,8 +95,8 @@ public class ExcelReporter implements CustomReporter {
             List<CheckListItem> value = entry.getValue();
             value.forEach(ExtentReportManager::writeExtentTestReport);
         }
+       ExtentReportModifier.modifyFile(ExtentReportManager.getReportPath());
         ExtentReportManager.cleanup();
-        ExtentReportModifier.modifyFile(ExtentReportManager.getReportPath());
         return ExtentReportManager.getReportPath();
     }
 
