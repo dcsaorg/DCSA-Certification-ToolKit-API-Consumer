@@ -1,8 +1,8 @@
 package org.dcsa.ctk.consumer.constant;
 
 public enum CheckListStatus {
-    COVERED("Covered"),
-    NOT_COVERED("Not Covered");
+    COVERED("COVERED"),
+    NOT_COVERED("NOT COVERED");
     private String name;
 
     CheckListStatus(String name) {
