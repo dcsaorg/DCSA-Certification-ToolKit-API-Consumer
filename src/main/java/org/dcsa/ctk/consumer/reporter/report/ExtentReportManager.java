@@ -68,7 +68,7 @@ public class ExtentReportManager {
     }
 
     public static ExtentSparkReporter getExtentSparkReporter(){
-        DateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy__hh-mm-ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy__hh-mm-ss");
         reportName = PropertyLoader.getInstance().getProperty("report.file.name") +
                     "_" +dateFormat.format(Calendar.getInstance().getTime()) + ".html";
         reportPath = System.getProperty("user.dir")+"/"+
