@@ -1,16 +1,10 @@
 package org.dcsa.ctk.consumer;
 
-import org.dcsa.tnt.Application;
-import org.dcsa.tnt.controller.EventController;
-import org.dcsa.tnt.controller.TNTEventSubscriptionTOController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.event.ContextClosedEvent;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.TimeUnit;
 

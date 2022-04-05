@@ -96,7 +96,7 @@ public class ExcelReporter implements CustomReporter {
             value.forEach(ExtentReportManager::writeExtentTestReport);
         }
        ExtentReportModifier.modifyFile(ExtentReportManager.getReportPath());
-        ExtentReportManager.cleanup();
+       ExtentReportManager.cleanup();
         return ExtentReportManager.getReportPath();
     }
 
