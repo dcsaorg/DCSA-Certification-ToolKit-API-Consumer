@@ -4,14 +4,13 @@ services:
         environment:
              - DB_HOSTNAME=db
              - AUTH0_ENABLED=true
-             - SERVER_PORT=9090
         container_name: ctk-consumer
         build:
             .
         volumes:
             - C:\workspace\abc\ctk\reports:/ctk/reports
         ports:
-            - 9090:9090
+            - 9092:9092
         logging:
             options:
                 max-file: '10'

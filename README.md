@@ -43,6 +43,8 @@ docker push docker.pkg.github.com/<user_name>/<repo_name>/ctk-consumer:<tagname>
 docker tag <image_name>:latest docker.pkg.github.com/<user_name>/<repo_name>/ctk-db:<tagname>
 docker push docker.pkg.github.com/<user_name>/<repo_name>/ctk-db:<tagname>
 ```
+
+
 We have already a repo for this, we can cintinue to use the same 
 https://github.com/deepakdcsa/ctk-docker-registry.git
 
