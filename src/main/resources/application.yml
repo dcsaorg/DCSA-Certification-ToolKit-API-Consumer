@@ -62,7 +62,7 @@ springdoc:
     path: /docs
 
 server:
-  port: 9092
+  port: ${SERVER_PORT:9092}
 
 pubSubFlag: false
 
