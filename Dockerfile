@@ -1,4 +1,4 @@
-FROM openjdk:17-alpine
+FROM eclipse-temurin:17-jre-alpine
 RUN mkdir -p /ctk
 COPY target/dcsa_ctk_consumer-*.jar /ctk/dcsa_ctk_consumer.jar
 WORKDIR /ctk/
