@@ -15,7 +15,7 @@ public class PropertyLoader {
 
 
     private PropertyLoader() {
-        String RESOURCE_FILENAME = "extent.properties";
+        String RESOURCE_FILENAME = "application.yml";
         try (InputStream inputStream = ClassLoader.getSystemResourceAsStream(RESOURCE_FILENAME)) {
             properties = new Properties();
             properties.load(inputStream);

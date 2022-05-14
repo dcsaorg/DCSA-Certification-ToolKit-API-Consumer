@@ -27,8 +27,14 @@ public class ExtentReportManager {
     private static ExtentTest extentTest;
     private static String reportPath;
     private static String reportName;
-    private static final String COMPANY = "Company";
-    private static final String AUTHOR = "Author";
+    private static final String COMPANY_KEY = "company";
+    private static final String AUTHOR_KEY = "author";
+    private static final String NAME_KEY = "name";
+    private static final String LOCATION_KEY = "location";
+    private static final String TITLE_KEY = "title";
+    private static final String THEME_KEY = "theme";
+    private static final String ENABLED_KEY = "enabled";
+    private static final String FORMAT_KEY = "format";
     private static final String OS_NAME = "os.name";
     private static final String USER_LANGUAGE = "user.language";
     private static final String JAVA_RUNTIME = "java.runtime.name";
@@ -46,8 +52,8 @@ public class ExtentReportManager {
 
     private static void setReportSystemInfo(){
         Properties properties = System.getProperties();
-        extentReports.setSystemInfo(COMPANY.toUpperCase(), PropertyLoader.getInstance().getProperty("report.company"));
-        extentReports.setSystemInfo(AUTHOR.toUpperCase(), PropertyLoader.getInstance().getProperty("report.author"));
+        extentReports.setSystemInfo(COMPANY_KEY.toUpperCase(), PropertyLoader.getInstance().getProperty(COMPANY_KEY));
+        extentReports.setSystemInfo(AUTHOR_KEY.toUpperCase(), PropertyLoader.getInstance().getProperty(AUTHOR_KEY));
         extentReports.setSystemInfo(OS_NAME.toUpperCase().replaceAll("\\."," "),
                                                 (String)properties.get(OS_NAME));
         extentReports.setSystemInfo(USER_LANGUAGE.toUpperCase().replaceAll("\\."," "),
@@ -69,21 +75,21 @@ public class ExtentReportManager {
 
     public static ExtentSparkReporter getExtentSparkReporter(){
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy__hh-mm-ss");
-        reportName = PropertyLoader.getInstance().getProperty("report.file.name") +
+        reportName = PropertyLoader.getInstance().getProperty(NAME_KEY) +
                     "_" +dateFormat.format(Calendar.getInstance().getTime()) + ".html";
         reportPath = System.getProperty("user.dir")+"/"+
-                    PropertyLoader.getInstance().getProperty("report.file.location")+"/" + reportName;
+                    PropertyLoader.getInstance().getProperty(LOCATION_KEY)+"/" + reportName;
 
         ExtentSparkReporter reporter = new ExtentSparkReporter( reportPath);
 
-        reporter.config().setReportName(PropertyLoader.getInstance().getProperty("report.name"));
-        reporter.config().setDocumentTitle(PropertyLoader.getInstance().getProperty("report.title"));
+        reporter.config().setReportName(PropertyLoader.getInstance().getProperty(NAME_KEY));
+        reporter.config().setDocumentTitle(PropertyLoader.getInstance().getProperty(TITLE_KEY));
         reporter.config().setTheme(
-                Objects.equals(PropertyLoader.getInstance().getProperty("report.theme"), Theme.DARK.getName()) ?
+                Objects.equals(PropertyLoader.getInstance().getProperty(THEME_KEY), Theme.DARK.getName()) ?
                         Theme.DARK : Theme.STANDARD);
         reporter.config().setTimelineEnabled(Boolean.parseBoolean(
-                PropertyLoader.getInstance().getProperty("report.timeline.enabled")));
-        reporter.config().setTimeStampFormat(PropertyLoader.getInstance().getProperty("report.time.stamp.format"));
+                PropertyLoader.getInstance().getProperty(ENABLED_KEY)));
+        reporter.config().setTimeStampFormat(PropertyLoader.getInstance().getProperty(FORMAT_KEY));
         return reporter;
     }
 

@@ -66,6 +66,25 @@ server:
 
 pubSubFlag: false
 
+report:
+  theme: standard
+  file:
+    name: Consumer-CTK-Report
+    location: reports
+  title: Consumer Report
+  timeline:
+    enabled: 'false'
+  time:
+    stamp:
+      format: yyyy-MM-dd_HH-mm-ss
+  author: Masum Islam
+  company: DCSA
+  name: Consumer CTK Report
+extent:
+  reporter:
+    spark:
+      start: 'true'
+
 
 
 
