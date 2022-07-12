@@ -4,10 +4,9 @@ services:
         environment:
              - DB_HOSTNAME=db
              - AUTH0_ENABLED=true
-             - #JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n"
+           #  - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n"
         container_name: dcsa-consumer-ctk
-        build:
-            .
+        build: ./
         volumes:
             - C:\workspace\abc\ctk\reports:/ctk/reports
         ports:
@@ -21,7 +20,6 @@ services:
         container_name: dcsa_db_ctk
         environment:
             POSTGRES_PASSWORD: "change_this_password"
-        build:
-            DCSA-Information-Model/datamodel/
+        build: ./DCSA-Information-Model/datamodel/
         ports:
             - 5432:5432
