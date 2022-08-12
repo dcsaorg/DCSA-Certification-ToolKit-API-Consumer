@@ -2,11 +2,10 @@ package org.dcsa.ctk.consumer.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
 import org.dcsa.ctk.consumer.service.log.CustomLogger;
 import org.dcsa.ctk.consumer.service.tnt.EventControllerService;
-import org.dcsa.ctk.consumer.model.CheckListItem;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -23,9 +22,7 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 @RequestMapping(value = "/v2/events", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class EventControllerProxy {
-
    final EventControllerService eventControllerService;
-
    final CustomLogger customLogger;
 
     @GetMapping

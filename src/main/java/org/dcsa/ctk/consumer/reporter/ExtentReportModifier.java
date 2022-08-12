@@ -1,4 +1,4 @@
-package org.dcsa.ctk.consumer.reporter.report;
+package org.dcsa.ctk.consumer.reporter;
 
 import lombok.extern.java.Log;
 

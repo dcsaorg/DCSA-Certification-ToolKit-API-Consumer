@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.ctk.consumer.model.CheckListItem;
-import org.dcsa.ctk.consumer.reporter.CustomReporter;
-import org.dcsa.ctk.consumer.reporter.report.ExtentReportManager;
+import org.dcsa.ctk.consumer.reporter.ExtentReportManager;
+import org.dcsa.ctk.consumer.reporter.Reporter;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
 import org.dcsa.ctk.consumer.service.log.CustomLogger;
 import org.dcsa.ctk.consumer.service.tnt.TNTEventSubscriptionToService;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -35,13 +34,9 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 @RequestMapping(value = "/v2", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class TNTEventSubscriptionTOControllerProxy {
-
-    private static final String HTML = "html";
-    private static final String EXCEL = "excel";
-
     final TNTEventSubscriptionToService<Map<String, Object>> tntEventSubscriptionToService;
 
-    final CustomReporter customReporter;
+    final Reporter reporter;
 
     final CustomLogger customLogger;
 
@@ -109,29 +104,12 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.log(null, response, request);
     }
 
-    @GetMapping(value = "/download/report/{reportType}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Object> downloadReport(@PathVariable Optional<String> reportType) throws IOException {
-        String defaultReportType = HTML;
-        if(reportType.isPresent()){
-            defaultReportType = reportType.get();
-        }
-        String fileName = "";
+    @GetMapping(value = "/download/report", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<Object> downloadReport() throws IOException {
         HttpHeaders header = new HttpHeaders();
-        ByteArrayResource resource = null;
-        if(defaultReportType.equalsIgnoreCase(HTML)){
-            fileName = customReporter.generateHtmlTestReport();
-            resource = FileUtility.getFile(fileName);
-            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + ExtentReportManager.getReportName());
-
-        }else if(defaultReportType.equalsIgnoreCase(EXCEL)){
-            fileName = customReporter.generateExcelTestReport("reports");
-            resource = FileUtility.getFile("reports/" + fileName);
-            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
-        } else {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Unknown report type. Only html or excel report type is supported.");
-        }
+        String fileName = reporter.generateHtmlTestReport();
+        ByteArrayResource resource = FileUtility.getFile(fileName);
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + ExtentReportManager.getReportName());
         header.add("Cache-Control", "no-cache, no-store, must-revalidate");
         header.add("Pragma", "no-cache");
         header.add("Expires", "0");

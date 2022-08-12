@@ -1,4 +1,4 @@
-package org.dcsa.ctk.consumer.reporter.report;
+package org.dcsa.ctk.consumer.reporter;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;

@@ -8,12 +8,14 @@
 		<version>2.4.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>org.dcsa</groupId>
 	<artifactId>dcsa_ctk_consumer</artifactId>
 	<version>0.0.2</version>
 	<packaging>jar</packaging>
 	<name>dcsa_ctk_consumer</name>
 	<description>dcsa ctk consumer</description>
+
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
@@ -22,22 +24,19 @@
 		<dcsa.artifacttype>-SNAPSHOT</dcsa.artifacttype>
 		<lombok.version>1.18.22</lombok.version>
 	</properties>
+
 	<dependencies>
+
 		<dependency>
 			<groupId>org.dcsa</groupId>
 			<artifactId>dcsa_tnt</artifactId>
 			<version>${dcsa.tnt.version}${dcsa.artifacttype}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>4.0.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>5.1.0</version>
 		</dependency>
 
 		<dependency>
@@ -58,8 +57,8 @@
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
 		</dependency>
-	</dependencies>
 
+	</dependencies>
 
 	<build>
 		<plugins>
