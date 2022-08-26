@@ -23,6 +23,12 @@
 		<dcsa.tnt.version>0.0.1</dcsa.tnt.version>
 		<dcsa.artifacttype>-SNAPSHOT</dcsa.artifacttype>
 		<lombok.version>1.18.22</lombok.version>
+		<dcsa.version>0.8.14</dcsa.version>
+		<dcsa.events.version>0.0.26</dcsa.events.version>
+		<dcsa.core.tag/>
+		<dcsa.event.tag/>
+		<dcsa.artifacttype>-SNAPSHOT</dcsa.artifacttype>
+		<lombok.version>1.18.22</lombok.version>
 	</properties>
 
 	<dependencies>
@@ -36,6 +42,17 @@
 			<groupId>org.dcsa</groupId>
 			<artifactId>dcsa_tnt</artifactId>
 			<version>${dcsa.tnt.version}${dcsa.artifacttype}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dcsa</groupId>
+			<artifactId>dcsa_core</artifactId>
+			<version>${dcsa.version}${dcsa.core.tag}${dcsa.artifacttype}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dcsa</groupId>
+			<artifactId>dcsa_event_core</artifactId>
+			<version>${dcsa.events.version}${dcsa.event.tag}${dcsa.artifacttype}</version>
 		</dependency>
 
 		<dependency>

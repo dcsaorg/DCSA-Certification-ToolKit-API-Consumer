@@ -1,7 +1,8 @@
 package org.dcsa.ctk.consumer.util;
 
 import lombok.extern.java.Log;
-import org.dcsa.ctk.consumer.init.AppProperty;
+import org.dcsa.testdata.init.AppProperty;
+import org.dcsa.testdata.model.Vessel;
 import org.springframework.util.StringUtils;
 
 import java.sql.ResultSet;
@@ -325,7 +326,7 @@ public class SqlUtility {
             }
         });
     }
-/*
+
     public static Vessel getLastVessel(){
         String selectLastVesselImo = "select * from vessel offset ((select count(*) from vessel)-1)";
         Vessel vessel = new Vessel();
@@ -347,7 +348,7 @@ public class SqlUtility {
         }
         return vessel;
     }
-*/
+
     public static void deleteTransportEventByTransportCallId(List<String> transportCallIds){
         transportCallIds.forEach(id -> {
             if(!Objects.equals(id, "")){

@@ -4,11 +4,22 @@ import org.springframework.core.io.ByteArrayResource;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Level;
 
 public class FileUtility {
+
+    public static String loadResourceAsString(String resource) {
+        try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource)) {
+            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            log.log(Level.SEVERE, e.getMessage());
+        }
+        return "";
+    }
     public static String loadFileAsString(String resource) {
         return parseResourceWithStream(resource, inputStream -> {
             Reader dataInputStream = new BufferedReader(new InputStreamReader(inputStream));

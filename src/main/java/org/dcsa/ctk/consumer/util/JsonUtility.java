@@ -2,6 +2,7 @@ package org.dcsa.ctk.consumer.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.netty.handler.codec.DecoderException;
 import org.dcsa.ctk.consumer.model.TestConfig;
@@ -12,6 +13,21 @@ import java.util.List;
 import java.util.Map;
 
 public class JsonUtility {
+
+    public static <T> String getStringFormObject(T t) {
+        ObjectMapper mapper = JsonMapper.builder()
+                .addModule(new JavaTimeModule())
+                .build();
+        String inputJson = "";
+        if (t != null) {
+            try {
+                inputJson = mapper.writeValueAsString(t);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
+        return inputJson;
+    }
 
     public static Map<String, Object> convertToMap(Object object) {
         ObjectMapper mapObject = new ObjectMapper();
