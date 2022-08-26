@@ -18,6 +18,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,10 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
         }
     }
 
+    @Override
+    public  Flux<TNTEventSubscriptionTO> findAllEvent(ServerHttpResponse response, ServerHttpRequest request) {
+        return  tntServer.findAll(response, request);
+    }
     @Override
     public Map<String, Object> findById(UUID id, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
         Map<String, Object> responseMap = null;

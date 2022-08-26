@@ -27,10 +27,7 @@ pagination:
 spring:
   application:
     name: dcsa-ctk-consumer
-  #datasource:
-  #${db_hostname}
   r2dbc:
-    #url: r2dbc:postgresql://localhost
     url: r2dbc:postgresql://${DB_HOSTNAME:localhost:5432}
     name: dcsa_openapi
     properties:
@@ -38,10 +35,6 @@ spring:
     username: dcsa_db_owner
     password: 9c072fe8-c59c-11ea-b8d1-7b6577e9f3f5
 
-    #initialization-mode: always
-    #url: r2dbc:postgresql://localhost:5433/dcsa_openapi1
-    #username: dcsa_db_owner
-    #password: my-db
   security:
     oauth2:
       resourceserver:

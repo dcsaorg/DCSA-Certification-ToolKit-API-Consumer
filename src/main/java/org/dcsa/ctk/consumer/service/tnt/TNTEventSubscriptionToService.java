@@ -5,6 +5,7 @@ import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,6 @@ public interface TNTEventSubscriptionToService<T> {
     T update(UUID id, TNTEventSubscriptionTO obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException;
 
     void updateSecret(UUID id, EventSubscriptionSecretUpdateTO obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException;
-
+    Flux<TNTEventSubscriptionTO> findAllEvent(ServerHttpResponse response, ServerHttpRequest request);
 
 }

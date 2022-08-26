@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
+import org.dcsa.ctk.consumer.init.AppProperty;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.reporter.ExtentReportManager;
 import org.dcsa.ctk.consumer.reporter.Reporter;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,7 +33,6 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @Slf4j
-@RequiredArgsConstructor
 @RequestMapping(value = "/v2", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class TNTEventSubscriptionTOControllerProxy {
     final TNTEventSubscriptionToService<Map<String, Object>> tntEventSubscriptionToService;
@@ -39,6 +40,16 @@ public class TNTEventSubscriptionTOControllerProxy {
     final Reporter reporter;
 
     final CustomLogger customLogger;
+
+    final AppProperty appProperty;
+
+    public TNTEventSubscriptionTOControllerProxy(TNTEventSubscriptionToService<Map<String, Object>> tntEventSubscriptionToService, Reporter reporter, CustomLogger customLogger, AppProperty appProperty) {
+        this.tntEventSubscriptionToService = tntEventSubscriptionToService;
+        this.reporter = reporter;
+        this.customLogger = customLogger;
+        this.appProperty = appProperty;
+        appProperty.init();
+    }
 
     @PostMapping("/event-subscriptions")
     @ResponseStatus(HttpStatus.CREATED)
@@ -82,6 +93,13 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.log(responseMap, response, request);
         return responseMap;
     }
+
+    @GetMapping({"/findAllEvent"})
+    @ResponseStatus(HttpStatus.OK)
+    public Flux<TNTEventSubscriptionTO> findAllEvent(ServerHttpResponse response, ServerHttpRequest request){
+        return  tntEventSubscriptionToService.findAllEvent(response, request);
+    }
+
 
     @PutMapping({"/event-subscriptions/{id}"})
     @ResponseStatus(HttpStatus.OK)
