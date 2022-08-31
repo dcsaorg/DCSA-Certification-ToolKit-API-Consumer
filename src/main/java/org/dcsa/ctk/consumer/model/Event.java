@@ -121,13 +121,14 @@ public class Event {
         dateTime = dateTime.replaceAll("DATE", "").trim();
         dateTime = dateTime.replaceAll("\'", "").trim();
         String[] tokens =  dateTime.split("\\.");
+        // remove number between dot and Z
         if(tokens.length > 1){
-            String lastToken =  tokens[tokens.length -1];
-            pattern.append(".");
-            for(int i=0; i < lastToken.length()-1; i++){
-                pattern.append("S");
+            tokens[1] = tokens[1].replace("Z", "");
+            dateTime = dateTime.replace("."+tokens[1], "");
+            // if dateTime contains Z, pattern must have Z
+            if(dateTime.contains("Z")){
+                pattern.append("\'Z\'");
             }
-            pattern.append("\'Z\'");
         }else{
             if(dateTime.contains("T") || dateTime.contains("Z")){
                 pattern.append("\'Z\'");
