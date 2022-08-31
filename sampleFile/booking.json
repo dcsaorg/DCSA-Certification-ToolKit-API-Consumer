@@ -1,0 +1,12 @@
+{
+    "id": "BR1239719971",
+    "receiptDeliveryTypeAtOrigin": "CY",
+    "receiptDeliveryTypeAtDestination": "CFS",
+    "cargoMovementTypeAtOrigin": "FCL",
+    "cargoMovementTypeAtDestination": "LCL",
+    "bookingDateTime": "DATE '2020-07-07'",
+    "serviceContract": "You will surrender",
+    "cargoGrossWeight": 13233.4,
+    "cargoGrossWeightUnit": "KGM",
+    "commodityType": "Donno"
+  }

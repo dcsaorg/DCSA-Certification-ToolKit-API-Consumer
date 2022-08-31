@@ -1,0 +1,23 @@
+{
+    "eventID": "5e51e72c-d872-11ea-811c-0f8f10a32ea1",
+    "eventType": "SHIPMENT",
+    "eventDateTime": "2003-05-03T00:00:00Z",
+    "eventCreatedDateTime": "2022-07-04T09:37:15.295467Z",
+    "eventClassifierCode": "PLN",
+    "shipmentEventTypeCode": "CONF",
+    "documentTypeCode": "BKG",
+    "documentID": "5e51e72c-d872-11ea-811c-0f8f10a32ea1",
+    "reason": null,
+    "documentReferences": [
+        {
+            "documentReferenceType": "BKG",
+            "documentReferenceValue": "ABC123123123"
+        }
+    ],
+    "references": [
+        {
+            "referenceType": "FF",
+            "referenceValue": "string"
+        }
+    ]
+}

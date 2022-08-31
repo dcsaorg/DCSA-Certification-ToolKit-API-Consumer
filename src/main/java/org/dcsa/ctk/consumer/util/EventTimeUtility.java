@@ -1,10 +1,8 @@
 package org.dcsa.ctk.consumer.util;
 
-import org.dcsa.core.events.model.EquipmentEvent;
-import org.dcsa.core.events.model.ShipmentEvent;
-import org.dcsa.core.events.model.TransportEvent;
-import org.dcsa.ctk.consumer.model.EventTimeOffset;
-import org.dcsa.ctk.consumer.model.FullShipment;
+import org.dcsa.ctk.consumer.model.*;
+import org.dcsa.ctk.consumer.model.enums.EventTimeDuration;
+import org.dcsa.ctk.consumer.model.enums.TimeOffset;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -27,13 +25,13 @@ public class EventTimeUtility {
 
     private static FullShipment updateFullShipment(FullShipment fullShipment) {
         ShipmentEvent shipmentEvent =  fullShipment.getShipmentEvent();
-        if(shipmentEvent.getEventID() == null){
-            shipmentEvent.setEventID(UUID.randomUUID());
+        if(shipmentEvent.getEvent_id() == null){
+            shipmentEvent.setEvent_id(UUID.randomUUID());
         }
         fullShipment.setShipmentEvent(shipmentEvent);
         EquipmentEvent equipmentEvent = fullShipment.getEquipmentEvent();
-        if(equipmentEvent.getEventID() == null){
-            equipmentEvent.setEventID(UUID.randomUUID());
+        if(equipmentEvent.getEvent_id() == null){
+            equipmentEvent.setEvent_id(UUID.randomUUID());
         }
         if(equipmentEvent.getTransportCallID() == null && equipmentEvent.getTransportCall().getTransportCallID() == null){
             UUID transportCallId = UUID.randomUUID();
@@ -41,30 +39,30 @@ public class EventTimeUtility {
             equipmentEvent.setTransportCallID(transportCallId);
         }
         String lastFacilityId = SqlUtility.getLastFacilityId();
-        equipmentEvent.getTransportCall().setFacilityID(UUID.fromString(lastFacilityId));
-        equipmentEvent.getTransportCall().setVessel(SqlUtility.getLastVessel());
+        equipmentEvent.getTransportCall().setFacilityID(lastFacilityId);
+        equipmentEvent.getTransportCall().setVesselIMONumber(SqlUtility.getLastVesselImo());
         fullShipment.setEquipmentEvent(equipmentEvent);
         TransportEvent transportEvent = fullShipment.getTransportEvent();
         if(transportEvent.getEvent_id() == null){
             transportEvent.setEvent_id(UUID.randomUUID());
         }
-        if(transportEvent.getTransportCallID() == null && transportEvent.getTransportCall().getId() == null){
+        if(transportEvent.getTransportCallID() == null && transportEvent.getTransportCall().getTransportCallID() == null){
             UUID transportCallId = UUID.randomUUID();
-            transportEvent.getTransportCall().setId(transportCallId);
+            transportEvent.getTransportCall().setTransportCallID(transportCallId);
             transportEvent.setTransportCallID(transportCallId);
         }
-        transportEvent.getTransportCall().setFacilityID(UUID.fromString(lastFacilityId));
+        transportEvent.getTransportCall().setFacilityID(lastFacilityId);
         fullShipment.setTransportEvent(transportEvent);
         return fullShipment;
     }
 
     private  static ShipmentEvent shipmentEventUpdateTime(ShipmentEvent shipmentEvent, EventTimeOffset eventTimeOffset){
         if(eventTimeOffset.getTimeOffset() ==  TimeOffset.PAST){
-            shipmentEvent.setEventCreatedDateTime(setPastTime(OffsetDateTime.now(), eventTimeOffset, true));
-            shipmentEvent.setEventDateTime(setPastTime(shipmentEvent.getEventCreatedDateTime(), eventTimeOffset, false));
+            shipmentEvent.setEventCreatedDateTime(setPastTime(OffsetDateTime.now(), eventTimeOffset, true).toString());
+            shipmentEvent.setEventDateTime(setPastTime(shipmentEvent.getEventCreatedDateTime(), eventTimeOffset, false).toString());
         } else if(eventTimeOffset.getTimeOffset() ==  TimeOffset.FUTURE){
-            shipmentEvent.setEventCreatedDateTime(setFutureTime(OffsetDateTime.now(), eventTimeOffset));
-            shipmentEvent.setEventDateTime(setFutureTime(shipmentEvent.getEventCreatedDateTime(), eventTimeOffset));
+            shipmentEvent.setEventCreatedDateTime(setFutureTime(OffsetDateTime.now(), eventTimeOffset).toString());
+            shipmentEvent.setEventDateTime(setFutureTime(shipmentEvent.getEventCreatedDateTime(), eventTimeOffset).toString());
         }
         return  shipmentEvent;
     }

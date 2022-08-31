@@ -1,0 +1,16 @@
+{
+  "eventID":"784871e7-c9cd-4f59-8d88-2e033fa79999",
+  "eventType":"SHIPMENT",
+  "eventDateTime":"2020-07-15T00:00:00Z",
+  "eventCreatedDateTime":"2022-07-26T13:04:09.267832Z",
+  "eventClassifierCode":"ACT",
+  "shipmentEventTypeCode":"APPR",
+  "documentTypeCode":"BKG",
+  "documentID":"BR1239719971",
+  "reason":null,
+  "references":[
+  ],
+  "shipmentInformationTypeCode":"BOK",
+  "shipmentID":null,
+  "eventTypeCode":"APPR"
+}

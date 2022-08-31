@@ -1,0 +1,16 @@
+{
+    "eventID": "b785317a-2340-4db7-8fb3-c8dfb1edfa60",
+    "eventClassifierCode": "ACT",
+    "eventCreatedDateTime": "current_timestamp",
+    "eventDateTime": "TIMESTAMP '2022/06/23 21:02:44'",
+    "operationsEventTypeCode": "DEPA",
+    "transportCallID": "286c605e-4043-11eb-9c0b-7b4196cf71fa",
+    "publisherID": "be5bc290-7bac-48bb-a211-f3fa5a3ab3ae",
+    "publisherRole": "TR",
+    "portCallServiceTypeCode": "BUNK",
+    "eventLocationID": "06aca2f6-f1d0-48f8-ba46-9a3480adfd23",
+    "facilityTypeCode": "POTE",
+    "delayReasonCode": "ANA",
+    "vesselPositionID": "770b7624-403d-11eb-b44b-d3f4ad185386",
+    "remark": "This is example remark"
+  }

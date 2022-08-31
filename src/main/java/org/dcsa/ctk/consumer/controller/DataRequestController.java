@@ -1,6 +1,9 @@
 package org.dcsa.ctk.consumer.controller;
 
 import org.dcsa.ctk.consumer.init.AppProperty;
+import org.dcsa.ctk.consumer.model.enums.UploadType;
+import org.dcsa.ctk.consumer.service.sql.SqlInsertHandler;
+import org.dcsa.ctk.consumer.service.sql.SqlRemoveHandler;
 import org.dcsa.ctk.consumer.service.uploader.StorageService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

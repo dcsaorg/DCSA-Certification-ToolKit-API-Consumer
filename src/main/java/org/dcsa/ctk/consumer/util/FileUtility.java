@@ -1,5 +1,6 @@
 package org.dcsa.ctk.consumer.util;
 
+import lombok.extern.java.Log;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.io.*;
@@ -10,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 
+@Log
 public class FileUtility {
 
     public static String loadResourceAsString(String resource) {

@@ -1,0 +1,58 @@
+{
+    "eventID": "84db923d-2a19-4eb0-beb5-446c1ec57333",
+    "eventType": "EQUIPMENT",
+    "eventCreatedDateTime": "current_timestamp",
+    "eventDateTime": "TIMESTAMP '2019-11-12T07:41:00Z'",
+    "eventClassifierCode": "EST",
+    "equipmentEventTypeCode": "LOAD",
+    "equipmentReference": "APZU4812090",
+    "emptyIndicatorCode": "EMPTY",
+    "transportCallID": "b785317a-2340-4db7-8fb3-c8dfb1edfa66",
+    "transportCall": {
+        "transportCallID": "b785317a-2340-4db7-8fb3-c8dfb1edfa66",
+        "transportCallSequenceNumber": 1,
+        "facilityTypeCode": "POTE",
+        "otherFacility": null,
+        "carrierServiceCode": "A_CSC",
+        "carrierVoyageNumber": "A_carrier_voyage_number",
+        "facilityCode": "de6ee7e0-9185-416d-936e-c0e0047fa87a",
+        "facilityCodeListProvider": "SMDG",
+        "vessel": {
+            "vesselIMONumber": "9811000",
+            "vesselName": "Ever Given",
+            "vesselFlag": "PA",
+            "vesselCallSignNumber": "H3RC",
+            "vesselOperatorCarrierCode": "2f96594a-615d-4377-8f55-7899e02284c6",
+            "vesselOperatorCarrierCodeListProvider": "EMS"
+        },
+        "vesselIMONumber": "1234567",
+        "location": null,
+        "modeOfTransport": "1",
+        "UNLocationCode": "SGSIN"
+    },
+    "documentReferences": [
+        {
+            "documentReferenceType": "BKG",
+            "documentReferenceValue": "ABC123123123"
+        }
+    ],
+    "references": [
+        {
+            "referenceType": "FF",
+            "referenceValue": "string",
+            "shipmentID": "374eb6f3-b712-43fa-9ba5-c6188849cd17",
+            "shippingInstructionID": "01670315-a51f-4a11-b947-ce8e245128eb"
+
+        }
+    ],
+    "seals": [
+        {
+            "shipmentEquipmentId": "e0b81540-4066-11eb-9a35-7734806583a6",
+            "sealNumber": "SN123457",
+            "sealSource": "CUS",
+            "sealType": "WIR"
+        }
+    ],
+    "ISOEquipmentCode": "22G2",
+    "eventTypeCode": "LOAD"
+}

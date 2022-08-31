@@ -1,8 +1,8 @@
 package org.dcsa.ctk.consumer.util;
 
 import lombok.extern.java.Log;
-import org.dcsa.testdata.init.AppProperty;
-import org.dcsa.testdata.model.Vessel;
+import org.dcsa.core.events.model.Vessel;
+import org.dcsa.ctk.consumer.init.AppProperty;
 import org.springframework.util.StringUtils;
 
 import java.sql.ResultSet;
@@ -327,7 +327,7 @@ public class SqlUtility {
         });
     }
 
-    public static Vessel getLastVessel(){
+    public static String getLastVesselImo(){
         String selectLastVesselImo = "select * from vessel offset ((select count(*) from vessel)-1)";
         Vessel vessel = new Vessel();
         try (Statement statement = AppProperty.getConnection().createStatement()) {
@@ -336,7 +336,7 @@ public class SqlUtility {
                 vessel.setVesselIMONumber(resultSet.getString("vessel_imo_number"));
                 vessel.setVesselName(resultSet.getString("vessel_name"));
                 vessel.setVesselFlag(resultSet.getString("vessel_flag"));
-                vessel.setVesselCallSign(resultSet.getString("vessel_call_sign_number"));
+                vessel.setVesselCallSignNumber(resultSet.getString("vessel_call_sign_number"));
                 vessel.setVesselOperatorCarrierID(UUID.fromString(resultSet.getString("vessel_operator_carrier_id")));
             }
         }catch (SQLException e){
@@ -346,7 +346,7 @@ public class SqlUtility {
                 throw new RuntimeException(e);
             }
         }
-        return vessel;
+        return vessel.getVesselIMONumber();
     }
 
     public static void deleteTransportEventByTransportCallId(List<String> transportCallIds){

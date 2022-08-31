@@ -1,0 +1,121 @@
+{
+  "shipmentEvent":{
+    "eventID":"",
+    "eventType":"SHIPMENT",
+    "eventDateTime":"2022-08-17T09:44:40Z",
+    "eventCreatedDateTime":"2022-08-13T09:44:40Z",
+    "eventClassifierCode":"ACT",
+    "carrierBookingReference":null,
+    "documentID":"BR1239719971",
+    "documentTypeCode":"BKG",
+    "reason":null,
+    "references":[
+
+    ],
+    "documentReferences":null,
+    "shipmentID":null,
+    "newRecord":false,
+    "shipmentEventTypeCode":"APPR",
+    "shipmentInformationTypeCode":"BOK",
+    "eventTypeCode":"APPR"
+  },
+  "equipmentEvent":{
+    "eventID":"",
+    "eventType":"EQUIPMENT",
+    "eventDateTime":"2022-08-17T09:44:40Z",
+    "eventCreatedDateTime":"2022-08-13T09:44:40Z",
+    "eventClassifierCode":"EST",
+    "carrierBookingReference":null,
+    "equipmentEventTypeCode":"LOAD",
+    "equipmentReference":"APZU4812090",
+    "emptyIndicatorCode":"EMPTY",
+    "transportCallID":"",
+    "transportCall":{
+      "transportCallID":"",
+      "transportCallSequenceNumber":1,
+      "otherFacility":null,
+      "vessel":{
+        "vesselIMONumber":"9811000",
+        "vesselName":"Ever Given",
+        "vesselFlag":"PA",
+        "vesselCallSignNumber":"H3RC",
+        "vesselOperatorCarrierCode":"2f96594a-615d-4377-8f55-7899e02284c6",
+        "vesselOperatorCarrierCodeListProvider":"SMDG"
+      },
+      "facilityTypeCode":"POTE",
+      "facilityCode":"8a8d1efa-0660-4032-b628-ed8476e792c2",
+      "location":null,
+      "vesselIMONumber":"1234567",
+      "UNLocationCode":"SGSIN",
+      "modeOfTransport":"RAIL",
+      "carrierServiceCode":"A_CSC",
+      "carrierVoyageNumber":"A_carrier_voyage_number",
+      "facilityCodeListProvider":"SMDG"
+    },
+    "documentReferences":[
+      {
+        "documentReferenceType":"BKG",
+        "documentReferenceValue":"ABC123123123"
+      }
+    ],
+    "references":[
+      {
+        "referenceID":null,
+        "consignmentItemID":null,
+        "cargoItemID":null,
+        "referenceType":"FF",
+        "referenceValue":"string",
+        "shippingInstructionID":"01670315-a51f-4a11-b947-ce8e245128eb",
+        "shipmentID":"374eb6f3-b712-43fa-9ba5-c6188849cd17"
+      }
+    ],
+    "seals":[
+      {
+        "id":null,
+        "shipmentEquipmentId":"e0b81540-4066-11eb-9a35-7734806583a6",
+        "sealNumber":"SN123457",
+        "sealSource":"CUS",
+        "sealType":"WIR"
+      }
+    ],
+    "newRecord":false,
+    "ISOEquipmentCode":"22G2",
+    "eventTypeCode":"LOAD"
+  },
+  "transportEvent":{
+    "eventID": "",
+    "eventType": "TRANSPORT",
+    "eventDateTime": "2022-07-04T06:37:15.295467Z",
+    "eventCreatedDateTime": "2022-08-08T12:42:55.141801Z",
+    "eventClassifierCode": "ACT",
+    "transportEventTypeCode": "ARRI",
+    "delayReasonCode": "WEA",
+    "changeRemark": "Bad weather",
+    "transportCallID": "",
+    "transportCall": {
+      "transportCallID": "",
+      "transportCallSequenceNumber": 1,
+      "facilityTypeCode": "POTE",
+      "otherFacility": null,
+      "carrierServiceCode": null,
+      "carrierVoyageNumber": null,
+      "facilityCode": "8a8d1efa-0660-4032-b628-ed8476e792c2",
+      "facilityCodeListProvider": "SMDG",
+      "vessel": {
+        "vesselIMONumber": "1234567",
+        "vesselName": "King of the Seas",
+        "vesselFlag": "DE",
+        "vesselCallSignNumber": "NCVV",
+        "vesselOperatorCarrierCode": "5b80b59b-76cd-4003-8d10-c382b10704e9",
+        "vesselOperatorCarrierCodeListProvider": "SMDG"
+      },
+      "location": null,
+      "modeOfTransport": null,
+      "UNLocationCode": "ZAPLZ"
+    },
+    "documentReferences": [],
+    "references": [],
+    "eventTypeCode": "ARRI",
+    "vesselScheduleChangeRemark": "Bad weather"
+  }
+}

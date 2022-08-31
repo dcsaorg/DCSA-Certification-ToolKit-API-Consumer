@@ -1,0 +1,44 @@
+{
+  "eventID": "84db923d-2a19-4eb0-beb5-446c1ec57777",
+  "eventType": "TRANSPORT",
+  "eventCreatedDateTime": "current_timestamp",
+  "eventDateTime": "TIMESTAMP '2022-07-04T09:37:15.295467Z'",
+  "eventClassifierCode": "ACT",
+  "transportEventTypeCode": "ARRI",
+  "delayReasonCode": "WEA",
+  "changeRemark": "Bad weather",
+  "transportCallID": "8b64d20b-523b-4491-b2e5-32cfa5174eed",
+  "transportCall": {
+    "transportCallID": "8b64d20b-523b-4491-b2e5-32cfa5174eed",
+    "transportCallSequenceNumber": 1,
+    "facilityTypeCode": "POTE",
+    "otherFacility": null,
+    "carrierServiceCode": "A_CSC",
+    "carrierVoyageNumber": "A_carrier_voyage_number",
+    "facilityCode": "PSABT",
+    "facilityCodeListProvider": "SMDG",
+    "vessel": {
+      "vesselIMONumber": "1234567",
+      "vesselName": "King of the Seas",
+      "vesselFlag": "DE",
+      "vesselCallSignNumber": "NCVV",
+      "vesselOperatorCarrierCode": "fd22e15d-a664-4c27-b962-71a8fc6f4b77",
+      "vesselOperatorCarrierCodeListProvider": "SMDG"
+    },
+    "location": null,
+    "modeOfTransport": "VESSEL",
+    "UNLocationCode": "SGSIN"
+  },
+  "documentReferences": [
+    {
+      "documentReferenceType": "BKG",
+      "documentReferenceValue": "ABC123123123"
+    }
+  ],
+  "references": [
+    {
+      "referenceType": "FF",
+      "referenceValue": "string"
+    }
+  ]
+}

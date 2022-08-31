@@ -78,7 +78,14 @@ extent:
     spark:
       start: 'true'
 
-
-
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          servlet:
+            mvc:
+              method:
+                annotation: TRACE
 
 

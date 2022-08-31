@@ -1,0 +1,114 @@
+{
+  "shipmentEvent":{
+    "eventID":"784871e7-c9cd-4f59-8d88-2e033fa79999",
+    "eventType":"SHIPMENT",
+    "eventDateTime":"2022-08-17T09:44:40Z",
+    "eventCreatedDateTime":"2022-08-13T09:44:40Z",
+    "eventClassifierCode":"ACT",
+    "carrierBookingReference":null,
+    "documentID":"BR1239719971",
+    "documentTypeCode":"BKG",
+    "reason":null,
+    "references":[
+
+    ],
+    "documentReferences":null,
+    "shipmentID":null,
+    "newRecord":false,
+    "shipmentEventTypeCode":"APPR",
+    "shipmentInformationTypeCode":"BOK",
+    "eventTypeCode":"APPR"
+  },
+  "equipmentEvent":{
+    "eventType":"EQUIPMENT",
+    "eventDateTime":"2022-08-17T09:44:40Z",
+    "eventCreatedDateTime":"2022-08-13T09:44:40Z",
+    "eventClassifierCode":"EST",
+    "carrierBookingReference":null,
+    "equipmentEventTypeCode":"LOAD",
+    "equipmentReference":"APZU4812090",
+    "emptyIndicatorCode":"EMPTY",
+    "transportCallID":"b785317a-2340-4db7-8fb3-c8dfb1edfa66",
+    "transportCall":{
+      "transportCallSequenceNumber":1,
+      "otherFacility":null,
+      "vessel":{
+        "vesselIMONumber":"9811000",
+        "vesselName":"Ever Given",
+        "vesselFlag":"PA",
+        "vesselCallSignNumber":"H3RC",
+        "vesselOperatorCarrierCode":"2f96594a-615d-4377-8f55-7899e02284c6",
+        "vesselOperatorCarrierCodeListProvider":"EMS"
+      },
+      "transportCallID":"b785317a-2340-4db7-8fb3-c8dfb1edfa66",
+      "facilityTypeCode":"POTE",
+      "facilityCode":"465d01f8-dd4d-4c01-a399-5bac839d5797",
+      "location":null,
+      "vesselIMONumber":"1234567",
+      "UNLocationCode":"SGSIN",
+      "modeOfTransport":"RAIL",
+      "carrierServiceCode":"A_CSC",
+      "carrierVoyageNumber":"A_carrier_voyage_number",
+      "facilityCodeListProvider":"SMDG"
+    },
+    "documentReferences":[
+      {
+        "documentReferenceType":"BKG",
+        "documentReferenceValue":"ABC123123123"
+      }
+    ],
+    "references":[
+      {
+        "referenceID":null,
+        "consignmentItemID":null,
+        "cargoItemID":null,
+        "referenceType":"FF",
+        "referenceValue":"string",
+        "shippingInstructionID":"01670315-a51f-4a11-b947-ce8e245128eb",
+        "shipmentID":"374eb6f3-b712-43fa-9ba5-c6188849cd17"
+      }
+    ],
+    "seals":[
+      {
+        "id":null,
+        "shipmentEquipmentId":"e0b81540-4066-11eb-9a35-7734806583a6",
+        "sealNumber":"SN123457",
+        "sealSource":"CUS",
+        "sealType":"WIR"
+      }
+    ],
+    "newRecord":false,
+    "eventID":"84db923d-2a19-4eb0-beb5-446c1ec57333",
+    "ISOEquipmentCode":"22G2",
+    "eventTypeCode":"LOAD"
+  },
+  "transportEvent":{
+    "eventID": "84db923d-2a19-4eb0-beb5-446c1ec58888",
+    "eventType": "TRANSPORT",
+    "eventDateTime": "2022-07-04T06:37:15.295467Z",
+    "eventCreatedDateTime": "2022-08-08T12:42:55.141801Z",
+    "eventClassifierCode": "ACT",
+    "transportEventTypeCode": "ARRI",
+    "delayReasonCode": "WEA",
+    "changeRemark": "Bad weather",
+    "transportCallID": "b785317a-2340-4db7-8fb3-c8dfb1edfa60",
+    "transportCall": {
+      "transportCallID": "b785317a-2340-4db7-8fb3-c8dfb1edfa60",
+      "transportCallSequenceNumber": 1,
+      "facilityTypeCode": "POTE",
+      "otherFacility": null,
+      "carrierServiceCode": null,
+      "carrierVoyageNumber": null,
+      "facilityCode": "465d01f8-dd4d-4c01-a399-5bac839d5797",
+      "facilityCodeListProvider": "SMDG",
+      "vessel": null,
+      "location": null,
+      "modeOfTransport": null,
+      "UNLocationCode": "ZAPLZ"
+    },
+    "documentReferences": [],
+    "references": [],
+    "eventTypeCode": "ISSU",
+    "vesselScheduleChangeRemark": "Bad weather"
+  }
+}
