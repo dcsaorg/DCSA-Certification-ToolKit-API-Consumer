@@ -20,13 +20,12 @@ public class FileUploadServiceImpl implements FileUploadService {
     public FileUploadServiceImpl(SqlInsertHandler sqlInsertHandler) {
         this.sqlInsertHandler = sqlInsertHandler;
     }
-    public Mono<List<String>> getLines(FilePart filePart) {
+    public Mono<List<String>> readJson(FilePart filePart) {
        return filePart.content()
                 .map(dataBuffer -> {
                     byte[] bytes = new byte[dataBuffer.readableByteCount()];
                     dataBuffer.read(bytes);
                     DataBufferUtils.release(dataBuffer);
-
                     return new String(bytes, StandardCharsets.UTF_8);
                 })
                .map( item -> insertIntoDb(item, filePart.filename()))
