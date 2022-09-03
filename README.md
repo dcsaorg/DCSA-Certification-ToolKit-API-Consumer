@@ -44,6 +44,14 @@ docker tag <image_name>:latest docker.pkg.github.com/<user_name>/<repo_name>/ctk
 docker push docker.pkg.github.com/<user_name>/<repo_name>/ctk-db:<tagname>
 ```
 
+Utility for generating and loading test data. Primarily for use with conformance tooling.
+
+It will find all JSON file recursively and perform POST request from  current directory   
+`.\upload.ps1`
+
+Pass the json file as parameter (-Param1 jsonFullShipment.json)   
+`.\uploadShipmentEvent.ps1 -Param1 jsonFullShipment.json`
+
 
 We have already a repo for this, we can cintinue to use the same 
 https://github.com/deepakdcsa/ctk-docker-registry.git
