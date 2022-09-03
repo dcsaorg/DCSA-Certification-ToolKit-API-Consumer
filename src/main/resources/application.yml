@@ -42,6 +42,7 @@ spring:
           issuer-uri: https://dcsa.eu.auth0.com/
   webflux:
     base-path: ${dcsa.url.prefix:}
+  upload_config_path: config/uploaded
 
 auth0:
   audience: localhost
@@ -77,15 +78,4 @@ extent:
   reporter:
     spark:
       start: 'true'
-
-logging:
-  level:
-    org:
-      springframework:
-        web:
-          servlet:
-            mvc:
-              method:
-                annotation: TRACE
-
 

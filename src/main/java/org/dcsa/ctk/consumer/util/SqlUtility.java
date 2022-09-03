@@ -441,7 +441,7 @@ public class SqlUtility {
         String deleteTransportById = "DELETE FROM dcsa_im_v3_0.transport_call where id = "+
                                         StringUtils.quote(transportById);
         updateRow(deleteTransportById);
-    }
+        }
 
     public static void deleteTransportCallVoyageByTransportCallId(String transportCallId){
         String deleteTransportCallByImo = "DELETE FROM dcsa_im_v3_0.transport_call_voyage WHERE transport_call_id = "+
@@ -527,5 +527,93 @@ public class SqlUtility {
     public static void removeAllEventId(String tableName){
         int count = SqlUtility.getTableRowCount(tableName);
         SqlUtility.deleteTableAllRow(tableName, "id", count);
+    }
+
+    public static String getShipmentIdByReferenceType(String ReferenceType){
+        String selectShipmentId = "select shipment_id from dcsa_im_v3_0.references where reference_type = "+
+                                        StringUtils.quote(ReferenceType);
+        String shipmentId = "";
+        try (Statement statement = AppProperty.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectShipmentId);
+            while (resultSet.next()) {
+                shipmentId = resultSet.getString("shipment_id");
+            }
+        }catch (SQLException e){
+            if(e.getMessage().contains("OFFSET must not be negative")){
+                return  null;
+            }else {
+                throw new RuntimeException(e);
+            }
+        }
+        return shipmentId;
+    }
+
+    public static boolean isShipmentExist(String shipmentId){
+        String selectShipmentId = "select id from dcsa_im_v3_0.shipment where id = "+
+                StringUtils.quote(shipmentId);
+        String selectedShipmentId = "";
+        try (Statement statement = AppProperty.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectShipmentId);
+            while (resultSet.next()) {
+                selectedShipmentId = resultSet.getString("id");
+            }
+        }catch (SQLException e){
+            if(e.getMessage().contains("OFFSET must not be negative")){
+                return false;
+            }else {
+                throw new RuntimeException(e);
+            }
+        }
+        if(selectedShipmentId.length() > 0){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public static boolean isReferenceExist(String shipmentId){
+        String selectShipmentId = "select shipment_id from dcsa_im_v3_0.references where shipment_id = "+
+                StringUtils.quote(shipmentId);
+        String selectedShipmentId = "";
+        try (Statement statement = AppProperty.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectShipmentId);
+            while (resultSet.next()) {
+                selectedShipmentId = resultSet.getString("shipment_id");
+            }
+        }catch (SQLException e){
+            if(e.getMessage().contains("OFFSET must not be negative")){
+                return false;
+            }else {
+                throw new RuntimeException(e);
+            }
+        }
+        if(selectedShipmentId.length() > 0){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public static boolean isShipmentEquipmentExist(String shipmentEquipmentEd){
+        String selectShipmentId = "select shipment_equipment_id from dcsa_im_v3_0.shipment_equipment where shipment_equipment_id = "+
+                StringUtils.quote(shipmentEquipmentEd);
+        String selectedShipmentEquipmentEd = "";
+        try (Statement statement = AppProperty.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectShipmentId);
+            while (resultSet.next()) {
+                selectedShipmentEquipmentEd = resultSet.getString("shipment_equipment_id");
+            }
+        }catch (SQLException e){
+            if(e.getMessage().contains("OFFSET must not be negative")){
+                return false;
+            }else {
+                throw new RuntimeException(e);
+            }
+        }
+        if(selectedShipmentEquipmentEd.length() > 0){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

@@ -9,7 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.servlet.MultipartConfigElement;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -52,6 +56,18 @@ public class AppProperty {
 
         AppProperty.DATABASE_USER_NAME = username;
         AppProperty.DATABASE_PASSWORD = password;
+        AppProperty.UPLOAD_CONFIG_PATH = upload_config_path;
+        makeUploadPath();
+    }
+
+    private static void makeUploadPath(){
+        uploadPath = Paths.get(AppProperty.UPLOAD_CONFIG_PATH);
+        try {
+            Files.createDirectories(uploadPath);
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Could not initialize storage ", e);
+        }
     }
 
     public static Connection getConnection() {
@@ -66,6 +82,10 @@ public class AppProperty {
             System.out.println("Connection init error: "+e.getMessage());
         }
         return connection;
+    }
+
+    @Bean public MultipartConfigElement multipartConfigElement() {
+        return new MultipartConfigElement("");
     }
 
   /*  @Bean
