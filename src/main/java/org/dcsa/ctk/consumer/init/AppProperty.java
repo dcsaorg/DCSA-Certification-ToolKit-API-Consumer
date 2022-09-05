@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.MultipartConfigElement;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +18,7 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 @Data
 @Log
@@ -27,6 +29,8 @@ public class AppProperty {
     public static Connection connection = null;
 
     private static final String UPLOAD_CONFIG_PATH_NAME_KEY = "app.upload_config_path";
+
+    public static final String CTK_SUBSCRIPTION_TABLE = "ctk_event_subscription";
     public static String DATABASE_URL;
     public static String DATABASE_USER_NAME;
     public static String DATABASE_PASSWORD;
@@ -44,7 +48,7 @@ public class AppProperty {
     @Value("${spring.r2dbc.properties.schema}")
     public String schema;
 
-    public void init(){
+     public void init(){
         String evnApiRootUri = System.getenv("DB_HOST_IP");
         if(evnApiRootUri != null){
             AppProperty.DATABASE_URL = url.replace("localhost", evnApiRootUri) ;
@@ -83,13 +87,9 @@ public class AppProperty {
         }
         return connection;
     }
-
-    @Bean public MultipartConfigElement multipartConfigElement() {
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
         return new MultipartConfigElement("");
     }
 
-  /*  @Bean
-    public WebClient localApiClient() {
-        return WebClient.create("http://localhost:9090/v2/");
-    }*/
 }

@@ -5,6 +5,7 @@ import org.dcsa.ctk.consumer.model.enums.UploadType;
 import org.dcsa.ctk.consumer.service.sql.SqlInsertHandler;
 import org.dcsa.ctk.consumer.service.sql.SqlRemoveHandler;
 import org.dcsa.ctk.consumer.service.uploader.FileUploadService;
+import org.dcsa.ctk.consumer.util.SqlUtility;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,7 @@ public class DataRequestController {
         this.sqlRemoveHandler = sqlRemoveHandler;
         this.appProperty = appProperty;
         this.appProperty.init();
+        SqlUtility.makeTableIfNotExist();
     }
 
     @PostMapping(value = POST_JSON_SHIPMENT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

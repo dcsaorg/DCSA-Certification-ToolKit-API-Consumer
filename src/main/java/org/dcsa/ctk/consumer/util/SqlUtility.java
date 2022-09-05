@@ -3,6 +3,7 @@ package org.dcsa.ctk.consumer.util;
 import lombok.extern.java.Log;
 import org.dcsa.core.events.model.Vessel;
 import org.dcsa.ctk.consumer.init.AppProperty;
+import org.dcsa.ctk.consumer.model.EventSubscription;
 import org.springframework.util.StringUtils;
 
 import java.sql.ResultSet;
@@ -12,6 +13,54 @@ import java.util.*;
 
 @Log
 public class SqlUtility {
+    public static final String CTK_SUBSCRIPTION_TABLE = "dcsa_im_v3_0.ctk_event_subscription";
+    static public void makeTableIfNotExist() {
+        String tableCreate = "DROP TABLE IF EXISTS "+CTK_SUBSCRIPTION_TABLE+" CASCADE;"
+                            + "CREATE TABLE IF NOT EXISTS "+CTK_SUBSCRIPTION_TABLE
+                            + "(subscription_id            VARCHAR(48),"
+                            + "callback_url                VARCHAR(160),"
+                            + "secret                      VARCHAR(80))";
+        Statement stmt;
+        try {
+            stmt = AppProperty.getConnection().createStatement();
+            stmt.execute(tableCreate);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    static public String insetSubscription(EventSubscription eventSubscription){
+       String encryptedSecret = CipherUtil.encrypt(eventSubscription.getSecret());
+        String insertIntoSubscription = "INSERT INTO dcsa_im_v3_0.ctk_event_subscription"
+                                        + "(subscription_id, callback_url, secret)"
+                                        +"VALUES("+StringUtils.quote(eventSubscription.getSubscriptionId())+","
+                                        + StringUtils.quote(eventSubscription.getCallbackUrl())+","
+                                        +  StringUtils.quote(encryptedSecret)+")";
+        if(updateRow(insertIntoSubscription) > 0){
+            return "A new EventSubscription is inserted with subscriptionId: "+eventSubscription.getSubscriptionId();
+        }else {
+            return "";
+        }
+    }
+
+    static public EventSubscription getEventSubscriptionBySubscriptionId(String subscriptionId){
+        EventSubscription eventSubscription = new EventSubscription();
+        String selectEventSubscription = "select * from "+CTK_SUBSCRIPTION_TABLE+" where subscription_id = "
+                                            +StringUtils.quote(subscriptionId);
+
+        try (Statement statement = AppProperty.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectEventSubscription);
+            while (resultSet.next()) {
+                eventSubscription.setSubscriptionId(resultSet.getString("subscription_id"));
+                eventSubscription.setCallbackUrl(resultSet.getString("callback_url"));
+                eventSubscription.setSecret(CipherUtil.decrypt(resultSet.getString("secret")));
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return eventSubscription;
+    }
+
     public static int updateRow(String deleteStatement){
         int effectedRow = 0;
         try( Statement statement = AppProperty.getConnection().createStatement()){
