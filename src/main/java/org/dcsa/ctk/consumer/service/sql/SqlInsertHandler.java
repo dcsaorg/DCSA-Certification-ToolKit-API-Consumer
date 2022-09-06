@@ -384,7 +384,7 @@ public class SqlInsertHandler {
 
     private String processTransportCall(TransportCall transportCall) throws Exception {
         StringBuilder result = new StringBuilder();
-        SqlUtility.chcekDeleteTransportCallIfExist((transportCall.getId().toString()));
+        SqlUtility.checkDeleteTransportCallIfExist((transportCall.getId().toString()));
         result.append(insetIntoTransportCall(transportCall));
         return result.toString();
     }

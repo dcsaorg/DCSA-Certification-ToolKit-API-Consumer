@@ -18,8 +18,8 @@ public class SqlUtility {
         String tableCreate = "DROP TABLE IF EXISTS "+CTK_SUBSCRIPTION_TABLE+" CASCADE;"
                             + "CREATE TABLE IF NOT EXISTS "+CTK_SUBSCRIPTION_TABLE
                             + "(subscription_id            VARCHAR(48),"
-                            + "callback_url                VARCHAR(160),"
-                            + "secret                      VARCHAR(80))";
+                            + "callback_url                VARCHAR(256),"
+                            + "secret                      VARCHAR(256))";
         Statement stmt;
         try {
             stmt = AppProperty.getConnection().createStatement();
@@ -61,18 +61,18 @@ public class SqlUtility {
         return eventSubscription;
     }
 
-    public static int updateRow(String deleteStatement){
+    public static int updateRow(String sqlStatement){
         int effectedRow = 0;
         try( Statement statement = AppProperty.getConnection().createStatement()){
-            effectedRow = statement.executeUpdate(deleteStatement);
-            log.info(deleteStatement+" was successfully updated "+effectedRow+" rows!");
+            effectedRow = statement.executeUpdate(sqlStatement);
+            log.info(sqlStatement+" was successfully updated "+effectedRow+" rows!");
         }catch (SQLException e){
-            log.severe(deleteStatement+" was failed!");
+            log.severe(sqlStatement+" was failed!");
             throw new RuntimeException(e);
         }
         return effectedRow;
     }
-    public static boolean chcekDeleteTransportCallIfExist(String id) {
+    public static boolean checkDeleteTransportCallIfExist(String id) {
         String transportCallId = "";
         String selectTransportCallById = "SELECT id FROM dcsa_im_v3_0.transport_call where id = " +
                 StringUtils.quote(id);

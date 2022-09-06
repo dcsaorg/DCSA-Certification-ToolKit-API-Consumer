@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.ctk.consumer.init.AppProperty;
 import org.dcsa.ctk.consumer.model.CheckListItem;
+import org.dcsa.ctk.consumer.model.EventSubscription;
 import org.dcsa.ctk.consumer.reporter.ExtentReportManager;
 import org.dcsa.ctk.consumer.reporter.Reporter;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
@@ -13,6 +14,7 @@ import org.dcsa.ctk.consumer.service.log.CustomLogger;
 import org.dcsa.ctk.consumer.service.tnt.TNTEventSubscriptionToService;
 import org.dcsa.ctk.consumer.util.FileUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;
+import org.dcsa.ctk.consumer.util.SqlUtility;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -57,7 +60,12 @@ public class TNTEventSubscriptionTOControllerProxy {
         String route = "/event-subscriptions";
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(obj, response, request, checkListItem, route);
+        EventSubscription eventSubscription = new EventSubscription();
+        eventSubscription.setCallbackUrl(((LinkedHashMap<?, ?>) obj).get((("callbackUrl"))).toString());
+        eventSubscription.setSecret((((LinkedHashMap<?, ?>) obj).get((("secret"))).toString()));
         Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
+        eventSubscription.setSubscriptionId(responseMap.get("subscriptionID").toString());
+        SqlUtility.insetSubscription(eventSubscription);
         customLogger.log(responseMap, response, request);
         return responseMap;
     }
