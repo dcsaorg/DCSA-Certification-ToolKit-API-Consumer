@@ -1,4 +1,4 @@
-package org.dcsa.ctk.consumer.config.callback;
+package org.dcsa.ctk.consumer.callback;
 
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;

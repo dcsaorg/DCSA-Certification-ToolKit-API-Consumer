@@ -1,7 +1,7 @@
 package org.dcsa.ctk.consumer.notification.sender;
 
 import org.dcsa.core.events.model.enums.EventType;
-import org.dcsa.ctk.consumer.config.callback.ApplicationContextProvider;
+import org.dcsa.ctk.consumer.callback.ApplicationContextProvider;
 import org.dcsa.ctk.consumer.notification.sender.impl.EquipmentNotificationSubscriber;
 import org.dcsa.ctk.consumer.notification.sender.impl.ShipmentNotificationSubscriber;
 import org.dcsa.ctk.consumer.notification.sender.impl.TransportNotificationSubscriber;

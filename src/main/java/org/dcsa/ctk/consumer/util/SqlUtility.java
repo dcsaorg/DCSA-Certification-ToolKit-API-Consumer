@@ -2,7 +2,7 @@ package org.dcsa.ctk.consumer.util;
 
 import lombok.extern.java.Log;
 import org.dcsa.core.events.model.Vessel;
-import org.dcsa.ctk.consumer.init.AppProperty;
+import org.dcsa.ctk.consumer.config.AppProperty;
 import org.dcsa.ctk.consumer.model.EventSubscription;
 import org.springframework.util.StringUtils;
 

@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException;
 @Slf4j
 public class CallBackServiceImpl implements CallBackService {
 
-    @Value("${pubSubFlag}")
+    @Value("${spring.pubSubFlag}")
     boolean pubSubFlag;
     private final  WebClient webClient;
 

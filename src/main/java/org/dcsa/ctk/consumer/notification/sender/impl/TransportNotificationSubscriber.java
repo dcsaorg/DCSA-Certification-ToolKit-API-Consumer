@@ -3,13 +3,11 @@ package org.dcsa.ctk.consumer.notification.sender.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.dcsa.ctk.consumer.config.callback.ApplicationContextProvider;
-import org.dcsa.ctk.consumer.config.callback.CallBackConfig;
+import org.dcsa.ctk.consumer.callback.CallBackConfig;
 import org.dcsa.ctk.consumer.notification.sender.NotificationSubscriber;
 import org.dcsa.ctk.consumer.util.EventUtility;
 import org.dcsa.ctk.consumer.util.SignatureUtility;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 

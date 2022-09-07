@@ -1,10 +1,8 @@
 package org.dcsa.ctk.consumer.util;
 
 import lombok.Data;
-import org.dcsa.ctk.consumer.model.CheckListItem;
-import org.dcsa.ctk.consumer.model.ResponseDecoratorWrapper;
-import org.dcsa.ctk.consumer.model.TestCase;
-import org.dcsa.ctk.consumer.model.TestConfig;
+import org.dcsa.ctk.consumer.model.*;
+import org.dcsa.ctk.consumer.webhook.SparkWebHook;
 import org.springframework.validation.annotation.Validated;
 
 import java.text.ParseException;
@@ -67,5 +65,13 @@ public class APIUtility {
             return true;
         else
             return false;
+    }
+    public static void runWebHook() throws Exception {
+        CallbackContext callbackContext;
+        SparkWebHook sparkWebHook;
+        callbackContext = new CallbackContext();
+        sparkWebHook = new SparkWebHook();
+        sparkWebHook.startServer();
+        sparkWebHook.setContext(callbackContext);
     }
 }

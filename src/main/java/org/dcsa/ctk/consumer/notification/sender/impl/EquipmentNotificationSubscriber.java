@@ -3,8 +3,7 @@ package org.dcsa.ctk.consumer.notification.sender.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.dcsa.ctk.consumer.config.callback.ApplicationContextProvider;
-import org.dcsa.ctk.consumer.config.callback.CallBackConfig;
+import org.dcsa.ctk.consumer.callback.CallBackConfig;
 import org.dcsa.ctk.consumer.notification.sender.NotificationSubscriber;
 import org.dcsa.ctk.consumer.util.EventUtility;
 import org.dcsa.ctk.consumer.util.SignatureUtility;
@@ -40,7 +39,7 @@ public class EquipmentNotificationSubscriber implements NotificationSubscriber {
 
         HttpStatus statusCode=restTemplate
                 .exchange(callbackUrl, HttpMethod.POST,entity,String.class).getStatusCode();
-        if(statusCode!=HttpStatus.OK)
+        if(statusCode!=HttpStatus.CREATED)
         {
             log.error("Error received while sending notification:{}",statusCode);
         }
