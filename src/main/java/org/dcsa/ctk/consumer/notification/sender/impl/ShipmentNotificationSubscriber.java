@@ -3,7 +3,6 @@ package org.dcsa.ctk.consumer.notification.sender.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.dcsa.ctk.consumer.callback.CallBackConfig;
 import org.dcsa.ctk.consumer.config.AppProperty;
 import org.dcsa.ctk.consumer.notification.sender.NotificationSubscriber;
 import org.dcsa.ctk.consumer.util.EventUtility;
