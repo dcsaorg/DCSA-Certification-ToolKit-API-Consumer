@@ -6,6 +6,8 @@ import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.dcsa.ctk.consumer.config.AppProperty;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -24,11 +26,8 @@ import java.security.cert.X509Certificate;
 
 @Configuration
 public class CallBackConfig {
-    public static long notificationTriggerTime = 10000;
-
     @Bean
     public WebClient createWebClient() throws SSLException {
-
         SslContext sslContext = SslContextBuilder
                 .forClient()
                 .trustManager(InsecureTrustManagerFactory.INSTANCE)

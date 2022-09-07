@@ -43,15 +43,16 @@ spring:
   webflux:
     base-path: ${dcsa.url.prefix:}
   upload_config_path: config/uploaded
-  callback_port: '9999'
+  callback_port: 9999
   callback_uri: http://localhost
   test_data: config/v2/testdata.json
   event_subscription_simulation: 'true'
   config_data: config/v2/config.json
   test_suite_name: TNT-TestSuite.xml
   api_root_uri: http://localhost:9090
-  callback_wait: '3000'
+  callback_wait: 3000
   pubSubFlag: true
+  notificationTriggerTime: 5000
 
 auth0:
   audience: localhost

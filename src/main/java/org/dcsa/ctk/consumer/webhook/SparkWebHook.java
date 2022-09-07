@@ -15,7 +15,7 @@ public class SparkWebHook {
 
     public void  startServer() {
         Service http = ignite()
-                .port(Integer.parseInt(AppProperty.CALLBACK_PORT.trim()))
+                .port(AppProperty.CALLBACK_PORT)
                 .threadPool(20);
 
         http.post(AppProperty.CALLBACK_PATH+"/:uuid", (req, res) -> {
