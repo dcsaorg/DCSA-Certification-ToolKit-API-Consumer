@@ -4,6 +4,7 @@ import lombok.extern.java.Log;
 import org.dcsa.core.events.model.Vessel;
 import org.dcsa.ctk.consumer.config.AppProperty;
 import org.dcsa.ctk.consumer.model.EventSubscription;
+import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.util.StringUtils;
 
 import java.sql.ResultSet;
@@ -14,12 +15,28 @@ import java.util.*;
 @Log
 public class SqlUtility {
     public static final String CTK_SUBSCRIPTION_TABLE = "dcsa_im_v3_0.ctk_event_subscription";
+
+    private static final String INSET_INTO_CTK_SUBSCRIPTION = "INSERT INTO "+CTK_SUBSCRIPTION_TABLE +
+                                                                "(subscription_id, " +
+                                                                "callback_url, " +
+                                                                "secret, " +
+                                                                "carrier_booking_reference, " +
+                                                                "equipment_reference, " +
+                                                                "transport_call_id, " +
+                                                                "carrier_service_code, " +
+                                                                "vessel_imo_number) " +
+                                                                "VALUES(";
     static public void makeTableIfNotExist() {
-        String tableCreate = "DROP TABLE IF EXISTS "+CTK_SUBSCRIPTION_TABLE+" CASCADE;"
-                            + "CREATE TABLE IF NOT EXISTS "+CTK_SUBSCRIPTION_TABLE
-                            + "(subscription_id            VARCHAR(48),"
-                            + "callback_url                VARCHAR(256),"
-                            + "secret                      VARCHAR(256))";
+        String tableCreate = //"DROP TABLE IF EXISTS "+CTK_SUBSCRIPTION_TABLE+" CASCADE;"
+                            "CREATE TABLE IF NOT EXISTS "+CTK_SUBSCRIPTION_TABLE
+                            +"(subscription_id             VARCHAR(48),"
+                            +"callback_url                 VARCHAR(256),"
+                            +"secret                       VARCHAR(256),"
+                            +"carrier_booking_reference     VARCHAR(35),"
+                            +"equipment_reference           VARCHAR(15),"
+                            +"transport_call_id             VARCHAR(100),"
+                            +"carrier_service_code          VARCHAR(5),"
+                            +"vessel_imo_number             VARCHAR(7))";
         Statement stmt;
         try {
             stmt = AppProperty.getConnection().createStatement();
@@ -29,18 +46,81 @@ public class SqlUtility {
         }
     }
 
+
     static public String insetSubscription(EventSubscription eventSubscription){
-       String encryptedSecret = CipherUtil.encrypt(eventSubscription.getSecret());
-        String insertIntoSubscription = "INSERT INTO dcsa_im_v3_0.ctk_event_subscription"
-                                        + "(subscription_id, callback_url, secret)"
-                                        +"VALUES("+StringUtils.quote(eventSubscription.getSubscriptionId())+","
+       String encryptedSecret = CipherUtil.encrypt(eventSubscription.getPlainSecret());
+       String callBackUuid =  APIUtility.getCallBackUuid(eventSubscription.getCallbackUrl());
+       String insertIntoSubscription = INSET_INTO_CTK_SUBSCRIPTION
+                                        + StringUtils.quote(eventSubscription.getSubscriptionID().toString())+","
                                         + StringUtils.quote(eventSubscription.getCallbackUrl())+","
-                                        +  StringUtils.quote(encryptedSecret)+")";
+                                        + StringUtils.quote(encryptedSecret)+","
+                                        + StringUtils.quote(eventSubscription.getCarrierBookingReference())+","
+                                        + StringUtils.quote(eventSubscription.getEquipmentReference())+","
+                                        + StringUtils.quote(eventSubscription.getTransportCallID())+","
+                                        + StringUtils.quote(eventSubscription.getCarrierServiceCode())+","
+                                        + StringUtils.quote(eventSubscription.getVesselIMONumber())+")";
+                                       // + StringUtils.quote(callBackUuid)+")";
         if(updateRow(insertIntoSubscription) > 0){
-            return "A new EventSubscription is inserted with subscriptionId: "+eventSubscription.getSubscriptionId();
+            return "A new EventSubscription is inserted with subscriptionId: "+eventSubscription.getSubscriptionID().toString();
         }else {
             return "";
         }
+    }
+
+    static public String getSubscriptionCallBackUuid(String subscriptionId){
+        String selectEventSubscription = "select * from "+CTK_SUBSCRIPTION_TABLE+" where subscription_id = "
+                +StringUtils.quote(subscriptionId);
+        String callBackUrl = "";
+        try (Statement statement = AppProperty.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectEventSubscription);
+            while (resultSet.next()) {
+                callBackUrl =  resultSet.getString("callback_url");
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        String uuid = "";
+        if(callBackUrl.length() > 0){
+           uuid = APIUtility.getCallBackUuid(callBackUrl);
+        }
+        return uuid;
+    }
+
+    static public TNTEventSubscriptionTO updateEventSubscription (TNTEventSubscriptionTO tntEventSubscriptionTO){
+        EventSubscription eventSubscription = getEventSubscriptionBySubscriptionId(tntEventSubscriptionTO.getSubscriptionID().toString());
+        if(eventSubscription.getSubscriptionID() != null) {
+            String updateEventSubscriptionSql = "UPDATE " + CTK_SUBSCRIPTION_TABLE + " SET " +
+                    "subscription_id = " + StringUtils.quote(tntEventSubscriptionTO.getSubscriptionID().toString()) + "," +
+                    "callback_url = " + StringUtils.quote(tntEventSubscriptionTO.getCallbackUrl()) + "," +
+                    "carrier_booking_reference = " + StringUtils.quote(tntEventSubscriptionTO.getCarrierBookingReference()) + "," +
+                    "equipment_reference = " + StringUtils.quote(tntEventSubscriptionTO.getEquipmentReference()) + "," +
+                    "transport_call_id = " + StringUtils.quote(tntEventSubscriptionTO.getTransportCallID()) + "," +
+                    "carrier_service_code = " + StringUtils.quote(tntEventSubscriptionTO.getCarrierServiceCode()) + "," +
+                    "vessel_imo_number = " + StringUtils.quote(tntEventSubscriptionTO.getVesselIMONumber());
+            if (updateRow(updateEventSubscriptionSql) > 0) {
+                return tntEventSubscriptionTO;
+            }
+        }
+        return null;
+    }
+
+    static public String getCallBackUrlIfExist(String callBackUrl){
+        String selectCallBackUrl = "select callback_url from "+CTK_SUBSCRIPTION_TABLE+" where callback_url = "
+                                            +StringUtils.quote(callBackUrl);
+        String callBack = "";
+        try (Statement statement = AppProperty.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectCallBackUrl);
+            while (resultSet.next()) {
+                callBack =  resultSet.getString("callback_url");
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+
+        if(callBack.length() > 0){
+          return callBack;
+        }
+        return "";
     }
 
     static public EventSubscription getEventSubscriptionBySubscriptionId(String subscriptionId){
@@ -51,9 +131,9 @@ public class SqlUtility {
         try (Statement statement = AppProperty.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectEventSubscription);
             while (resultSet.next()) {
-                eventSubscription.setSubscriptionId(resultSet.getString("subscription_id"));
+                eventSubscription.setSubscriptionID(UUID.fromString(resultSet.getString("subscription_id")));
                 eventSubscription.setCallbackUrl(resultSet.getString("callback_url"));
-                eventSubscription.setSecret(CipherUtil.decrypt(resultSet.getString("secret")));
+                eventSubscription.setPlainSecret(CipherUtil.decrypt(resultSet.getString("secret")));
             }
         }catch (SQLException e){
             throw new RuntimeException(e);

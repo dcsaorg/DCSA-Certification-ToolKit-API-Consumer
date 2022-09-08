@@ -67,12 +67,9 @@ public class TNTEventSubscriptionTOControllerProxy {
         String route = "/event-subscriptions";
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(obj, response, request, checkListItem, route);
-        EventSubscription eventSubscription = new EventSubscription();
-        eventSubscription.setCallbackUrl(((LinkedHashMap<?, ?>) obj).get((("callbackUrl"))).toString());
-        eventSubscription.setSecret((((LinkedHashMap<?, ?>) obj).get((("secret"))).toString()));
-        Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
-        eventSubscription.setSubscriptionId(responseMap.get("subscriptionID").toString());
-        SqlUtility.insetSubscription(eventSubscription);
+        EventSubscription eventSubscription = APIUtility.getEventSubscription(obj);
+        Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj),
+                                            response, request, checkListItem, eventSubscription);
         customLogger.log(responseMap, response, request);
         return responseMap;
     }

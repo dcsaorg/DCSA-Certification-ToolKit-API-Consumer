@@ -74,7 +74,7 @@ public class AppProperty {
         AppProperty.UPLOAD_CONFIG_PATH = upload_config_path;
         AppProperty.PUB_SUB_FLAG = pubSubFlag;
         AppProperty.NOTIFICATION_TRIGGER_TIME = notificationTriggerTime;
-        CALLBACK_PATH = "/v"+API_VERSION.split("\\.")[0]+"/notification-endpoints/receive";
+        CALLBACK_PATH = "/v"+API_VERSION.split("\\.")[0]+"/notification-endpoints/receive/";
 
         String evnApiRootUri = System.getenv("DB_HOST_IP");
         if(evnApiRootUri != null){

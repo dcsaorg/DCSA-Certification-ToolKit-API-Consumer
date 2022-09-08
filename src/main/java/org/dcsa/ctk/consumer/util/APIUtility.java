@@ -1,14 +1,18 @@
 package org.dcsa.ctk.consumer.util;
 
 import lombok.Data;
+import lombok.extern.java.Log;
 import org.dcsa.ctk.consumer.model.*;
 import org.dcsa.ctk.consumer.webhook.SparkWebHook;
+import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.validation.annotation.Validated;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
+@Log
 @Data
 @Validated
 public class APIUtility {
@@ -66,12 +70,48 @@ public class APIUtility {
         else
             return false;
     }
-    public static void runWebHook() throws Exception {
+    public static void runWebHook() {
         CallbackContext callbackContext;
         SparkWebHook sparkWebHook;
         callbackContext = new CallbackContext();
         sparkWebHook = new SparkWebHook();
         sparkWebHook.startServer();
         sparkWebHook.setContext(callbackContext);
+    }
+
+    static public EventSubscription getEventSubscription(Object obj){
+        EventSubscription eventSubscription;
+        try {
+            eventSubscription = JsonUtility.convertTo(EventSubscription.class, obj);
+            var secret = ((LinkedHashMap<?, ?>) obj).get((("secret")));
+            if( secret != null) {
+                eventSubscription.setPlainSecret((((LinkedHashMap<?, ?>) obj).get((("secret"))).toString()));
+            }
+        }catch (Exception e){
+            log.severe(e.getMessage());
+            return null;
+        }
+        return eventSubscription;
+    }
+
+    static public EventSubscription getEventSubscription(TNTEventSubscriptionTO tntEventSubscriptionTO){
+        EventSubscription eventSubscription;
+        try {
+            eventSubscription = JsonUtility.convertTo(EventSubscription.class, tntEventSubscriptionTO);
+        }catch (Exception e){
+            log.severe(e.getMessage());
+            return null;
+        }
+        return eventSubscription;
+    }
+    static public String getCallBackUuid(String callBack){
+        String uuid = "";
+        if(callBack != null){
+            String[] tokens = callBack.split("/");
+            if(tokens.length > 0){
+                uuid = tokens[tokens.length  -1];
+            }
+        }
+         return uuid;
     }
 }

@@ -105,5 +105,19 @@ public class JsonUtility {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
     }
+    public static String getSubscriptionId(String notificationBody){
+        String subscriptionId = "";
+        String[] tokens = notificationBody.split(",");
+        if(tokens.length > 0){
+            String subscriptionVal =   tokens[tokens.length - 1];
+            tokens = subscriptionVal.split(":");
+            if(tokens.length > 0 ){
+                subscriptionId = tokens[tokens.length-1].trim();
+                subscriptionId = subscriptionId.replaceAll("\"", "");
+                subscriptionId = subscriptionId.replaceAll("}", "").trim();
+            }
+        }
+        return subscriptionId;
+    }
 
 }

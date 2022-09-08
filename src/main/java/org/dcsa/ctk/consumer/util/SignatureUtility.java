@@ -13,7 +13,7 @@ public class SignatureUtility {
         String notificationSignature="sha256=";
         byte[] key = Base64.getDecoder().decode(encodedKey.getBytes(StandardCharsets.UTF_8));
         byte[] payloadByteArray = payload.getBytes(StandardCharsets.UTF_8);
-        byte[] signature = new byte[0];
+        byte[] signature;
         try {
             signature = computeSignature(key, payloadByteArray);
         } catch (Exception e) {
@@ -27,8 +27,7 @@ public class SignatureUtility {
         return notificationSignature;
     }
 
-    private static byte[] computeSignature(byte[] secretKey, byte[] payload) throws
-            Exception {
+    private static byte[]   computeSignature(byte[] secretKey, byte[] payload) throws Exception {
         final String javaAlgorithmName = "HmacSHA256";
         Mac mac = Mac.getInstance(javaAlgorithmName);
         mac.init(new SecretKeySpec(secretKey, javaAlgorithmName));

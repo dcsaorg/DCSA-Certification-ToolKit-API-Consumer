@@ -52,7 +52,7 @@ spring:
   api_root_uri: http://localhost:9090
   callback_wait: 3000
   pubSubFlag: true
-  notificationTriggerTime: 5000
+  notificationTriggerTime: 1000
 
 auth0:
   audience: localhost

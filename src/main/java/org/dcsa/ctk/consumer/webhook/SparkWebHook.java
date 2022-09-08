@@ -2,6 +2,9 @@ package org.dcsa.ctk.consumer.webhook;
 
 import org.dcsa.ctk.consumer.config.AppProperty;
 import org.dcsa.ctk.consumer.model.CallbackContext;
+import org.dcsa.ctk.consumer.util.APIUtility;
+import org.dcsa.ctk.consumer.util.JsonUtility;
+import org.dcsa.ctk.consumer.util.SqlUtility;
 import spark.Service;
 import spark.Spark;
 
@@ -19,8 +22,9 @@ public class SparkWebHook {
                 .threadPool(20);
 
         http.post(AppProperty.CALLBACK_PATH+"/:uuid", (req, res) -> {
-            res.status(201);
-            if (req.params(":uuid").equals("456eacf9-8cda-412b-b801-4a41be7a6c35")) {
+            String subscriptionId = JsonUtility.getSubscriptionId(req.body());
+            String callBackUuid = SqlUtility.getSubscriptionCallBackUuid(subscriptionId);
+            if (req.params(":uuid").equals(callBackUuid)) {
                 res.header("Content-Type", "application/json");
                 callbackContext.setNotificationReceived(true);
                 callbackContext.setNotificationBody(req.body());
@@ -30,23 +34,28 @@ public class SparkWebHook {
                 }
                 callbackContext.setHeaders(headers);
                 callbackContext.getNotificationRequestLock().countDown();
+                res.status(201);
+            }else {
+                res.status(400);
             }
-            return "{\"status\":\"OK\"}";
+            return  res;
         });
 
         http.head(AppProperty.CALLBACK_PATH+"/:uuid", (req, res) -> {
+            String callBackUrl = SqlUtility.getCallBackUrlIfExist(AppProperty.CALLBACK_PATH+req.params(":uuid"));
+            String callBackUuid = APIUtility.getCallBackUuid(callBackUrl);
             res.header("Content-Type", "application/json");
-            if (req.params(":uuid").equals("456eacf9-8cda-412b-b801-4a41be7a6c35")) {
+            if (req.params(":uuid").equals(callBackUuid)) {
                 res.status(201);
                 callbackContext.setHeadRequestReceived(true);
                 callbackContext.getHeadRequestLock().countDown();
             }
-            else if (req.params(":uuid").equals("307deecf-e599-4ff2-bf5a-fd47c171b8c4")) {
+            else {
                 res.status(400);
                 callbackContext.setHeadRequestReceived(true);
                 callbackContext.getHeadRequestLock().countDown();
             }
-            return "{\"status\":\"OK\"}";
+            return res;
         });
         http.awaitInitialization();
         System.out.println("Server Started listening on port. "+ AppProperty.CALLBACK_PORT);

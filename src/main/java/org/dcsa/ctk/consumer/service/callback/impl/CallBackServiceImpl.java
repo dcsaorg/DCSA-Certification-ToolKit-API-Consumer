@@ -24,11 +24,8 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 @Slf4j
 public class CallBackServiceImpl implements CallBackService {
-
     @Value("${spring.pubSubFlag}")
     boolean pubSubFlag;
-    private final  WebClient webClient;
-
     private final TNTEventSubscriptionTOController tntServer;
     private final RestTemplate restTemplate;
 
@@ -46,9 +43,11 @@ public class CallBackServiceImpl implements CallBackService {
                 log.info("head request status:"+statusCode);
             } catch (Exception e) {
                 log.error(e.getLocalizedMessage());
-                    throw new CreateException("CallBackUrl does not exist");
+                if(e.getMessage().contains("400")){
+                    //
+                    System.out.printf("go it");
+                }
             }
-
         }
         return true;
     }
@@ -66,7 +65,6 @@ public class CallBackServiceImpl implements CallBackService {
 
     @Override
     public boolean sendNotification(UUID id, EventSubscriptionSecretUpdateTO secret) throws ExecutionException, InterruptedException {
-
         if (pubSubFlag) {
             TNTEventSubscriptionTO req = tntServer.findById(id).toFuture().get();
             req.setSecret(secret.getSecret());

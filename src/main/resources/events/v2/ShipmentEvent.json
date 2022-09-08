@@ -49,5 +49,6 @@
     }
   ],
   "ISOEquipmentCode": "22G2",
-  "eventTypeCode": "LOAD"
+  "eventTypeCode": "LOAD",
+  "subscriptionId": "SUB_ID_HERE"
 }
