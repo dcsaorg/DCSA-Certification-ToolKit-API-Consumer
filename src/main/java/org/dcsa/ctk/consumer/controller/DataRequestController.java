@@ -38,7 +38,6 @@ public class DataRequestController {
         this.sqlRemoveHandler = sqlRemoveHandler;
         this.appProperty = appProperty;
         this.appProperty.init();
-        SqlUtility.makeTableIfNotExist();
     }
 
     @PostMapping(value = POST_JSON_SHIPMENT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

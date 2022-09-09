@@ -64,7 +64,6 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
 
     @Override
     public List<Map<String, Object>> findAll(ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
-
         List<Map<String, Object>> responseList;
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             List<TNTEventSubscriptionTO> actualResponse = tntServer.findAll(response, request).collectList().toFuture().get();
@@ -81,10 +80,6 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
         }
     }
 
-    @Override
-    public  Flux<TNTEventSubscriptionTO> findAllEvent(ServerHttpResponse response, ServerHttpRequest request) {
-        return  tntServer.findAll(response, request);
-    }
     @Override
     public Map<String, Object> findById(UUID id, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
         Map<String, Object> responseMap;

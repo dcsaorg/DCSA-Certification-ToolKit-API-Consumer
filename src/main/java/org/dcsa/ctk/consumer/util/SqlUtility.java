@@ -68,7 +68,6 @@ public class SqlUtility {
     }
 
     static public String getSubscriptionCallBackUuid(String subscriptionId){
-      //  String selectEventSubscription = "select * from "+CTK_SUBSCRIPTION_TABLE+" where subscription_id = "
         String selectEventSubscription = "select * from dcsa_im_v3_0.event_subscription"+ " where subscription_id = "
                 +StringUtils.quote(subscriptionId);
         String callBackUrl = "";

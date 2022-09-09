@@ -26,6 +26,4 @@ public interface TNTEventSubscriptionToService<T> {
     T update(UUID id, TNTEventSubscriptionTO obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException;
 
     void updateSecret(UUID id, EventSubscriptionSecretUpdateTO obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException;
-    Flux<TNTEventSubscriptionTO> findAllEvent(ServerHttpResponse response, ServerHttpRequest request);
-
 }

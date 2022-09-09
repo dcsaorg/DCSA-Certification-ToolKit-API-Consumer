@@ -85,7 +85,7 @@ public class TNTEventSubscriptionTOControllerProxy {
     public void updateSecret(@PathVariable String id, @RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions/{id}/secret";
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
-        SqlUtility.updateSecretBySubscriptionId(id, (((LinkedHashMap<?, ?>) obj).get((("secret"))).toString()));
+        //SqlUtility.updateSecretBySubscriptionId(id, (((LinkedHashMap<?, ?>) obj).get((("secret"))).toString()));
         customLogger.init(obj, response, request, checkListItem, route);
         tntEventSubscriptionToService.updateSecret(UUID.fromString(id), JsonUtility.convertTo(EventSubscriptionSecretUpdateTO.class, obj), response, request, checkListItem);
         customLogger.log(null, response, request);
@@ -101,13 +101,6 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.log(responseMap, response, request);
         return responseMap;
     }
-
-    @GetMapping({"/findAllEvent"})
-    @ResponseStatus(HttpStatus.OK)
-    public Flux<TNTEventSubscriptionTO> findAllEvent(ServerHttpResponse response, ServerHttpRequest request){
-        return  tntEventSubscriptionToService.findAllEvent(response, request);
-    }
-
 
     @PutMapping({"/event-subscriptions/{id}"})
     @ResponseStatus(HttpStatus.OK)
