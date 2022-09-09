@@ -65,18 +65,16 @@ public class APIUtility {
     }
 
     public static boolean isReferenceCallRequired(int httpCode) {
-        if (httpCode == 200 || httpCode == 201 || httpCode == 202 || httpCode == 204)
+        if (httpCode == 200 || httpCode == 201 || httpCode == 202 ||
+                httpCode == 204 || httpCode == 400 || httpCode == 404 )
             return true;
         else
             return false;
     }
     public static void runWebHook() {
-        CallbackContext callbackContext;
         SparkWebHook sparkWebHook;
-        callbackContext = new CallbackContext();
         sparkWebHook = new SparkWebHook();
         sparkWebHook.startServer();
-        sparkWebHook.setContext(callbackContext);
     }
 
     static public EventSubscription getEventSubscription(Object obj){

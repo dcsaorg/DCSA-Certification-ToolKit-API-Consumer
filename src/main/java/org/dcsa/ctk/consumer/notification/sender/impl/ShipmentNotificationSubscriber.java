@@ -30,13 +30,14 @@ public class ShipmentNotificationSubscriber implements NotificationSubscriber {
         String secret = Base64.getEncoder().encodeToString(req.getSecret());
         String callbackUrl = req.getCallbackUrl();
         String notificationBody = EventUtility.getTransportEvent();
+        String subscriptionId = req.getSubscriptionID().toString();
+        notificationBody = notificationBody.replace("SUB_ID_HERE", subscriptionId);
         String signature = SignatureUtility.getSignature(secret, notificationBody);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Notification-Signature", signature);
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<String> entity = new HttpEntity<>(notificationBody,headers);
-
         HttpStatus statusCode=restTemplate
                 .exchange(callbackUrl, HttpMethod.POST,entity,String.class).getStatusCode();
         if(statusCode!=HttpStatus.OK)

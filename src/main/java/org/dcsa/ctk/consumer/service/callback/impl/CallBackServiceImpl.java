@@ -30,22 +30,19 @@ public class CallBackServiceImpl implements CallBackService {
     private final RestTemplate restTemplate;
 
     @Override
-    public boolean doHeadRequest(String callbackUrl) throws ExecutionException, InterruptedException {
-
+    public boolean doHeadRequest(String callbackUrl) {
         if (pubSubFlag) {
             log.info("CallbackUrl received :{}", callbackUrl);
             try {
                 HttpHeaders headers = new HttpHeaders();
                 headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
                 HttpEntity<String> entity = new HttpEntity<>(headers);
-                HttpStatus statusCode=restTemplate
-                        .exchange(callbackUrl, HttpMethod.HEAD,entity,String.class).getStatusCode();
+                HttpStatus statusCode=restTemplate.exchange(callbackUrl, HttpMethod.HEAD,entity,String.class)
+                                                    .getStatusCode();
                 log.info("head request status:"+statusCode);
             } catch (Exception e) {
-                log.error(e.getLocalizedMessage());
                 if(e.getMessage().contains("400")){
-                    //
-                    System.out.printf("go it");
+                    log.warn("THE CALLBACK URL IS NOT FOUND. CALL BACK IS NOT ALLOWED");
                 }
             }
         }
@@ -53,7 +50,7 @@ public class CallBackServiceImpl implements CallBackService {
     }
 
     @Override
-    public boolean sendNotification(TNTEventSubscriptionTO req) throws ExecutionException, InterruptedException {
+    public boolean sendNotification(TNTEventSubscriptionTO req) {
         if (pubSubFlag) {
             NotificationSubscriber eventNotification = NotificationFactory.getNotification(req.getEventType());
             NotificationSender notificationSender = new NotificationSender();

@@ -1,13 +1,11 @@
 package org.dcsa.ctk.consumer.controller;
 
 import org.dcsa.ctk.consumer.config.AppProperty;
-import org.dcsa.ctk.consumer.model.CallbackContext;
 import org.dcsa.ctk.consumer.model.enums.UploadType;
 import org.dcsa.ctk.consumer.service.sql.SqlInsertHandler;
 import org.dcsa.ctk.consumer.service.sql.SqlRemoveHandler;
 import org.dcsa.ctk.consumer.service.uploader.FileUploadService;
 import org.dcsa.ctk.consumer.util.SqlUtility;
-import org.dcsa.ctk.consumer.webhook.SparkWebHook;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

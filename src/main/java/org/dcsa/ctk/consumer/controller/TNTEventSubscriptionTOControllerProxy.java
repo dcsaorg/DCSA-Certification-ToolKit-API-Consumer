@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.ctk.consumer.config.AppProperty;
-import org.dcsa.ctk.consumer.model.CallbackContext;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.model.EventSubscription;
 import org.dcsa.ctk.consumer.reporter.ExtentReportManager;
@@ -16,7 +15,6 @@ import org.dcsa.ctk.consumer.util.APIUtility;
 import org.dcsa.ctk.consumer.util.FileUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;
 import org.dcsa.ctk.consumer.util.SqlUtility;
-import org.dcsa.ctk.consumer.webhook.SparkWebHook;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +25,6 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
-import spark.Service;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -35,8 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
-
-import static spark.Service.ignite;
 
 
 @RestController
@@ -90,6 +85,7 @@ public class TNTEventSubscriptionTOControllerProxy {
     public void updateSecret(@PathVariable String id, @RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions/{id}/secret";
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
+        SqlUtility.updateSecretBySubscriptionId(id, (((LinkedHashMap<?, ?>) obj).get((("secret"))).toString()));
         customLogger.init(obj, response, request, checkListItem, route);
         tntEventSubscriptionToService.updateSecret(UUID.fromString(id), JsonUtility.convertTo(EventSubscriptionSecretUpdateTO.class, obj), response, request, checkListItem);
         customLogger.log(null, response, request);

@@ -36,15 +36,14 @@ public class EquipmentNotificationSubscriber implements NotificationSubscriber {
         String signature = SignatureUtility.getSignature(secret, notificationBody);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Notification-Signature", signature);
-        headers.add("subscription_id", subscriptionId);
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<String> entity = new HttpEntity<>(notificationBody,headers);
         HttpStatus statusCode=restTemplate.exchange(callbackUrl, HttpMethod.POST,entity,String.class).getStatusCode();
         if(statusCode == HttpStatus.CREATED) {
-            log.info("Notification Sent");
+            log.info("NOTIFICATION SENT");
         }else if( statusCode == HttpStatus.METHOD_NOT_ALLOWED){
-            log.error("Error received while sending notification:{}",statusCode);
+            log.error("THE CALL BACK URL IS NOT FOUND. CALL BACK IS NOT ALLOWED:{}",statusCode);
         }
     }
 

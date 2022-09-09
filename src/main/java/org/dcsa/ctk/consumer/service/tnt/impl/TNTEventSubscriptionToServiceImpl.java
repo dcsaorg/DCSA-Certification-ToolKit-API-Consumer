@@ -49,7 +49,6 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             res = tntServer.create(req).toFuture().get();
             eventSubscription.setSubscriptionID(res.getSubscriptionID());
-            SqlUtility.insetSubscription(eventSubscription);
             responseMap = mapDecorator.decorate(JsonUtility.convertToMap(res), response, request, checkListItem);
             if (checkListItem != null)
                 checkListItem.setStatus(CheckListStatus.COVERED);
@@ -119,11 +118,11 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
 
     @Override
     public Map<String, Object> update(UUID id, TNTEventSubscriptionTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
-        callBackService.doHeadRequest(req.getCallbackUrl());
         Map<String, Object> responseMap  = new HashMap<>();
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
-            TNTEventSubscriptionTO actualResponse = SqlUtility.updateEventSubscription(req);
+            TNTEventSubscriptionTO actualResponse = tntServer.update(id, req).toFuture().get();
             if(actualResponse != null){
+                callBackService.doHeadRequest(actualResponse.getCallbackUrl());
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(actualResponse), response, request, checkListItem);
                 if (checkListItem != null) {
                     checkListItem.setStatus(CheckListStatus.COVERED);
@@ -150,7 +149,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             tntServer.updateSecret(id, req).toFuture().get();
             if (checkListItem != null)
                 checkListItem.setStatus(CheckListStatus.COVERED);
-            callBackService.sendNotification(id, req);
+          callBackService.sendNotification(id, req);
         } else {
             responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
             responseMap = mapDecorator.decorate(responseMap, response, request, checkListItem);
