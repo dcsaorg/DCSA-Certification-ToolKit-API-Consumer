@@ -2,11 +2,9 @@ package org.dcsa.ctk.consumer.service.tnt;
 
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.ctk.consumer.model.CheckListItem;
-import org.dcsa.ctk.consumer.model.EventSubscription;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 
 public interface TNTEventSubscriptionToService<T> {
 
-    T create(TNTEventSubscriptionTO obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem, EventSubscription eventSubscription) throws ExecutionException, InterruptedException;
+    T create(TNTEventSubscriptionTO obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException;
 
     List<T> findAll(ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException;
 

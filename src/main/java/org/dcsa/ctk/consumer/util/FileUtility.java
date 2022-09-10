@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.logging.Level;
 
 @Log
@@ -16,7 +17,7 @@ public class FileUtility {
 
     public static String loadResourceAsString(String resource) {
         try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource)) {
-            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            return new String(Objects.requireNonNull(inputStream).readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             log.log(Level.SEVERE, e.getMessage());
         }

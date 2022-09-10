@@ -6,24 +6,19 @@ import org.dcsa.ctk.consumer.constant.CheckListStatus;
 import org.dcsa.ctk.consumer.constant.ResponseMockType;
 import org.dcsa.ctk.consumer.exception.DecoratorException;
 import org.dcsa.ctk.consumer.model.CheckListItem;
-import org.dcsa.ctk.consumer.model.EventSubscription;
 import org.dcsa.ctk.consumer.service.callback.CallBackService;
 import org.dcsa.ctk.consumer.service.decorator.Decorator;
 import org.dcsa.ctk.consumer.service.mock.MockService;
 import org.dcsa.ctk.consumer.service.tnt.TNTEventSubscriptionToService;
 import org.dcsa.ctk.consumer.util.APIUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;
-import org.dcsa.ctk.consumer.util.SqlUtility;
 import org.dcsa.tnt.controller.TNTEventSubscriptionTOController;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
-import org.springframework.data.relational.core.sql.SQL;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import reactor.core.publisher.Flux;
 
-import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -43,12 +38,11 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
     final CallBackService callBackService;
 
     @Override
-    public Map<String, Object> create(TNTEventSubscriptionTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem, EventSubscription eventSubscription) throws ExecutionException, InterruptedException {
+    public Map<String, Object> create(TNTEventSubscriptionTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
         TNTEventSubscriptionTO res;
         Map<String, Object> responseMap;
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             res = tntServer.create(req).toFuture().get();
-            eventSubscription.setSubscriptionID(res.getSubscriptionID());
             responseMap = mapDecorator.decorate(JsonUtility.convertToMap(res), response, request, checkListItem);
             if (checkListItem != null)
                 checkListItem.setStatus(CheckListStatus.COVERED);
@@ -151,8 +145,5 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             checkListItem.setStatus(CheckListStatus.COVERED);
             throw new DecoratorException(responseMap);
         }
-
     }
-
-
 }

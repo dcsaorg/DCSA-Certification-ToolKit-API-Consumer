@@ -77,31 +77,6 @@ public class APIUtility {
         sparkWebHook.startServer();
     }
 
-    static public EventSubscription getEventSubscription(Object obj){
-        EventSubscription eventSubscription;
-        try {
-            eventSubscription = JsonUtility.convertTo(EventSubscription.class, obj);
-            var secret = ((LinkedHashMap<?, ?>) obj).get((("secret")));
-            if( secret != null) {
-                eventSubscription.setPlainSecret((((LinkedHashMap<?, ?>) obj).get((("secret"))).toString()));
-            }
-        }catch (Exception e){
-            log.severe(e.getMessage());
-            return null;
-        }
-        return eventSubscription;
-    }
-
-    static public EventSubscription getEventSubscription(TNTEventSubscriptionTO tntEventSubscriptionTO){
-        EventSubscription eventSubscription;
-        try {
-            eventSubscription = JsonUtility.convertTo(EventSubscription.class, tntEventSubscriptionTO);
-        }catch (Exception e){
-            log.severe(e.getMessage());
-            return null;
-        }
-        return eventSubscription;
-    }
     static public String getCallBackUuid(String callBack){
         String uuid = "";
         if(callBack != null){

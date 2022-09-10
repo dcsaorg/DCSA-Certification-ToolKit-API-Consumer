@@ -3,7 +3,6 @@ package org.dcsa.ctk.consumer.util;
 import lombok.extern.java.Log;
 import org.dcsa.core.events.model.Vessel;
 import org.dcsa.ctk.consumer.config.AppProperty;
-import org.dcsa.ctk.consumer.model.EventSubscription;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.util.StringUtils;
 
@@ -26,6 +25,7 @@ public class SqlUtility {
                                                                 "carrier_service_code, " +
                                                                 "vessel_imo_number) " +
                                                                 "VALUES(";
+
     static public void makeTableIfNotExist() {
         String tableCreate = //"DROP TABLE IF EXISTS "+CTK_SUBSCRIPTION_TABLE+" CASCADE;"
                             "CREATE TABLE IF NOT EXISTS "+CTK_SUBSCRIPTION_TABLE
@@ -43,27 +43,6 @@ public class SqlUtility {
             stmt.execute(tableCreate);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
-        }
-    }
-
-
-    static public String insetSubscription(EventSubscription eventSubscription){
-       String encryptedSecret = CipherUtil.encrypt(eventSubscription.getPlainSecret());
-       String callBackUuid =  APIUtility.getCallBackUuid(eventSubscription.getCallbackUrl());
-       String insertIntoSubscription = INSET_INTO_CTK_SUBSCRIPTION
-                                        + StringUtils.quote(eventSubscription.getSubscriptionID().toString())+","
-                                        + StringUtils.quote(eventSubscription.getCallbackUrl())+","
-                                        + StringUtils.quote(encryptedSecret)+","
-                                        + StringUtils.quote(eventSubscription.getCarrierBookingReference())+","
-                                        + StringUtils.quote(eventSubscription.getEquipmentReference())+","
-                                        + StringUtils.quote(eventSubscription.getTransportCallID())+","
-                                        + StringUtils.quote(eventSubscription.getCarrierServiceCode())+","
-                                        + StringUtils.quote(eventSubscription.getVesselIMONumber())+")";
-                                       // + StringUtils.quote(callBackUuid)+")";
-        if(updateRow(insertIntoSubscription) > 0){
-            return "A new EventSubscription is inserted with subscriptionId: "+eventSubscription.getSubscriptionID().toString();
-        }else {
-            return "";
         }
     }
 
@@ -86,25 +65,6 @@ public class SqlUtility {
         return uuid;
     }
 
-    static public TNTEventSubscriptionTO updateEventSubscription (TNTEventSubscriptionTO tntEventSubscriptionTO){
-        EventSubscription eventSubscription = getEventSubscriptionBySubscriptionId(tntEventSubscriptionTO.getSubscriptionID().toString());
-        if(eventSubscription.getSubscriptionID() != null) {
-            String updateEventSubscriptionSql = "UPDATE dcsa_im_v3_0.event_subscription SET " +
-                    "subscription_id = " + StringUtils.quote(tntEventSubscriptionTO.getSubscriptionID().toString()) + "," +
-                    "callback_url = " + StringUtils.quote(tntEventSubscriptionTO.getCallbackUrl()) + "," +
-                    "carrier_booking_reference = " + StringUtils.quote(tntEventSubscriptionTO.getCarrierBookingReference()) + "," +
-                    "equipment_reference = " + StringUtils.quote(tntEventSubscriptionTO.getEquipmentReference()) + "," +
-                    "transport_call_id = " + StringUtils.quote(tntEventSubscriptionTO.getTransportCallID()) + "," +
-                    "carrier_service_code = " + StringUtils.quote(tntEventSubscriptionTO.getCarrierServiceCode()) + "," +
-                    "vessel_imo_number = " + StringUtils.quote(tntEventSubscriptionTO.getVesselIMONumber()) +
-                    "WHERE subscription_id = "+StringUtils.quote(eventSubscription.getSubscriptionID().toString());;
-            if (updateRow(updateEventSubscriptionSql) > 0) {
-                return tntEventSubscriptionTO;
-            }
-        }
-        return null;
-    }
-
     static public String getCallBackUrl(String callBackUrl){
         String selectCallBackUrl = "select callback_url from dcsa_im_v3_0.event_subscription where callback_url = "
                                             +StringUtils.quote(callBackUrl);
@@ -123,23 +83,76 @@ public class SqlUtility {
         }
         return "";
     }
-
-    static public EventSubscription getEventSubscriptionBySubscriptionId(String subscriptionId){
-        EventSubscription eventSubscription = new EventSubscription();
-        String selectEventSubscription = "select * from "+CTK_SUBSCRIPTION_TABLE+" where subscription_id = "
-                                            +StringUtils.quote(subscriptionId);
-
+    static public TNTEventSubscriptionTO getEventSubscriptionBySubscriptionId(String subscriptionId){
+        String selectCallBackUrl = "select * from dcsa_im_v3_0.event_subscription where subscription_id = "
+                +StringUtils.quote(subscriptionId);
+        TNTEventSubscriptionTO tntEventSubscriptionTO = new TNTEventSubscriptionTO();
         try (Statement statement = AppProperty.getConnection().createStatement()) {
-            ResultSet resultSet = statement.executeQuery(selectEventSubscription);
+            ResultSet resultSet = statement.executeQuery(selectCallBackUrl);
             while (resultSet.next()) {
-                eventSubscription.setSubscriptionID(UUID.fromString(resultSet.getString("subscription_id")));
-                eventSubscription.setCallbackUrl(resultSet.getString("callback_url"));
-                eventSubscription.setPlainSecret(CipherUtil.decrypt(resultSet.getString("secret")));
+                tntEventSubscriptionTO.setSubscriptionID(UUID.fromString(resultSet.getString("subscription_id")));
+                tntEventSubscriptionTO.setCallbackUrl(resultSet.getString("callback_url"));
+                tntEventSubscriptionTO.setCarrierBookingReference(resultSet.getString("carrier_booking_reference"));
+                tntEventSubscriptionTO.setEquipmentReference(resultSet.getString("equipment_reference"));
+                tntEventSubscriptionTO.setTransportCallID(resultSet.getString("transport_call_id"));
+                tntEventSubscriptionTO.setSecret(resultSet.getBytes("secret"));
+                tntEventSubscriptionTO.setCarrierServiceCode(resultSet.getString("carrier_service_code"));
+                tntEventSubscriptionTO.setVesselIMONumber(resultSet.getString("vessel_imo_number"));
             }
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
-        return eventSubscription;
+        return tntEventSubscriptionTO;
+    }
+
+    static public boolean isEventSubscriptionIdExist(UUID id){
+        String selectEventSubscriptionSql = "select subscription_id from dcsa_im_v3_0.event_subscription where subscription_id = "
+                                            +StringUtils.quote(id.toString());
+        String subscriptionId = "";
+        try (Statement statement = AppProperty.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectEventSubscriptionSql);
+            while (resultSet.next()) {
+                subscriptionId = resultSet.getString("subscription_id");
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        if(subscriptionId.length() > 0 ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    static public String getEventSubscriptionId(UUID id){
+        String selectEventSubscriptionSql = "select subscription_id from dcsa_im_v3_0.event_subscription where subscription_id = "
+                +StringUtils.quote(id.toString());
+        String subscriptionId = "";
+        try (Statement statement = AppProperty.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectEventSubscriptionSql);
+            while (resultSet.next()) {
+                subscriptionId = resultSet.getString("subscription_id");
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+       return subscriptionId;
+    }
+
+    static public String getSecretBySubscriptionId(UUID id){
+        String selectEventSubscriptionSql = "select secret from dcsa_im_v3_0.event_subscription where subscription_id = "
+                +StringUtils.quote(id.toString());
+        String plainSecret = "";
+        try (Statement statement = AppProperty.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectEventSubscriptionSql);
+            while (resultSet.next()) {
+                byte[] secret = resultSet.getBytes("secret");
+                plainSecret = Base64.getEncoder().encodeToString(secret);
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return plainSecret;
     }
 
     static public void updateSecretBySubscriptionId(String subscriptionId, String secret){

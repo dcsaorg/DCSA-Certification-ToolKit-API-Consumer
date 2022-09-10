@@ -412,6 +412,33 @@
           }
         ]
       }
+    },
+    {
+      "route": "/check/callback",
+      "variants": {
+        "POST": [
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.X.X.SUB.CSM.1",
+            "description": "POST /callback check correct subscription ID"
+          },
+          {
+            "httpCode": 400,
+            "requirementID": "TNT.X.X.SUB.CSM.2",
+            "description": "POST /callback check wrong subscription ID"
+          },
+          {
+            "httpCode": 202,
+            "requirementID": "TNT.X.X.SUB.CSM.3",
+            "description": "POST /callback check correct secret allows to invoke callback"
+          },
+          {
+            "httpCode": 403,
+            "requirementID": "TNT.X.X.SUB.CSM.4",
+            "description": "POST /callback check wrong secret forbidden to invoke callback"
+          }
+        ]
+      }
     }
   ]
 }

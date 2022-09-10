@@ -5,7 +5,6 @@ import org.dcsa.ctk.consumer.model.enums.UploadType;
 import org.dcsa.ctk.consumer.service.sql.SqlInsertHandler;
 import org.dcsa.ctk.consumer.service.sql.SqlRemoveHandler;
 import org.dcsa.ctk.consumer.service.uploader.FileUploadService;
-import org.dcsa.ctk.consumer.util.SqlUtility;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping(path = DataRequestController.API_VERSION)
+@RequestMapping(path = DataRequestController.API_VERSION, produces = {MediaType.APPLICATION_JSON_VALUE})
 public class DataRequestController {
     public static final String API_VERSION = "/v2";
     private static final String POST_JSON_SHIPMENT = "/uploadShipment";

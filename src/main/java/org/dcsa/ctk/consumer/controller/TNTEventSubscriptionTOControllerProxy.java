@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.ctk.consumer.config.AppProperty;
 import org.dcsa.ctk.consumer.model.CheckListItem;
-import org.dcsa.ctk.consumer.model.EventSubscription;
 import org.dcsa.ctk.consumer.reporter.ExtentReportManager;
 import org.dcsa.ctk.consumer.reporter.Reporter;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
@@ -14,7 +13,6 @@ import org.dcsa.ctk.consumer.service.tnt.TNTEventSubscriptionToService;
 import org.dcsa.ctk.consumer.util.APIUtility;
 import org.dcsa.ctk.consumer.util.FileUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;
-import org.dcsa.ctk.consumer.util.SqlUtility;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -24,20 +22,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import static org.dcsa.ctk.consumer.controller.TNTEventSubscriptionTOControllerProxy.API_VERSION;
+
 
 @RestController
 @Slf4j
-@RequestMapping(value = "/v2", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = API_VERSION, produces = {MediaType.APPLICATION_JSON_VALUE})
 public class TNTEventSubscriptionTOControllerProxy {
+    public static final String API_VERSION = "/v2";
     final TNTEventSubscriptionToService<Map<String, Object>> tntEventSubscriptionToService;
 
     final Reporter reporter;
@@ -62,9 +61,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         String route = "/event-subscriptions";
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(obj, response, request, checkListItem, route);
-        EventSubscription eventSubscription = APIUtility.getEventSubscription(obj);
-        Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj),
-                                            response, request, checkListItem, eventSubscription);
+        Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
         customLogger.log(responseMap, response, request);
         return responseMap;
     }
@@ -85,7 +82,6 @@ public class TNTEventSubscriptionTOControllerProxy {
     public void updateSecret(@PathVariable String id, @RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions/{id}/secret";
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
-        //SqlUtility.updateSecretBySubscriptionId(id, (((LinkedHashMap<?, ?>) obj).get((("secret"))).toString()));
         customLogger.init(obj, response, request, checkListItem, route);
         tntEventSubscriptionToService.updateSecret(UUID.fromString(id), JsonUtility.convertTo(EventSubscriptionSecretUpdateTO.class, obj), response, request, checkListItem);
         customLogger.log(null, response, request);

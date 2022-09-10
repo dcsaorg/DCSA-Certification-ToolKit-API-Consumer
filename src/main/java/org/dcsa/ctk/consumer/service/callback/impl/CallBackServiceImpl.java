@@ -3,18 +3,17 @@ package org.dcsa.ctk.consumer.service.callback.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
-import org.dcsa.core.exception.CreateException;
 import org.dcsa.ctk.consumer.notification.sender.NotificationFactory;
 import org.dcsa.ctk.consumer.notification.sender.NotificationSender;
 import org.dcsa.ctk.consumer.notification.sender.NotificationSubscriber;
 import org.dcsa.ctk.consumer.service.callback.CallBackService;
+import org.dcsa.ctk.consumer.util.SqlUtility;
 import org.dcsa.tnt.controller.TNTEventSubscriptionTOController;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -69,4 +68,19 @@ public class CallBackServiceImpl implements CallBackService {
         }
         return true;
     }
+
+    @Override
+    public TNTEventSubscriptionTO getEventSubscription(UUID id, TNTEventSubscriptionTO req) throws ExecutionException, InterruptedException {
+        if (pubSubFlag) {
+            return SqlUtility.getEventSubscriptionBySubscriptionId(id.toString());
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isEventSubscriptionIdExist(UUID id){
+        return SqlUtility.isEventSubscriptionIdExist(id);
+    }
+
+
 }

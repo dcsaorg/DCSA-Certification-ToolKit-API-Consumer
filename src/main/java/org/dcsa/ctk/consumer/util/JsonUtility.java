@@ -71,7 +71,7 @@ public class JsonUtility {
     }
 
     public static TestConfig loadTestConfig(String testSuiteJson) {
-        String jsonString = FileUtility.loadFileAsString(testSuiteJson);
+        String jsonString = FileUtility.loadResourceAsString(testSuiteJson);
         TestConfig testConfig = JsonUtility.getObjectFromJson(TestConfig.class, jsonString);
         return testConfig;
     }
