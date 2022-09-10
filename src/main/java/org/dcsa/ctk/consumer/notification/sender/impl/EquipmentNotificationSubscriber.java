@@ -39,11 +39,12 @@ public class EquipmentNotificationSubscriber implements NotificationSubscriber {
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<String> entity = new HttpEntity<>(notificationBody,headers);
+        log.info("POST NOTIFICATION SENT");
         HttpStatus statusCode=restTemplate.exchange(callbackUrl, HttpMethod.POST,entity,String.class).getStatusCode();
         if(statusCode == HttpStatus.CREATED) {
-            log.info("NOTIFICATION SENT");
+            log.info("NOTIFICATION RECEIVED RESPONSE: {}",statusCode);
         }else if( statusCode == HttpStatus.METHOD_NOT_ALLOWED){
-            log.error("THE CALL BACK URL IS NOT FOUND. CALL BACK IS NOT ALLOWED:{}",statusCode);
+            log.error("ERROR NOTIFICATION RECEIVED RESPONSE:{}",statusCode);
         }
     }
 

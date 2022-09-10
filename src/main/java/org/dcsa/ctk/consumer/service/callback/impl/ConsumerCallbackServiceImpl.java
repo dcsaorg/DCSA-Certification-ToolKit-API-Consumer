@@ -53,7 +53,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
                 }
                 customLogger.log(responseMap, response, request);
                 return  new ResponseEntity<>("Correct event subscription id "+id+" found as well as correct secret found that allows to invoke callback "+
-                                                dbTntEventSubscriptionTO.getCallbackUrl(), HttpStatus.ACCEPTED);
+                                                dbTntEventSubscriptionTO.getCallbackUrl(), HttpStatus.NO_CONTENT);
             }else{
                 checkListItem = ConfigService.getNextCheckListItem(route, "POST", 403);
                 customLogger.init(dbTntEventSubscriptionTO, response, request, checkListItem, route);

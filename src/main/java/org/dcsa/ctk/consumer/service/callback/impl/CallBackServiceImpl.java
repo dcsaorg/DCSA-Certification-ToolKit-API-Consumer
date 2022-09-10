@@ -7,7 +7,6 @@ import org.dcsa.ctk.consumer.notification.sender.NotificationFactory;
 import org.dcsa.ctk.consumer.notification.sender.NotificationSender;
 import org.dcsa.ctk.consumer.notification.sender.NotificationSubscriber;
 import org.dcsa.ctk.consumer.service.callback.CallBackService;
-import org.dcsa.ctk.consumer.util.SqlUtility;
 import org.dcsa.tnt.controller.TNTEventSubscriptionTOController;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,9 +35,10 @@ public class CallBackServiceImpl implements CallBackService {
                 HttpHeaders headers = new HttpHeaders();
                 headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
                 HttpEntity<String> entity = new HttpEntity<>(headers);
+                log.info("HEAD NOTIFICATION SENT");
                 HttpStatus statusCode=restTemplate.exchange(callbackUrl, HttpMethod.HEAD,entity,String.class)
                                                     .getStatusCode();
-                log.info("head request status:"+statusCode);
+                log.info("GOT HEAD RESPONSE STATUS:"+statusCode);
             } catch (Exception e) {
                 if(e.getMessage().contains("400")){
                     log.warn("THE CALLBACK URL IS NOT FOUND. CALL BACK IS NOT ALLOWED");
@@ -58,7 +58,6 @@ public class CallBackServiceImpl implements CallBackService {
         }
         return true;
     }
-
     @Override
     public boolean sendNotification(UUID id, EventSubscriptionSecretUpdateTO secret) throws ExecutionException, InterruptedException {
         if (pubSubFlag) {
@@ -68,19 +67,4 @@ public class CallBackServiceImpl implements CallBackService {
         }
         return true;
     }
-
-    @Override
-    public TNTEventSubscriptionTO getEventSubscription(UUID id, TNTEventSubscriptionTO req) throws ExecutionException, InterruptedException {
-        if (pubSubFlag) {
-            return SqlUtility.getEventSubscriptionBySubscriptionId(id.toString());
-        }
-        return null;
-    }
-
-    @Override
-    public boolean isEventSubscriptionIdExist(UUID id){
-        return SqlUtility.isEventSubscriptionIdExist(id);
-    }
-
-
 }
