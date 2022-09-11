@@ -11,10 +11,7 @@ import org.dcsa.ctk.consumer.util.APIUtility;
 import org.dcsa.ctk.consumer.util.SqlUtility;
 import org.dcsa.tnt.controller.TNTEventSubscriptionTOController;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,28 +23,24 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 @Slf4j
 public class CallBackServiceImpl implements CallBackService {
-    @Value("${spring.pubSubFlag}")
-    boolean pubSubFlag;
     private final TNTEventSubscriptionTOController tntServer;
     private final RestTemplate restTemplate;
 
     @Override
     public boolean doHeadRequest(String callbackUrl, boolean newSubscription) {
-        if (pubSubFlag) {
-            boolean result;
-            log.info("CALLBACK URL REQUEST RECEIVED: {}, IS IT A NEW SUBSCRIPTION: {} ", callbackUrl,  String.valueOf(newSubscription).toUpperCase());
-            if(newSubscription){
-                result = performHttpHead(callbackUrl,newSubscription);
-            }else{
-                result = headRequestForSavedSubscription(callbackUrl, newSubscription);
-            }
-            return result;
+        boolean result;
+        log.info("CALLBACK URL REQUEST RECEIVED: {}, IS IT A NEW SUBSCRIPTION: {} ", callbackUrl,  String.valueOf(newSubscription).toUpperCase());
+        if(newSubscription){
+            result = performHttpHead(callbackUrl,newSubscription);
+        }else{
+            result = headRequestForSavedSubscription(callbackUrl, newSubscription);
         }
-        return true;
+        return result;
+
     }
 
     boolean headRequestForSavedSubscription(String callbackUrl, boolean newSubscription){
-        boolean result = false;
+        boolean result;
         String dbCallbackUrl = SqlUtility.getCallBackUrl(callbackUrl);
         String dbCallbackUuid = APIUtility.getCallBackUuid(dbCallbackUrl);
         String callbackUuid = APIUtility.getCallBackUuid(callbackUrl);
@@ -81,21 +74,17 @@ public class CallBackServiceImpl implements CallBackService {
 
     @Override
     public boolean sendNotification(TNTEventSubscriptionTO req) {
-        if (pubSubFlag) {
-            NotificationSubscriber eventNotification = NotificationFactory.getNotification(req.getEventType());
-            NotificationSender notificationSender = new NotificationSender();
-            notificationSender.attach(eventNotification);
-            notificationSender.notifySubscribers(req);
-        }
+        NotificationSubscriber eventNotification = NotificationFactory.getNotification(req.getEventType());
+        NotificationSender notificationSender = new NotificationSender();
+        notificationSender.attach(eventNotification);
+        notificationSender.notifySubscribers(req);
         return true;
     }
     @Override
     public boolean sendNotification(UUID id, EventSubscriptionSecretUpdateTO secret) throws ExecutionException, InterruptedException {
-        if (pubSubFlag) {
-            TNTEventSubscriptionTO req = tntServer.findById(id).toFuture().get();
-            req.setSecret(secret.getSecret());
-            sendNotification(req);
-        }
+        TNTEventSubscriptionTO req = tntServer.findById(id).toFuture().get();
+        req.setSecret(secret.getSecret());
+        sendNotification(req);
         return true;
     }
 }

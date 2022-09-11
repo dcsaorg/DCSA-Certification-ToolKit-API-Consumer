@@ -51,7 +51,6 @@ spring:
   test_suite_name: TNT-TestSuite.xml
   api_root_uri: http://localhost:9090
   callback_wait: 3000
-  pubSubFlag: true
   notificationTriggerTime: 1000
   externalCallback: false
 

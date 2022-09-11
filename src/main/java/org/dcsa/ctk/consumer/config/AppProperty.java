@@ -50,7 +50,6 @@ public class AppProperty {
     private int callback_wait;
     private String test_suite_name;
     private String event_subscription_simulation;
-    private boolean pubSubFlag;
     private long notificationTriggerTime;
 
     public static String API_ROOT_URI;
@@ -68,7 +67,6 @@ public class AppProperty {
         AppProperty.CALLBACK_PORT = callback_port;
         AppProperty.CALLBACK_WAIT = callback_wait;
         AppProperty.UPLOAD_CONFIG_PATH = upload_config_path;
-        AppProperty.PUB_SUB_FLAG = pubSubFlag;
         AppProperty.NOTIFICATION_TRIGGER_TIME = notificationTriggerTime;
         CALLBACK_PATH = "/v"+API_VERSION.split("\\.")[0]+"/notification-endpoints/receive/";
 

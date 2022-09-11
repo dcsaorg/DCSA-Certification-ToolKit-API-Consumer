@@ -50,9 +50,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         this.reporter = reporter;
         this.customLogger = customLogger;
         this.appProperty = appProperty;
-        if(AppProperty.PUB_SUB_FLAG){
-           APIUtility.runWebHook();
-        }
+        APIUtility.runWebHook();
     }
 
     @PostMapping("/event-subscriptions")
