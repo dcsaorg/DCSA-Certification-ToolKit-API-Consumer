@@ -21,9 +21,9 @@ public class SignatureUtility {
             return null;
         }
         notificationSignature+= Hex.encodeHexString(signature);
-        System.out.println("Notification-Signature:"+ notificationSignature);
-        System.out.println("< --- PAY LOAD (" + payloadByteArray.length + " bytes) --->");
-        System.out.println(payload);
+      //  System.out.println("Notification-Signature:"+ notificationSignature);
+      //  System.out.println("< --- PAY LOAD (" + payloadByteArray.length + " bytes) --->");
+      //  System.out.println(payload);
         return notificationSignature;
     }
 

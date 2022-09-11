@@ -10,6 +10,11 @@
             "description": "POST /event-subscriptions-notification check"
           },
           {
+            "httpCode": 400,
+            "requirementID": "TNT.2.2.SUB.CSM.2",
+            "description": "POST /event-subscriptions-notification fail check"
+          },
+          {
             "httpCode": 201,
             "requirementID": "TNT.2.2.SUB.CSM.2",
             "description": "POST /event-subscriptions-response with empty body",

@@ -9,7 +9,6 @@ import org.dcsa.ctk.consumer.util.EventUtility;
 import org.dcsa.ctk.consumer.util.SignatureUtility;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.http.*;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -19,20 +18,15 @@ import java.util.Base64;
 @Slf4j
 @RequiredArgsConstructor
 public class EquipmentNotificationSubscriber implements NotificationSubscriber {
-
     private TNTEventSubscriptionTO req;
-
     private final RestTemplate restTemplate;
-
     @SneakyThrows
     @Override
     public void run() {
         Thread.sleep(AppProperty.NOTIFICATION_TRIGGER_TIME);
         String secret = Base64.getEncoder().encodeToString(req.getSecret());
         String callbackUrl = req.getCallbackUrl();
-        String subscriptionId = req.getSubscriptionID().toString();
         String notificationBody = EventUtility.getEquipmentEvent();
-        notificationBody = notificationBody.replace("SUB_ID_HERE", subscriptionId);
         String signature = SignatureUtility.getSignature(secret, notificationBody);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Notification-Signature", signature);

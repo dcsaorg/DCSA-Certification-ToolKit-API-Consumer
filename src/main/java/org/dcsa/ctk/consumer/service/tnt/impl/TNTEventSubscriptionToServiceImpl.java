@@ -7,7 +7,9 @@ import org.dcsa.ctk.consumer.constant.ResponseMockType;
 import org.dcsa.ctk.consumer.exception.DecoratorException;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.service.callback.CallBackService;
+import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
 import org.dcsa.ctk.consumer.service.decorator.Decorator;
+import org.dcsa.ctk.consumer.service.log.CustomLogger;
 import org.dcsa.ctk.consumer.service.mock.MockService;
 import org.dcsa.ctk.consumer.service.tnt.TNTEventSubscriptionToService;
 import org.dcsa.ctk.consumer.util.APIUtility;
@@ -19,7 +21,10 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -37,23 +42,36 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
 
     final CallBackService callBackService;
 
+    final CustomLogger customLogger;
+
     @Override
     public Map<String, Object> create(TNTEventSubscriptionTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
-        TNTEventSubscriptionTO res;
-        Map<String, Object> responseMap;
-        if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
-            res = tntServer.create(req).toFuture().get();
-            responseMap = mapDecorator.decorate(JsonUtility.convertToMap(res), response, request, checkListItem);
-            if (checkListItem != null)
+        boolean result = callBackService.doHeadRequest(req.getCallbackUrl(), true);
+        Map<String, Object> responseMap = new HashMap<>();
+        if(result) {
+            TNTEventSubscriptionTO res;
+            if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
+                res = tntServer.create(req).toFuture().get();
+                responseMap = mapDecorator.decorate(JsonUtility.convertToMap(res), response, request, checkListItem);
+                if (checkListItem != null) {
+                    checkListItem.setStatus(CheckListStatus.COVERED);
+                }
+                callBackService.sendNotification(req);//async call, triggered after config time
+            } else {
+                responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
+                responseMap = mapDecorator.decorate(responseMap, response, request, checkListItem);
                 checkListItem.setStatus(CheckListStatus.COVERED);
-            callBackService.sendNotification(req);//async call, triggered after config time
-            return responseMap;
-        } else {
-            responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
-            responseMap = mapDecorator.decorate(responseMap, response, request, checkListItem);
-            checkListItem.setStatus(CheckListStatus.COVERED);
-            throw new DecoratorException(responseMap);
+                throw new DecoratorException(responseMap);
+            }
+        }else{
+            String route = request.getPath().toString().replace("/v2", "");
+            checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), 400);
+            if (checkListItem != null) {
+                checkListItem.setStatus(CheckListStatus.COVERED);
+            }
+            responseMap.put("SUBSCRIPTION REGISTRATION FAILED", "THE CALLBACK URL DID NOT RESPOND");
         }
+        return responseMap;
     }
 
     @Override
@@ -111,7 +129,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             TNTEventSubscriptionTO actualResponse = tntServer.update(id, req).toFuture().get();
             if(actualResponse != null){
-                callBackService.doHeadRequest(actualResponse.getCallbackUrl());
+                callBackService.doHeadRequest(actualResponse.getCallbackUrl(),false);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(actualResponse), response, request, checkListItem);
                 if (checkListItem != null) {
                     checkListItem.setStatus(CheckListStatus.COVERED);

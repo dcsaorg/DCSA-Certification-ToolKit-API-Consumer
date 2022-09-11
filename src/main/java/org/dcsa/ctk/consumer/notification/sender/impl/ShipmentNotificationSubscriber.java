@@ -18,11 +18,8 @@ import java.util.Base64;
 @Slf4j
 @RequiredArgsConstructor
 public class ShipmentNotificationSubscriber implements NotificationSubscriber {
-
     private TNTEventSubscriptionTO req;
-
     private final RestTemplate restTemplate;
-
     @SneakyThrows
     @Override
     public void run() {
@@ -30,8 +27,6 @@ public class ShipmentNotificationSubscriber implements NotificationSubscriber {
         String secret = Base64.getEncoder().encodeToString(req.getSecret());
         String callbackUrl = req.getCallbackUrl();
         String notificationBody = EventUtility.getTransportEvent();
-        String subscriptionId = req.getSubscriptionID().toString();
-        notificationBody = notificationBody.replace("SUB_ID_HERE", subscriptionId);
         String signature = SignatureUtility.getSignature(secret, notificationBody);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Notification-Signature", signature);
@@ -50,4 +45,5 @@ public class ShipmentNotificationSubscriber implements NotificationSubscriber {
     public void setRequest(TNTEventSubscriptionTO req) {
         this.req = req;
     }
+
 }

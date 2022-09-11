@@ -50,10 +50,7 @@ public class AppProperty {
     private int callback_wait;
     private String test_suite_name;
     private String event_subscription_simulation;
-
     private boolean pubSubFlag;
-
-   // @Value("${spring.notification_trigger_time}")
     private long notificationTriggerTime;
 
     public static String API_ROOT_URI;
@@ -62,7 +59,6 @@ public class AppProperty {
     public static int CALLBACK_WAIT;
     public static boolean EVENT_SUBSCRIPTION_SIMULATION;
     public static boolean PUB_SUB_FLAG;
-
     public static long NOTIFICATION_TRIGGER_TIME;
 
 

@@ -53,6 +53,7 @@ spring:
   callback_wait: 3000
   pubSubFlag: true
   notificationTriggerTime: 1000
+  externalCallback: false
 
 auth0:
   audience: localhost

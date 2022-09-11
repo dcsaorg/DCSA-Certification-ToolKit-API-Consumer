@@ -29,8 +29,6 @@ public class TransportNotificationSubscriber implements NotificationSubscriber {
         String secret = Base64.getEncoder().encodeToString(req.getSecret());
         String callbackUrl = req.getCallbackUrl();
         String notificationBody = EventUtility.getTransportEvent();
-        String subscriptionId = req.getSubscriptionID().toString();
-        notificationBody = notificationBody.replace("SUB_ID_HERE", subscriptionId);
         String signature = SignatureUtility.getSignature(secret, notificationBody);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Notification-Signature", signature);

@@ -56,14 +56,17 @@ public class TNTEventSubscriptionTOControllerProxy {
     }
 
     @PostMapping("/event-subscriptions")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> create(@RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
+    public ResponseEntity< Map<String, Object>> create(@RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions";
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(obj, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
         customLogger.log(responseMap, response, request);
-        return responseMap;
+        if(responseMap.get("subscriptionID") != null){
+            return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
+        }else {
+            return new ResponseEntity<>(responseMap, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/event-subscriptions")
