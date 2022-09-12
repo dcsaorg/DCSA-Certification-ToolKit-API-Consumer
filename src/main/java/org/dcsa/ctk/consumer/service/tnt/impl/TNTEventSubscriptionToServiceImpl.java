@@ -46,7 +46,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
 
     @Override
     public Map<String, Object> create(TNTEventSubscriptionTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
-        boolean result = callBackService.doHeadRequest(req.getCallbackUrl(), true);
+        boolean result = callBackService.doHeadRequest(req, true);
         Map<String, Object> responseMap = new HashMap<>();
         if(result) {
             TNTEventSubscriptionTO res;
@@ -129,7 +129,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             TNTEventSubscriptionTO actualResponse = tntServer.update(id, req).toFuture().get();
             if(actualResponse != null){
-                callBackService.doHeadRequest(actualResponse.getCallbackUrl(),false);
+                callBackService.doHeadRequest(actualResponse,false);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(actualResponse), response, request, checkListItem);
                 if (checkListItem != null) {
                     checkListItem.setStatus(CheckListStatus.COVERED);

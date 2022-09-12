@@ -65,9 +65,9 @@ public class SqlUtility {
         return uuid;
     }
 
-    static public String getCallBackUrl(String callBackUrl){
-        String selectCallBackUrl = "select callback_url from dcsa_im_v3_0.event_subscription where callback_url = "
-                                            +StringUtils.quote(callBackUrl);
+    static public String getCallbackUrlBySubscriptionId(String subscriptionId){
+        String selectCallBackUrl = "select callback_url from dcsa_im_v3_0.event_subscription where subscription_id = "
+                                            +StringUtils.quote(subscriptionId);
         String callBack = "";
         try (Statement statement = AppProperty.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectCallBackUrl);

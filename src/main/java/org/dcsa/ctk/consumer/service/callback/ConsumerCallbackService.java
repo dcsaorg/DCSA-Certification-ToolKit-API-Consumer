@@ -14,4 +14,6 @@ import java.util.concurrent.ExecutionException;
 
 public interface ConsumerCallbackService {
     ResponseEntity<String> checkCallback(UUID id, TNTEventSubscriptionTO obj, ServerHttpResponse response, ServerHttpRequest request, Map<String, List<CheckListItem>> checkListItemMap) throws ExecutionException, InterruptedException, JsonProcessingException;
+
+    ResponseEntity<Map<String, Object>> callCallback(UUID id, ServerHttpResponse response, ServerHttpRequest request, Map<String, List<CheckListItem>> checkListItemMap) throws ExecutionException, InterruptedException, JsonProcessingException;
 }

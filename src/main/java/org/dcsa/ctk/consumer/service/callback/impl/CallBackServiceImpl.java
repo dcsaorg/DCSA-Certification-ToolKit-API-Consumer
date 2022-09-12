@@ -27,26 +27,27 @@ public class CallBackServiceImpl implements CallBackService {
     private final RestTemplate restTemplate;
 
     @Override
-    public boolean doHeadRequest(String callbackUrl, boolean newSubscription) {
+    public boolean doHeadRequest(TNTEventSubscriptionTO tntEventSubscriptionTO, boolean newSubscription) {
         boolean result;
-        log.info("CALLBACK URL REQUEST RECEIVED: {}, IS IT A NEW SUBSCRIPTION: {} ", callbackUrl,  String.valueOf(newSubscription).toUpperCase());
+        log.info("CALLBACK URL REQUEST RECEIVED: {}, IS IT A NEW SUBSCRIPTION: {} ", tntEventSubscriptionTO.getCallbackUrl(),
+                                String.valueOf(newSubscription).toUpperCase());
         if(newSubscription){
-            result = performHttpHead(callbackUrl,newSubscription);
+            result = performHttpHead(tntEventSubscriptionTO.getCallbackUrl(),newSubscription);
         }else{
-            result = headRequestForSavedSubscription(callbackUrl, newSubscription);
+            result = headRequestForSavedSubscription(tntEventSubscriptionTO, newSubscription);
         }
         return result;
 
     }
 
-    boolean headRequestForSavedSubscription(String callbackUrl, boolean newSubscription){
+    boolean headRequestForSavedSubscription(TNTEventSubscriptionTO tntEventSubscriptionTO, boolean newSubscription){
         boolean result;
-        String dbCallbackUrl = SqlUtility.getCallBackUrl(callbackUrl);
+        String dbCallbackUrl = SqlUtility.getCallbackUrlBySubscriptionId(tntEventSubscriptionTO.getSubscriptionID().toString());
         String dbCallbackUuid = APIUtility.getCallBackUuid(dbCallbackUrl);
-        String callbackUuid = APIUtility.getCallBackUuid(callbackUrl);
+        String callbackUuid = APIUtility.getCallBackUuid(tntEventSubscriptionTO.getCallbackUrl());
         if (dbCallbackUuid.equals(dbCallbackUuid)) {
             log.info("FOUND CORRECT REQUEST CALLBACK UUID: {}", dbCallbackUuid);
-            result = performHttpHead(callbackUrl, newSubscription);
+            result = performHttpHead(dbCallbackUrl, newSubscription);
         }else {
             log.warn("FOUND WRONG CALLBACK UUID: {} NO HEAD REQUEST DONE,", callbackUuid);
             result = false;

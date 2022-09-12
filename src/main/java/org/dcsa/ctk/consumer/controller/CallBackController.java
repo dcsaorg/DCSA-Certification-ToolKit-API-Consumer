@@ -11,6 +11,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -31,6 +32,11 @@ public class CallBackController {
             throws ExecutionException, InterruptedException, JsonProcessingException {
        return consumerCallbackService.checkCallback(UUID.fromString(id), JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj),
                response, request, ConfigService.checkListItemMap);
+    }
+    @GetMapping(value = "/callback/{id}")
+    public ResponseEntity<Map<String, Object>> test(@PathVariable String id, ServerHttpResponse response, ServerHttpRequest request)
+                  throws ExecutionException, InterruptedException, JsonProcessingException {
+            return consumerCallbackService.callCallback(UUID.fromString(id),response, request, ConfigService.checkListItemMap);
     }
 
 }

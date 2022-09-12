@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutionException;
 
 public interface CallBackService {
 
-    boolean doHeadRequest(String callbackUrl, boolean newSubscription) throws ExecutionException, InterruptedException;
+    boolean doHeadRequest(TNTEventSubscriptionTO tntEventSubscriptionTO, boolean newSubscription) throws ExecutionException, InterruptedException;
     boolean sendNotification(TNTEventSubscriptionTO req) throws ExecutionException, InterruptedException;
     boolean sendNotification(UUID uuid, EventSubscriptionSecretUpdateTO req) throws ExecutionException, InterruptedException;
 
