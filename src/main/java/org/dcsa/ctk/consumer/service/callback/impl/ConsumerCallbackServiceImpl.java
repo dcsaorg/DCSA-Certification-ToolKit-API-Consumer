@@ -5,6 +5,7 @@ import org.dcsa.core.events.model.enums.EventType;
 import org.dcsa.core.validator.EnumSubset;
 import org.dcsa.ctk.consumer.constant.CheckListStatus;
 import org.dcsa.ctk.consumer.model.CheckListItem;
+import org.dcsa.ctk.consumer.model.enums.ValidationRequirementID;
 import org.dcsa.ctk.consumer.service.callback.CallBackService;
 import org.dcsa.ctk.consumer.service.callback.ConsumerCallbackService;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
@@ -42,7 +43,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
     public ResponseEntity<String> checkCallback(UUID id, TNTEventSubscriptionTO reqTntEventSubscriptionTO, ServerHttpResponse response, ServerHttpRequest request, Map<String, List<CheckListItem>> checkListItemMap) throws ExecutionException, InterruptedException, JsonProcessingException {
         Map<String, Object> responseMap;
         String route = "/check/callback";
-        CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), 200);
+        CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_200.getValue());
         TNTEventSubscriptionTO dbTntEventSubscriptionTO = SqlUtility.getEventSubscriptionBySubscriptionId(id.toString());
 
         if(dbTntEventSubscriptionTO.getSubscriptionID() != null){
@@ -53,7 +54,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
             }
             customLogger.log(responseMap, response, request);
             if(isSameSecret(dbTntEventSubscriptionTO, reqTntEventSubscriptionTO)){
-                checkListItem = ConfigService.getNextCheckListItem(route, "POST", 202);
+                checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_202.getValue());
                 customLogger.init(dbTntEventSubscriptionTO, response, request, checkListItem, route);
                 if (checkListItem != null){
                     checkListItem.setStatus(CheckListStatus.COVERED);
@@ -62,7 +63,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
                 return  new ResponseEntity<>("Correct event subscription id "+id+" found as well as correct secret found that allows to invoke callback "+
                                                 dbTntEventSubscriptionTO.getCallbackUrl(), HttpStatus.FOUND);
             }else{
-                checkListItem = ConfigService.getNextCheckListItem(route, "POST", 403);
+                checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_403.getValue());
                 customLogger.init(dbTntEventSubscriptionTO, response, request, checkListItem, route);
                 if (checkListItem != null){
                     checkListItem.setStatus(CheckListStatus.COVERED);
@@ -72,7 +73,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
                         dbTntEventSubscriptionTO.getCallbackUrl(), HttpStatus.FORBIDDEN);
             }
         }else {
-            checkListItem = ConfigService.getNextCheckListItem(route, "POST", 400);
+            checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_400.getValue()    );
             customLogger.init(reqTntEventSubscriptionTO, response, request, checkListItem, route);
             responseMap = mapDecorator.decorate(JsonUtility.convertToMap(reqTntEventSubscriptionTO), response, request, checkListItem);
             if (checkListItem != null){
