@@ -54,7 +54,30 @@ public interface ConfigService {
         CheckListItem listItem = new CheckListItem();
         List<CheckListItem> checkListItemList = checkListItemMap.get(APIUtility.generateKey(route, httpVerb));
         if (checkListItemList != null) {
-            listItem = getCheckListItem(checkListItemList, httpCode);  //checkListItemMap.get(APIUtility.generateKey(route, httpVerb)).get(0);
+            listItem = getCheckListItem(checkListItemList, httpCode);
+            if (listItem != null)
+                return listItem;
+        }
+        return listItem;
+    }
+
+/*
+    static CheckListItem getNextCheckListItem( Map<String, List<CheckListItem>> checkListItemMap, String route, String httpVerb, String requirementID) {
+        CheckListItem listItem = new CheckListItem();
+        List<CheckListItem> checkListItemList = checkListItemMap.get(APIUtility.generateKey(route, httpVerb));
+        if (checkListItemList != null) {
+            listItem = getCheckListItem(checkListItemList, requirementID);
+            if (listItem != null)
+                return listItem;
+        }
+        return listItem;
+    }*/
+
+    static CheckListItem getNextCheckListItem(String route, String httpVerb, String requirementID) {
+        CheckListItem listItem = new CheckListItem();
+        List<CheckListItem> checkListItemList = checkListItemMap.get(APIUtility.generateKey(route, httpVerb));
+        if (checkListItemList != null) {
+            listItem = getCheckListItem(checkListItemList, requirementID);
             if (listItem != null)
                 return listItem;
         }
@@ -71,6 +94,17 @@ public interface ConfigService {
         }
         return null;
    }
+
+    private  static CheckListItem getCheckListItem(List<CheckListItem> checkListItemList, String  requirementID){
+        if(checkListItemList != null){
+            for (CheckListItem checkListItem : checkListItemList) {
+                if( checkListItem.getResponseDecoratorWrapper().getRequirementID().equalsIgnoreCase(requirementID)){
+                    return checkListItem;
+                }
+            }
+        }
+        return null;
+    }
 
     private static CheckListItem getRequestMatcher(String route, ServerHttpResponse response, ServerHttpRequest request) {
         CheckListItem listItem = null;

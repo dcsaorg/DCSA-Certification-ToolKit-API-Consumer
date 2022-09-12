@@ -70,7 +70,7 @@ public class EventControllerServiceImpl implements EventControllerService {
                     String equipmentReference,
             @Min(1) int limit,
             ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
-        List<Map<String, Object>> responseList = null;
+        List<Map<String, Object>> responseList;
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             List<Event> actualResponse = eventController.findAll(response, request).collectList().toFuture().get();
             responseList = listDecorator.decorate(JsonUtility.convertToList(actualResponse), response, request, checkListItem);

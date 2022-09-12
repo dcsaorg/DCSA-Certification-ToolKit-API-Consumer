@@ -17,7 +17,7 @@ import java.util.*;
 @Validated
 public class APIUtility {
 
-    public static Map<String, List<CheckListItem>> populateCheckList(TestConfig testConfig) {
+    public static Map<String, List<CheckListItem>>  populateCheckList(TestConfig testConfig) {
         Map<String, List<CheckListItem>> checkListItemMap = new LinkedHashMap<>();
         List<TestCase> testConfigItems = testConfig.getTestConfig();
         for (TestCase test : testConfigItems) {

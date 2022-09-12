@@ -34,7 +34,7 @@ public class CallBackController {
                response, request, ConfigService.checkListItemMap);
     }
     @GetMapping(value = "/callback/{id}")
-    public ResponseEntity<Map<String, Object>> test(@PathVariable String id, ServerHttpResponse response, ServerHttpRequest request)
+    public ResponseEntity<Map<String, Object>> callback(@PathVariable String id, ServerHttpResponse response, ServerHttpRequest request)
                   throws ExecutionException, InterruptedException, JsonProcessingException {
             return consumerCallbackService.callCallback(UUID.fromString(id),response, request, ConfigService.checkListItemMap);
     }
