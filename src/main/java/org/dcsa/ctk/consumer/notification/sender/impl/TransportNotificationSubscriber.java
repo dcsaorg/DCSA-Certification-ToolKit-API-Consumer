@@ -33,7 +33,7 @@ public class TransportNotificationSubscriber implements NotificationSubscriber {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Notification-Signature", signature);
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(notificationBody,headers);
 
         HttpStatus statusCode=restTemplate

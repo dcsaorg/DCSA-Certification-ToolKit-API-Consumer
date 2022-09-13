@@ -23,6 +23,8 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -58,6 +60,8 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
                 res = tntServer.create(req).toFuture().get();
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(res), response, request, checkListItem);
+                String timeStamp = ZonedDateTime.now().minus(1, ChronoUnit.HOURS).toString();
+                responseMap.put("eventDateTime", timeStamp);
                 if (checkListItem != null) {
                     checkListItem.setStatus(CheckListStatus.COVERED);
                 }

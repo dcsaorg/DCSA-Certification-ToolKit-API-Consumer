@@ -21,6 +21,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -98,12 +99,14 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
             if (checkListItem != null) {
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
-                responseMap.put("eventDateTime", Instant.now().minus(1, ChronoUnit.MINUTES).toString());
+               // responseMap.put("eventDateTime", Instant.now().minus(1, ChronoUnit.MINUTES).toString());
+                String timeStamp = ZonedDateTime.now().minus(1, ChronoUnit.HOURS).toString();
+                responseMap.put("eventDateTime", timeStamp);
                 checkListItem.setStatus(CheckListStatus.COVERED);
             }
             callBackService.sendNotification(tntEventSubscriptionTO);//async call, triggered after config time
             customLogger.log(responseMap, response, request);
-            return new ResponseEntity<>(responseMap, HttpStatus.OK);
+                return new ResponseEntity<>(responseMap, HttpStatus.OK);
         }else {
             responseMap.put("SUBSCRIPTION NOT FOUND", "PLEASE FIRST SUBSCRIBE FOR THE EVENT NOTIFICATION BY POST /event-subscriptions");
             return new ResponseEntity<>(responseMap, HttpStatus.NOT_FOUND);

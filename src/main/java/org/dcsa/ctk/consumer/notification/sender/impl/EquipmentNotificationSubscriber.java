@@ -31,15 +31,20 @@ public class EquipmentNotificationSubscriber implements NotificationSubscriber {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Notification-Signature", signature);
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(notificationBody,headers);
         log.info("POST NOTIFICATION SENT");
-        HttpStatus statusCode=restTemplate.exchange(callbackUrl, HttpMethod.POST,entity,String.class).getStatusCode();
-        if(statusCode == HttpStatus.CREATED) {
-            log.info("NOTIFICATION RECEIVED RESPONSE: {}",statusCode);
-        }else if( statusCode == HttpStatus.METHOD_NOT_ALLOWED){
-            log.error("ERROR NOTIFICATION RECEIVED RESPONSE:{}",statusCode);
+        try {
+            HttpStatus statusCode=restTemplate.exchange(callbackUrl, HttpMethod.POST,entity,String.class).getStatusCode();
+            if(statusCode == HttpStatus.CREATED) {
+                log.info("NOTIFICATION RECEIVED RESPONSE: {}",statusCode);
+            }else if( statusCode == HttpStatus.METHOD_NOT_ALLOWED){
+                log.error("ERROR NOTIFICATION RECEIVED RESPONSE:{}",statusCode);
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
+
     }
 
     public void setRequest(TNTEventSubscriptionTO req) {
