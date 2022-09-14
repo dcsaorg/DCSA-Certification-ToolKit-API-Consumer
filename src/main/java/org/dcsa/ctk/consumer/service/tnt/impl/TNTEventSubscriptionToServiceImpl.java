@@ -54,7 +54,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
         if(!checkApiVersion(req, response, request)){
             responseMap.put("WRONG API VERSION", "ONLY TNT API VERSION 2 SUPPORTED");
             return responseMap;
-        };
+        }
         if(result) {
             TNTEventSubscriptionTO res;
             if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
@@ -74,7 +74,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             }
         }else{
             String route = request.getPath().toString().replace("/v2", "");
-            checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), 400);
+            checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), 400);
             if (checkListItem != null) {
                 checkListItem.setStatus(CheckListStatus.COVERED);
             }
@@ -87,15 +87,20 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
         boolean result;
         Map<String, Object> responseMap = new LinkedHashMap<>();
         String route = "/event-subscriptions";
-        var v = request.getHeaders().get("X-Api-Key");
         AtomicBoolean correctApiVersion = new AtomicBoolean(false);
-        request.getHeaders().get("X-Api-Key").forEach( e -> {
-            if(e.equalsIgnoreCase("2")){
-                correctApiVersion.set(true);
-            }
-        });
+        var apiVersion = request.getHeaders().get("X-Api-Key");
+        if(apiVersion != null){
+            apiVersion.forEach( e -> {
+                if(e.equalsIgnoreCase("2")){
+                    correctApiVersion.set(true);
+                }
+            });
+        }else {
+            return true;
+        }
+
         if(correctApiVersion.get()){
-            CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_CSM_200.getValue());
+            CheckListItem checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_CSM_200.getValue());
             if (checkListItem != null) {
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
@@ -104,7 +109,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             customLogger.log(responseMap, response, request);
             result = true;
         }else {
-            CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_CSM_400.getValue());
+            CheckListItem checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_CSM_400.getValue());
             if (checkListItem != null) {
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);

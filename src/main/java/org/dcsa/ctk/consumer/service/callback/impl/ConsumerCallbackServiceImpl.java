@@ -2,7 +2,6 @@ package org.dcsa.ctk.consumer.service.callback.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.dcsa.core.events.model.enums.EventType;
-import org.dcsa.core.validator.EnumSubset;
 import org.dcsa.ctk.consumer.constant.CheckListStatus;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.model.enums.ValidationRequirementID;
@@ -20,7 +19,6 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -44,7 +42,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
     public ResponseEntity<String> checkCallback(UUID id, TNTEventSubscriptionTO reqTntEventSubscriptionTO, ServerHttpResponse response, ServerHttpRequest request, Map<String, List<CheckListItem>> checkListItemMap) throws ExecutionException, InterruptedException, JsonProcessingException {
         Map<String, Object> responseMap;
         String route = "/check/callback";
-        CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_200.getValue());
+        CheckListItem checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_200.getValue());
         TNTEventSubscriptionTO dbTntEventSubscriptionTO = SqlUtility.getEventSubscriptionBySubscriptionId(id.toString());
 
         if(dbTntEventSubscriptionTO.getSubscriptionID() != null){
@@ -55,7 +53,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
             }
             customLogger.log(responseMap, response, request);
             if(isSameSecret(dbTntEventSubscriptionTO, reqTntEventSubscriptionTO)){
-                checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_202.getValue());
+                checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_202.getValue());
                 customLogger.init(dbTntEventSubscriptionTO, response, request, checkListItem, route);
                 if (checkListItem != null){
                     checkListItem.setStatus(CheckListStatus.COVERED);
@@ -64,7 +62,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
                 return  new ResponseEntity<>("Correct event subscription id "+id+" found as well as correct secret found that allows to invoke callback "+
                                                 dbTntEventSubscriptionTO.getCallbackUrl(), HttpStatus.FOUND);
             }else{
-                checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_403.getValue());
+                checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_403.getValue());
                 customLogger.init(dbTntEventSubscriptionTO, response, request, checkListItem, route);
                 if (checkListItem != null){
                     checkListItem.setStatus(CheckListStatus.COVERED);
@@ -74,7 +72,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
                         dbTntEventSubscriptionTO.getCallbackUrl(), HttpStatus.FORBIDDEN);
             }
         }else {
-            checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_400.getValue()    );
+            checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_400.getValue()    );
             customLogger.init(reqTntEventSubscriptionTO, response, request, checkListItem, route);
             responseMap = mapDecorator.decorate(JsonUtility.convertToMap(reqTntEventSubscriptionTO), response, request, checkListItem);
             if (checkListItem != null){
@@ -95,7 +93,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
                 tntEventSubscriptionTO.setEventType( List.of(EventType.EQUIPMENT, EventType.SHIPMENT, EventType.TRANSPORT, EventType.OPERATIONS));
             }
             if(callBackService.doHeadRequest(tntEventSubscriptionTO, false)){
-                CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_CSM_HEAD_200.getValue()) ;
+                CheckListItem checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_CSM_HEAD_200.getValue()) ;
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
                 String timeStamp = ZonedDateTime.now().minus(1, ChronoUnit.HOURS).toString();
@@ -103,7 +101,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
                 checkListItem.setStatus(CheckListStatus.COVERED);
                 customLogger.log(responseMap, response, request);
             }else {
-                CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_CSM_HEAD_400.getValue()) ;
+                CheckListItem checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_CSM_HEAD_400.getValue()) ;
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
                 checkListItem.setStatus(CheckListStatus.COVERED);
@@ -111,7 +109,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
             }
 
             if (callBackService.sendNotification(tntEventSubscriptionTO)) { //async call, triggered after config time
-                CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_CSM_POST_200.getValue()) ;
+                CheckListItem checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_CSM_POST_200.getValue()) ;
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
                 String timeStamp = ZonedDateTime.now().minus(1, ChronoUnit.HOURS).toString();
@@ -119,7 +117,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
                 checkListItem.setStatus(CheckListStatus.COVERED);
                 customLogger.log(responseMap, response, request);
             } else {
-                CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_CSM_POST_400.getValue()) ;
+                CheckListItem checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_CSM_POST_400.getValue()) ;
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
                 customLogger.log(responseMap, response, request);

@@ -1,6 +1,5 @@
 package org.dcsa.ctk.consumer.service.config.impl;
 
-import lombok.Getter;
 import org.dcsa.ctk.consumer.constant.CheckListStatus;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.ctk.consumer.model.RequestMatcher;
@@ -9,7 +8,6 @@ import org.dcsa.ctk.consumer.util.APIUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,7 +31,7 @@ public interface ConfigService {
         return null;
     }
 
-    static CheckListItem getNextCheckListItem(String route, ServerHttpResponse response, ServerHttpRequest request) {
+    static CheckListItem getCheckListItem(String route, ServerHttpResponse response, ServerHttpRequest request) {
         CheckListItem listItem = null;
         List<CheckListItem> checkListItemList = checkListItemMap.get(APIUtility.generateKey(route, request.getMethod().name()));
         if (checkListItemList != null) {
@@ -50,7 +48,7 @@ public interface ConfigService {
         return listItem;
     }
 
-    static CheckListItem getNextCheckListItem(String route, String httpVerb, int httpCode) {
+    static CheckListItem getCheckListItem(String route, String httpVerb, int httpCode) {
         CheckListItem listItem = new CheckListItem();
         List<CheckListItem> checkListItemList = checkListItemMap.get(APIUtility.generateKey(route, httpVerb));
         if (checkListItemList != null) {
@@ -61,19 +59,7 @@ public interface ConfigService {
         return listItem;
     }
 
-/*
-    static CheckListItem getNextCheckListItem( Map<String, List<CheckListItem>> checkListItemMap, String route, String httpVerb, String requirementID) {
-        CheckListItem listItem = new CheckListItem();
-        List<CheckListItem> checkListItemList = checkListItemMap.get(APIUtility.generateKey(route, httpVerb));
-        if (checkListItemList != null) {
-            listItem = getCheckListItem(checkListItemList, requirementID);
-            if (listItem != null)
-                return listItem;
-        }
-        return listItem;
-    }*/
-
-    static CheckListItem getNextCheckListItem(String route, String httpVerb, String requirementID) {
+    static CheckListItem getCheckListItem(String route, String httpVerb, String requirementID) {
         CheckListItem listItem = new CheckListItem();
         List<CheckListItem> checkListItemList = checkListItemMap.get(APIUtility.generateKey(route, httpVerb));
         if (checkListItemList != null) {
