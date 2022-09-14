@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.ctk.consumer.config.AppProperty;
 import org.dcsa.ctk.consumer.model.CheckListItem;
+import org.dcsa.ctk.consumer.model.enums.ValidationRequirementID;
 import org.dcsa.ctk.consumer.reporter.ExtentReportManager;
 import org.dcsa.ctk.consumer.reporter.Reporter;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
@@ -56,7 +57,7 @@ public class TNTEventSubscriptionTOControllerProxy {
     @PostMapping("/event-subscriptions")
     public ResponseEntity< Map<String, Object>> create(@RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions";
-        CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
+        CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_SUB_CSM_201.getValue()) ;
         customLogger.init(obj, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
         customLogger.log(responseMap, response, request);
