@@ -41,6 +41,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
     @Override
     public ResponseEntity<String> checkCallback(UUID id, TNTEventSubscriptionTO reqTntEventSubscriptionTO, ServerHttpResponse response, ServerHttpRequest request, Map<String, List<CheckListItem>> checkListItemMap) throws ExecutionException, InterruptedException, JsonProcessingException {
         Map<String, Object> responseMap;
+        String returnMsg = "";
         String route = "/check/callback";
         CheckListItem checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_200.getValue());
         TNTEventSubscriptionTO dbTntEventSubscriptionTO = SqlUtility.getEventSubscriptionBySubscriptionId(id.toString());
@@ -52,25 +53,27 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
                 checkListItem.setStatus(CheckListStatus.COVERED);
             }
             customLogger.log(responseMap, response, request);
-            if(isSameSecret(dbTntEventSubscriptionTO, reqTntEventSubscriptionTO)){
-                checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_202.getValue());
-                customLogger.init(dbTntEventSubscriptionTO, response, request, checkListItem, route);
-                if (checkListItem != null){
-                    checkListItem.setStatus(CheckListStatus.COVERED);
-                }
-                customLogger.log(responseMap, response, request);
-                return  new ResponseEntity<>("Correct event subscription id "+id+" found as well as correct secret found that allows to invoke callback "+
-                                                dbTntEventSubscriptionTO.getCallbackUrl(), HttpStatus.FOUND);
-            }else{
+            String checkResult = checkSameSecret(dbTntEventSubscriptionTO, reqTntEventSubscriptionTO);
+            if(checkResult.contains("Wrong")){
                 checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_403.getValue());
                 customLogger.init(dbTntEventSubscriptionTO, response, request, checkListItem, route);
                 if (checkListItem != null){
                     checkListItem.setStatus(CheckListStatus.COVERED);
                 }
                 customLogger.log(responseMap, response, request);
-                return  new ResponseEntity<>("Correct event subscription id "+id+" but wrong secret found so forbids to invoke callback  "+
-                        dbTntEventSubscriptionTO.getCallbackUrl(), HttpStatus.FORBIDDEN);
+                return  new ResponseEntity<>("Correct event subscription id "+id+".\n" +checkResult+" Forbidden to invoke callback",
+                                            HttpStatus.NOT_FOUND);
+            }else{
+                checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_202.getValue());
+                customLogger.init(dbTntEventSubscriptionTO, response, request, checkListItem, route);
+                if (checkListItem != null){
+                    checkListItem.setStatus(CheckListStatus.COVERED);
+                }
+                customLogger.log(responseMap, response, request);
+                return  new ResponseEntity<>("Correct event subscription id "+id+" found.\n"+checkResult,
+                        HttpStatus.FOUND);
             }
+
         }else {
             checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_400.getValue()    );
             customLogger.init(reqTntEventSubscriptionTO, response, request, checkListItem, route);
@@ -129,13 +132,24 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
         }
     }
 
-    private boolean isSameSecret(TNTEventSubscriptionTO bdTntEventSubscriptionTO, TNTEventSubscriptionTO reqTNTEventSubscriptionTO ){
+    private String checkSameSecret(TNTEventSubscriptionTO bdTntEventSubscriptionTO, TNTEventSubscriptionTO reqTNTEventSubscriptionTO ){
         String dbSecret = Base64.getEncoder().encodeToString(bdTntEventSubscriptionTO.getSecret());
         String reqSecret = Base64.getEncoder().encodeToString(reqTNTEventSubscriptionTO.getSecret());
+        StringBuffer result = new StringBuffer();
         if(dbSecret.equalsIgnoreCase(reqSecret)){
-            return true;
+            result.append("Correct secret found. ");
         }else {
-            return false;
+            result.append("Wrong secret found. ");
+        }
+        result.append(checkSameCallbackUrl(bdTntEventSubscriptionTO, reqTNTEventSubscriptionTO));
+        return result.toString();
+    }
+
+    private String checkSameCallbackUrl(TNTEventSubscriptionTO bdTntEventSubscriptionTO, TNTEventSubscriptionTO reqTNTEventSubscriptionTO ){
+        if(bdTntEventSubscriptionTO.getCallbackUrl().equalsIgnoreCase(reqTNTEventSubscriptionTO.getCallbackUrl())){
+            return "Same callback url found: "+ bdTntEventSubscriptionTO.getCallbackUrl();
+        }else {
+            return "Wrong callback url found: "+ reqTNTEventSubscriptionTO.getCallbackUrl();
         }
     }
 
