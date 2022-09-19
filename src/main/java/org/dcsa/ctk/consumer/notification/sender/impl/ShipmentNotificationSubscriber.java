@@ -26,7 +26,7 @@ public class ShipmentNotificationSubscriber implements NotificationSubscriber {
         Thread.sleep(AppProperty.NOTIFICATION_TRIGGER_TIME);
         String secret = Base64.getEncoder().encodeToString(req.getSecret());
         String callbackUrl = req.getCallbackUrl();
-        String notificationBody = EventUtility.getTransportEvent();
+        String notificationBody = EventUtility.getShipmentEvent();
         String signature = SignatureUtility.getSignature(secret, notificationBody);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Notification-Signature", signature);

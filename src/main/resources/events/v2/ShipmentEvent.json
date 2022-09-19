@@ -1,6 +1,6 @@
 {
   "eventID": "84db923d-2a19-4eb0-beb5-446c1ec57d34",
-  "eventType": "TRANSPORT",
+  "eventType": "SHIPMENT",
   "eventDateTime": "2019-11-11T23:11:00Z",
   "eventCreatedDateTime": "2021-01-09T13:12:56Z",
   "eventClassifierCode": "EST",
