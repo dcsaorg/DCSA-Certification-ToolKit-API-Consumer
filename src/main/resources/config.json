@@ -35,6 +35,11 @@
             "description": "POST /event-subscriptions-notification fail check"
           },
           {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.SUB.CSM.TIME.200",
+            "description": "POST /event-subscriptions check event time in the past"
+          },
+          {
             "httpCode": 201,
             "requirementID": "TNT.2.2.SUB.CSM.2",
             "description": "POST /event-subscriptions-response with empty body",

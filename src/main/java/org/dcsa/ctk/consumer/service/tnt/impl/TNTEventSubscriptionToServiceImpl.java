@@ -49,6 +49,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
     @Override
     public Map<String, Object> create(TNTEventSubscriptionTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem)
             throws ExecutionException, InterruptedException, JsonProcessingException {
+        String route = request.getPath().toString().replace("/v2", "");
         boolean result = callBackService.doHeadRequest(req, true);
         Map<String, Object> responseMap = new HashMap<>();
         if(!checkApiVersion(req, response, request)){
@@ -60,11 +61,20 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
                 res = tntServer.create(req).toFuture().get();
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(res), response, request, checkListItem);
-                String timeStamp = ZonedDateTime.now().minus(1, ChronoUnit.HOURS).toString();
-                responseMap.put("eventDateTime", timeStamp);
                 if (checkListItem != null) {
                     checkListItem.setStatus(CheckListStatus.CONFRONTED);
                 }
+                String timeStamp = ZonedDateTime.now().minus(1, ChronoUnit.HOURS).toString();
+                responseMap.put("eventDateTime",timeStamp);
+                responseMap.put("eventCreatedDateTime",timeStamp);
+                checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(),
+                                                            ValidationRequirementID.TNT_2_2_SUB_CSM_TIME_200.getValue());
+                customLogger.init(responseMap, response, request, checkListItem, route);
+                if (checkListItem != null){
+                    checkListItem.setStatus(CheckListStatus.CONFRONTED);
+                }
+                customLogger.log(responseMap, response, request);
+
                 callBackService.sendNotification(req);//async call, triggered after config time
             } else {
                 responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
@@ -73,7 +83,6 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                 throw new DecoratorException(responseMap);
             }
         }else{
-            String route = request.getPath().toString().replace("/v2", "");
             checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), 400);
             if (checkListItem != null) {
                 checkListItem.setStatus(CheckListStatus.CONFRONTED);

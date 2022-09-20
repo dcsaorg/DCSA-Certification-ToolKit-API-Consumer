@@ -14,7 +14,8 @@ public enum ValidationRequirementID {
     TNT_2_2_CSM_HEAD_200("TNT.2.2.CSM.HEAD.200"),
     TNT_2_2_CSM_HEAD_400("TNT.2.2.CSM.HEAD.400"),
     TNT_2_2_CSM_POST_200("TNT.2.2.CSM.POST.200"),
-    TNT_2_2_CSM_POST_400("TNT.2.2.CSM.POST.400");
+    TNT_2_2_CSM_POST_400("TNT.2.2.CSM.POST.400"),
+    TNT_2_2_SUB_CSM_TIME_200("TNT.2.2.SUB.CSM.TIME.200");
     private String value;
 
     ValidationRequirementID(String value) {
