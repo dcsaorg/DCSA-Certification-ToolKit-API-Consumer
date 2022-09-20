@@ -15,26 +15,26 @@ import java.util.logging.Level;
 
 @Log
 public class ExtentReportModifier {
-    // replace pass with covered
+    // replace pass with confronted
     private static final String capitalPassedKey = ">Pass</span>";
-    private static final String capitalPassedVal = ">Covered</span>";
+    private static final String capitalPassedVal = ">Confronted</span>";
     private static final String passedKey = "passed</span>";
-    private static final String passedVal = "covered</span>";
+    private static final String passedVal = "confronted</span>";
     private static final String passKey = "<th>Passed</th>";
-    private static final String passVal = "<th>Covered</th>";
+    private static final String passVal = "<th>Confronted</th>";
     private static final String passPercentageKey = "<th>Passed %</th>";
-    private static final String passPercentageVal = "<th>Covered %</th>";
+    private static final String passPercentageVal = "<th>Confronted %</th>";
     private static final String testPassedKey = "Tests Passed";
-    private static final String testPassedVal = "Tests Covered";
-   // replace fail with not covered
+    private static final String testPassedVal = "Tests Confronted";
+   // replace fail with unconfronted
     private static final String failKey = "Fail<";
-    private static final String failVal = "Not Covered<";
+    private static final String failVal = "Unconfronted<";
     private static final String failedKey = "failed<";
-    private static final String failedVal = "not covered<";
+    private static final String failedVal = "unconfronted<";
     private static final String FailedKey = "Failed<";
-    private static final String FailedVal = "Not covered<";
+    private static final String FailedVal = "unconfronted<";
     private static final String testFailedKey = "Test Failed";
-    private static final String testFailedVal = "Tests not covered";
+    private static final String testFailedVal = "Tests unconfronted";
     // to comment the pai chart
     private static final String htmlStrStartKey = "<div class=\"row\">";
     private static final String htmlStrStartVal = "<!--";
@@ -57,13 +57,13 @@ public class ExtentReportModifier {
 
     static {
         htmlTagMap = new HashMap<>();
-        // all pass as key and covered as value
+        // all pass as key and confronted as value
         htmlTagMap.put(capitalPassedKey, capitalPassedVal);
         htmlTagMap.put(passedKey, passedVal);
         htmlTagMap.put(passKey, passVal);
         htmlTagMap.put(passPercentageKey, passPercentageVal);
         htmlTagMap.put(testPassedKey, testPassedVal);
-        // all fail as key and not covered as value
+        // all fail as key and unconfronted as value
         htmlTagMap.put(failKey, failVal);
         htmlTagMap.put(failedKey, failedVal);
         htmlTagMap.put(FailedKey, FailedVal);

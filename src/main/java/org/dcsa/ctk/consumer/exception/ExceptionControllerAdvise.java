@@ -60,7 +60,7 @@ public class ExceptionControllerAdvise {
             CheckListItem checkListItem = ConfigService.getCheckListItemForHttpCode(routeKeyHeader.get(0), httpCode.value());
             if (checkListItem != null) {
                 response.getHeaders().add("checkListItemKey", checkListItem.getId());
-                checkListItem.setStatus(CheckListStatus.COVERED);
+                checkListItem.setStatus(CheckListStatus.CONFRONTED);
             }
         }
         Map<String, Object> responseMap = getMockedErrorResponse(ex, response, request);

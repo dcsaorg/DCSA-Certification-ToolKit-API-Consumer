@@ -92,7 +92,7 @@ public class EventControllerProxy {
             if (checkListItem != null) {
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
-                checkListItem.setStatus(CheckListStatus.COVERED);
+                checkListItem.setStatus(CheckListStatus.CONFRONTED);
             }
             customLogger.log(responseMap, response, request);
         }

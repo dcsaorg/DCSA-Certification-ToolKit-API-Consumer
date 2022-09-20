@@ -10,5 +10,5 @@ public class CheckListItem {
     String id=UUID.randomUUID().toString();
     ResponseDecoratorWrapper responseDecoratorWrapper;
     CustomerLogger log;
-    CheckListStatus status=CheckListStatus.NOT_COVERED;
+    CheckListStatus status=CheckListStatus.UNCONFRONTED;
 }

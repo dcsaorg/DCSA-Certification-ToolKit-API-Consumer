@@ -75,12 +75,12 @@ public class EventControllerServiceImpl implements EventControllerService {
             List<Event> actualResponse = eventController.findAll(response, request).collectList().toFuture().get();
             responseList = listDecorator.decorate(JsonUtility.convertToList(actualResponse), response, request, checkListItem);
             if (checkListItem != null)
-                checkListItem.setStatus(CheckListStatus.COVERED);
+                checkListItem.setStatus(CheckListStatus.CONFRONTED);
             return responseList;
         } else {
             Map<String, Object> responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request );
             responseMap = mapDecorator.decorate(responseMap, response, request, checkListItem);
-            checkListItem.setStatus(CheckListStatus.COVERED);
+            checkListItem.setStatus(CheckListStatus.CONFRONTED);
             throw new DecoratorException(responseMap);
         }
     }
