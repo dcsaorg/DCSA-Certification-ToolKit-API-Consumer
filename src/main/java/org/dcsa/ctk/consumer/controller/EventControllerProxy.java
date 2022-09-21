@@ -66,7 +66,9 @@ public class EventControllerProxy {
             ServerHttpRequest request
     ) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route="/events";
-        CheckListItem checkListItem= ConfigService.getCheckListItem(route,response,request);
+        CheckListItem checkListItem = ConfigService.getCheckListItem(route,response,request);
+      //  CheckListItem checkListItem= ConfigService.getCheckListItem(ConfigService.checkListItemMap, ValidationRequirementID.TNT_2_2_SUB_CSM_201.getValue());
+
         customLogger.init(null,response,request,checkListItem, route);
         List<Map<String, Object>> result =
                 eventControllerService.findAll(
@@ -92,7 +94,7 @@ public class EventControllerProxy {
             if (checkListItem != null) {
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
-                checkListItem.setStatus(CheckListStatus.CONFRONTED);
+                checkListItem.setStatus(CheckListStatus.CONFORMANT);
             }
             customLogger.log(responseMap, response, request);
         }

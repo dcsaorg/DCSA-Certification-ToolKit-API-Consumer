@@ -17,7 +17,7 @@ public class SparkWebHook {
             log.info("INTERNAL CALLBACK SEVER RECEIVED POST REQUEST WITH BODY: {}", req.body());
             res.header("Content-Type", "application/json");
             res.body("{ \"Successful\": \"Callback POST called successfully! }");
-            res.status(201);
+            res.status(204);
             return  res;
         });
 
@@ -25,7 +25,7 @@ public class SparkWebHook {
             boolean newSubscription =  Boolean.parseBoolean(req.headers("newSubscription"));
             log.info("INTERNAL CALLBACK SEVER RECEIVED HEAD UUID:: {} IS NEW SUBSCRIPTION REQUEST {}", req.params(":uuid"),
                     String.valueOf(newSubscription).toUpperCase());
-            res.status(200);
+            res.status(204);
             res.body("{ \"Successful\": \"Callback HEAD received successfully! }");
             return res;
         });

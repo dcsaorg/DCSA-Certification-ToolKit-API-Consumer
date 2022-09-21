@@ -55,7 +55,7 @@ public class CallBackServiceImpl implements CallBackService {
         return result;
     }
     boolean performHttpHead(String callbackUrl, boolean newSubscription){
-        boolean result = false;
+        boolean result;
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.set("newSubscription", ""+newSubscription);

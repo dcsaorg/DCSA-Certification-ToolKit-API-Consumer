@@ -39,7 +39,7 @@ public interface ConfigService {
             if (listItem != null)
                 return listItem;
             for (CheckListItem item : checkListItemList) {
-                if (item.getStatus().equals(CheckListStatus.UNCONFRONTED) && item.getResponseDecoratorWrapper().getRequestMatcher()==null) {
+                if (item.getStatus().equals(CheckListStatus.NOT_CONFORMANT) && item.getResponseDecoratorWrapper().getRequestMatcher()==null) {
                     listItem = item;
                     break;
                 }
@@ -101,7 +101,7 @@ public interface ConfigService {
         Set<String> querySet = request.getQueryParams().keySet();
         if (checkListItemList != null) {
             for (CheckListItem item : checkListItemList) {
-                if (item.getStatus().equals(CheckListStatus.UNCONFRONTED)
+                if (item.getStatus().equals(CheckListStatus.NOT_CONFORMANT)
                         && item.getResponseDecoratorWrapper() != null) {
                     RequestMatcher requestMatcher = item.getResponseDecoratorWrapper().getRequestMatcher();
                     if (requestMatcher != null) {
@@ -131,7 +131,7 @@ public interface ConfigService {
         List<CheckListItem> checkListItemList = checkListItemMap.get(routeKey);
         if (checkListItemList != null) {
             for (CheckListItem item : checkListItemList) {
-                if (item.getStatus().equals(CheckListStatus.UNCONFRONTED) && item.getResponseDecoratorWrapper().getHttpCode() == httpCode) {
+                if (item.getStatus().equals(CheckListStatus.NOT_CONFORMANT) && item.getResponseDecoratorWrapper().getHttpCode() == httpCode) {
                     listItem = item;
                     break;
                 }

@@ -20,6 +20,11 @@
             }
           },
           {
+            "httpCode": 404,
+            "requirementID": "TNT.2.2.SUB.CSM.HEAD.404",
+            "description": "POST /event-subscriptions callback head request no response check"
+          },
+          {
             "httpCode": 400,
             "requirementID": "TNT.2.2.API.CSM.400",
             "description": "POST /event-subscriptions with header wrong API-Version check",
@@ -485,8 +490,8 @@
             "description": "GET /callback check correct callback HEAD response received"
           },
           {
-            "httpCode": 400,
-            "requirementID": "TNT.2.2.CSM.HEAD.400",
+            "httpCode": 404,
+            "requirementID": "TNT.2.2.SUB.CSM.HEAD.404",
             "description": "GET /callback check HEAD response not received"
           },
           {

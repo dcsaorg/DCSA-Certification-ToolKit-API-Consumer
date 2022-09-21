@@ -15,26 +15,26 @@ import java.util.logging.Level;
 
 @Log
 public class ExtentReportModifier {
-    // replace pass with confronted
+    // replace pass with conformant
     private static final String capitalPassedKey = ">Pass</span>";
-    private static final String capitalPassedVal = ">Confronted</span>";
+    private static final String capitalPassedVal = ">Conformant</span>";
     private static final String passedKey = "passed</span>";
-    private static final String passedVal = "confronted</span>";
+    private static final String passedVal = "conformant</span>";
     private static final String passKey = "<th>Passed</th>";
-    private static final String passVal = "<th>Confronted</th>";
+    private static final String passVal = "<th>Conformant</th>";
     private static final String passPercentageKey = "<th>Passed %</th>";
-    private static final String passPercentageVal = "<th>Confronted %</th>";
+    private static final String passPercentageVal = "<th>Conformant %</th>";
     private static final String testPassedKey = "Tests Passed";
-    private static final String testPassedVal = "Tests Confronted";
-   // replace fail with unconfronted
+    private static final String testPassedVal = "Tests Conformant";
+   // replace fail with not conformant
     private static final String failKey = "Fail<";
-    private static final String failVal = "Unconfronted<";
+    private static final String failVal = "not conformant<";
     private static final String failedKey = "failed<";
-    private static final String failedVal = "unconfronted<";
+    private static final String failedVal = "not conformant<";
     private static final String FailedKey = "Failed<";
-    private static final String FailedVal = "unconfronted<";
+    private static final String FailedVal = "not conformant<";
     private static final String testFailedKey = "Test Failed";
-    private static final String testFailedVal = "Tests unconfronted";
+    private static final String testFailedVal = "Tests Not Conformant";
     // to comment the pai chart
     private static final String htmlStrStartKey = "<div class=\"row\">";
     private static final String htmlStrStartVal = "<!--";
@@ -57,13 +57,13 @@ public class ExtentReportModifier {
 
     static {
         htmlTagMap = new HashMap<>();
-        // all pass as key and confronted as value
+        // all pass as key and conformant as value
         htmlTagMap.put(capitalPassedKey, capitalPassedVal);
         htmlTagMap.put(passedKey, passedVal);
         htmlTagMap.put(passKey, passVal);
         htmlTagMap.put(passPercentageKey, passPercentageVal);
         htmlTagMap.put(testPassedKey, testPassedVal);
-        // all fail as key and unconfronted as value
+        // all fail as key and not conformant as value
         htmlTagMap.put(failKey, failVal);
         htmlTagMap.put(failedKey, failedVal);
         htmlTagMap.put(FailedKey, FailedVal);

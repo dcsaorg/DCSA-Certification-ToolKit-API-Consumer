@@ -57,14 +57,14 @@ public class TNTEventSubscriptionTOControllerProxy {
     @PostMapping("/event-subscriptions")
     public ResponseEntity< Map<String, Object>> create(@RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions";
-        CheckListItem checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_SUB_CSM_201.getValue()) ;
+        CheckListItem checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_SUB_CSM_201.getValue());
         customLogger.init(obj, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
         customLogger.log(responseMap, response, request);
         if(responseMap.get("subscriptionID") != null){
             return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
         }else {
-            return new ResponseEntity<>(responseMap, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(responseMap, HttpStatus.NOT_FOUND);
         }
     }
 

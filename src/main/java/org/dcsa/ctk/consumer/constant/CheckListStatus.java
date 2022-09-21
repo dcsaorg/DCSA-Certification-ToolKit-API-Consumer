@@ -1,8 +1,8 @@
 package org.dcsa.ctk.consumer.constant;
 
 public enum CheckListStatus {
-    CONFRONTED("CONFRONTED"),
-    UNCONFRONTED("UNCONFRONTED");
+    CONFORMANT("CONFORMANT"),
+    NOT_CONFORMANT("NOT CONFORMANT");
     private String name;
 
     CheckListStatus(String name) {

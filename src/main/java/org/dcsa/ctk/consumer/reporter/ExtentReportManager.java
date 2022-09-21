@@ -113,7 +113,7 @@ public class ExtentReportManager {
             ExtentTest extentTest = ExtentReportManager.getExtentTest(checkListItem.getResponseDecoratorWrapper().getRequirementID()+ " " +
                                     checkListItem.getResponseDecoratorWrapper().getDescription());
             extentTest.assignCategory(checkListItem.getResponseDecoratorWrapper().getRequirementID());
-            if(checkListItem.getStatus().equals(CheckListStatus.CONFRONTED)){
+            if(checkListItem.getStatus().equals(CheckListStatus.CONFORMANT)){
                 extentTest.pass(checkListItem.getResponseDecoratorWrapper().getDescription()+ " ");
                 extentTest.info(TestRequirement.getRequirement(checkListItem.getResponseDecoratorWrapper().getRequirementID()));
                 Markup markUp = MarkupHelper.createLabel(checkListItem.getStatus().getName(), ExtentColor.GREEN);
@@ -129,7 +129,7 @@ public class ExtentReportManager {
             if (testCaseDetails.length() > 32766){
                 testCaseDetails = testCaseDetails.substring(0, 32766);
             }
-            // Only when test case confronted and testCaseDetails is not blank
+            // Only when test case conformant and testCaseDetails is not blank
             if(!testCaseDetails.isBlank()){
                 extentTest.info("DETAILS REQUEST LOG:  " + testCaseDetails);
             }
