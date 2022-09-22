@@ -30,6 +30,6 @@ public class SparkWebHook {
             return res;
         });
         http.awaitInitialization();
-        log.info("Spark server started listening on port. "+ AppProperty.CALLBACK_PORT);
+        log.info("Spark server started listening on port: "+ AppProperty.CALLBACK_PORT);
     }
 }
