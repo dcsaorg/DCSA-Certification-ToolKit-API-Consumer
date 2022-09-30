@@ -6,13 +6,13 @@ import org.dcsa.ctk.consumer.config.AppProperty;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.util.StringUtils;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 
 @Log
 public class SqlUtility {
+
+    public static Connection connection = null;
     public static final String CTK_SUBSCRIPTION_TABLE = "dcsa_im_v3_0.ctk_event_subscription";
 
     private static final String INSET_INTO_CTK_SUBSCRIPTION = "INSERT INTO "+CTK_SUBSCRIPTION_TABLE +
@@ -39,18 +39,32 @@ public class SqlUtility {
                             +"vessel_imo_number             VARCHAR(7))";
         Statement stmt;
         try {
-            stmt = AppProperty.getConnection().createStatement();
+            stmt = SqlUtility.getConnection().createStatement();
             stmt.execute(tableCreate);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
+    public static Connection getConnection() {
+        try {
+            if (connection == null) {
+                connection = DriverManager.getConnection(AppProperty.DATABASE_URL, AppProperty.DATABASE_USER_NAME, AppProperty.DATABASE_PASSWORD);
+                System.out.println("Connected to the database!");
+            } else {
+                System.out.println("Connection is initialized: "+connection);
+            }
+        } catch (SQLException e) {
+            System.out.println("Connection init error: "+e.getMessage());
+        }
+        return connection;
+    }
+
     static public String getSubscriptionCallBackUuid(String subscriptionId){
         String selectEventSubscription = "select * from dcsa_im_v3_0.event_subscription"+ " where subscription_id = "
                 +StringUtils.quote(subscriptionId);
         String callBackUrl = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectEventSubscription);
             while (resultSet.next()) {
                 callBackUrl =  resultSet.getString("callback_url");
@@ -69,7 +83,7 @@ public class SqlUtility {
         String selectCallBackUrl = "select callback_url from dcsa_im_v3_0.event_subscription where subscription_id = "
                                             +StringUtils.quote(subscriptionId);
         String callBack = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectCallBackUrl);
             while (resultSet.next()) {
                 callBack =  resultSet.getString("callback_url");
@@ -87,7 +101,7 @@ public class SqlUtility {
         String selectCallBackUrl = "select * from dcsa_im_v3_0.event_subscription where subscription_id = "
                 +StringUtils.quote(subscriptionId);
         TNTEventSubscriptionTO tntEventSubscriptionTO = new TNTEventSubscriptionTO();
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectCallBackUrl);
             while (resultSet.next()) {
                 tntEventSubscriptionTO.setSubscriptionID(UUID.fromString(resultSet.getString("subscription_id")));
@@ -109,7 +123,7 @@ public class SqlUtility {
         String selectEventSubscriptionSql = "select subscription_id from dcsa_im_v3_0.event_subscription where subscription_id = "
                                             +StringUtils.quote(id.toString());
         String subscriptionId = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectEventSubscriptionSql);
             while (resultSet.next()) {
                 subscriptionId = resultSet.getString("subscription_id");
@@ -128,7 +142,7 @@ public class SqlUtility {
         String selectEventSubscriptionSql = "select subscription_id from dcsa_im_v3_0.event_subscription where subscription_id = "
                 +StringUtils.quote(id.toString());
         String subscriptionId = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectEventSubscriptionSql);
             while (resultSet.next()) {
                 subscriptionId = resultSet.getString("subscription_id");
@@ -143,7 +157,7 @@ public class SqlUtility {
         String selectEventSubscriptionSql = "select secret from dcsa_im_v3_0.event_subscription where subscription_id = "
                 +StringUtils.quote(id.toString());
         String plainSecret = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectEventSubscriptionSql);
             while (resultSet.next()) {
                 byte[] secret = resultSet.getBytes("secret");
@@ -165,7 +179,7 @@ public class SqlUtility {
 
     public static int updateRow(String sqlStatement){
         int effectedRow = 0;
-        try( Statement statement = AppProperty.getConnection().createStatement()){
+        try( Statement statement = SqlUtility.getConnection().createStatement()){
             effectedRow = statement.executeUpdate(sqlStatement);
             log.info(sqlStatement+" was successfully updated "+effectedRow+" rows!");
         }catch (SQLException e){
@@ -178,7 +192,7 @@ public class SqlUtility {
         String transportCallId = "";
         String selectTransportCallById = "SELECT id FROM dcsa_im_v3_0.transport_call where id = " +
                 StringUtils.quote(id);
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectTransportCallById);
             while (resultSet.next()) {
                 transportCallId = resultSet.getString("id");
@@ -197,7 +211,7 @@ public class SqlUtility {
         String vesselImoNumber = "";
         String selectVessel = "SELECT vessel_imo_number FROM dcsa_im_v3_0.vessel where vessel_imo_number = " +
                 StringUtils.quote(imoNumber);
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectVessel);
             while (resultSet.next()) {
                 vesselImoNumber = resultSet.getString("vessel_imo_number");
@@ -216,7 +230,7 @@ public class SqlUtility {
         String shipmentId = "";
         String selectVessel = "SELECT id FROM dcsa_im_v3_0.shipment where id = " +
                 StringUtils.quote(id);
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectVessel);
             while (resultSet.next()) {
                 shipmentId = resultSet.getString("id");
@@ -264,7 +278,7 @@ public class SqlUtility {
     public static String selectCarrierId(){
        String carrierId = "";
         String selectCarrierId = "SELECT id FROM dcsa_im_v3_0.carrier WHERE smdg_code = 'MSK'";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectCarrierId);
             while (resultSet.next()) {
                 carrierId = resultSet.getString("id");
@@ -279,7 +293,7 @@ public class SqlUtility {
         String eventId = "";
         String selectEquipmentEvent = "SELECT event_id FROM dcsa_im_v3_0.equipment_event where event_id = " +
                 StringUtils.quote(equipmentEventId);
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectEquipmentEvent);
             while (resultSet.next()) {
                 eventId = resultSet.getString("event_id");
@@ -298,7 +312,7 @@ public class SqlUtility {
         String eventId = "";
         String selectEquipmentEvent = "SELECT event_id FROM dcsa_im_v3_0.shipment_event where event_id = " +
                 StringUtils.quote(shipmentEventId);
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectEquipmentEvent);
             while (resultSet.next()) {
                 eventId = resultSet.getString("event_id");
@@ -317,7 +331,7 @@ public class SqlUtility {
         String eventId = "";
         String selectEquipmentEvent = "SELECT event_id FROM dcsa_im_v3_0.transport_event where event_id = " +
                                         StringUtils.quote(transportEventId);
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectEquipmentEvent);
             while (resultSet.next()) {
                 eventId = resultSet.getString("event_id");
@@ -336,7 +350,7 @@ public class SqlUtility {
         String referenceId = "";
         String selectEquipmentEvent = "SELECT id, shipment_id FROM dcsa_im_v3_0.references where id = " +
                 StringUtils.quote(id);
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectEquipmentEvent);
             while (resultSet.next()) {
                 referenceId = resultSet.getString("id");
@@ -408,7 +422,7 @@ public class SqlUtility {
     public static String getLastTransportId() {
         String lastTransportIdQuery = "select id from transport offset ((select count(*) from transport)-1)";
         String transportId = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(lastTransportIdQuery);
             while (resultSet.next()) {
                 transportId = resultSet.getString("id");
@@ -425,7 +439,7 @@ public class SqlUtility {
     public static String getLastTransportIdFromShipmentTransport() {
         String lastTransportIdQuery = "select transport_id from dcsa_im_v3_0.shipment_transport offset ((select count(*) from dcsa_im_v3_0.shipment_transport)-1)";
         String transportId = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(lastTransportIdQuery);
             while (resultSet.next()) {
                 transportId = resultSet.getString("transport_id");
@@ -445,7 +459,7 @@ public class SqlUtility {
             String dbTeansportId = "";
             String selectEquipmentEvent = "SELECT transport_id FROM dcsa_im_v3_0.shipment_transport where transport_id = " +
                     StringUtils.quote(transportId);
-            try (Statement statement = AppProperty.getConnection().createStatement()) {
+            try (Statement statement = SqlUtility.getConnection().createStatement()) {
                 ResultSet resultSet = statement.executeQuery(selectEquipmentEvent);
                 while (resultSet.next()) {
                     dbTeansportId = resultSet.getString("transport_id");
@@ -481,7 +495,7 @@ public class SqlUtility {
     public static String getLastVesselImo(){
         String selectLastVesselImo = "select * from vessel offset ((select count(*) from vessel)-1)";
         Vessel vessel = new Vessel();
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectLastVesselImo);
             while (resultSet.next()) {
                 vessel.setVesselIMONumber(resultSet.getString("vessel_imo_number"));
@@ -528,7 +542,7 @@ public class SqlUtility {
                 String selectTransportIdSql = "select id from dcsa_im_v3_0.transport where load_transport_call_id  = "
                         +StringUtils.quote(id)+" OR discharge_transport_call_id  = "+StringUtils.quote(id);
 
-                try (Statement statement = AppProperty.getConnection().createStatement()) {
+                try (Statement statement = SqlUtility.getConnection().createStatement()) {
                     ResultSet resultSet = statement.executeQuery(selectTransportIdSql);
                     while (resultSet.next()) {
                         transportIds.add(resultSet.getString("id"));
@@ -549,7 +563,7 @@ public class SqlUtility {
     public static List<String> getAllTransportCallId(){
         List<String> transportCallId = new ArrayList<>();
         String selectAllTransportCallIds = "select id from dcsa_im_v3_0.transport_call where id != ''";
-        try( Statement statement = AppProperty.getConnection().createStatement()){
+        try( Statement statement = SqlUtility.getConnection().createStatement()){
             var resultSet = statement.executeQuery(selectAllTransportCallIds);
             while (resultSet.next()) {
                 transportCallId.add(resultSet.getString("id"));
@@ -609,7 +623,7 @@ public class SqlUtility {
     public static String getLastTransportCallId() {
         String lastTransportCallId = "select id from transport_call offset ((select count(*) from transport_call)-1)";
         String transportCallId = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(lastTransportCallId);
             while (resultSet.next()) {
                 transportCallId = resultSet.getString("id");
@@ -626,7 +640,7 @@ public class SqlUtility {
     public static String getLastFacilityId(){
         String selectLastVesselImo = "select id from dcsa_im_v3_0.facility offset ((select count(*) from dcsa_im_v3_0.facility)-1)";
         String lastFacilityId = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectLastVesselImo);
             while (resultSet.next()) {
                 lastFacilityId = resultSet.getString("id");
@@ -659,7 +673,7 @@ public class SqlUtility {
     public static int getTableRowCount(String tableName){
         String tableCountSql = "SELECT COUNT(*) FROM dcsa_im_v3_0."+tableName;
         int count = 0;
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(tableCountSql);
             while (resultSet.next()) {
                  count = resultSet.getInt("count");
@@ -684,7 +698,7 @@ public class SqlUtility {
         String selectShipmentId = "select shipment_id from dcsa_im_v3_0.references where reference_type = "+
                                         StringUtils.quote(ReferenceType);
         String shipmentId = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectShipmentId);
             while (resultSet.next()) {
                 shipmentId = resultSet.getString("shipment_id");
@@ -703,7 +717,7 @@ public class SqlUtility {
         String selectShipmentId = "select id from dcsa_im_v3_0.shipment where id = "+
                 StringUtils.quote(shipmentId);
         String selectedShipmentId = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectShipmentId);
             while (resultSet.next()) {
                 selectedShipmentId = resultSet.getString("id");
@@ -726,7 +740,7 @@ public class SqlUtility {
         String selectShipmentId = "select shipment_id from dcsa_im_v3_0.references where shipment_id = "+
                 StringUtils.quote(shipmentId);
         String selectedShipmentId = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectShipmentId);
             while (resultSet.next()) {
                 selectedShipmentId = resultSet.getString("shipment_id");
@@ -749,7 +763,7 @@ public class SqlUtility {
         String selectShipmentId = "select shipment_equipment_id from dcsa_im_v3_0.shipment_equipment where shipment_equipment_id = "+
                 StringUtils.quote(shipmentEquipmentEd);
         String selectedShipmentEquipmentEd = "";
-        try (Statement statement = AppProperty.getConnection().createStatement()) {
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectShipmentId);
             while (resultSet.next()) {
                 selectedShipmentEquipmentEd = resultSet.getString("shipment_equipment_id");

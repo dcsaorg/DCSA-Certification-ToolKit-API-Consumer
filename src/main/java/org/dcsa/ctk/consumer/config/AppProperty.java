@@ -24,7 +24,6 @@ import java.sql.SQLException;
 @ConfigurationProperties( prefix = "spring")
 public class AppProperty {
     private static final String API_VERSION =  "2.2.0";
-    public static Connection connection = null;
     public static String DATABASE_URL;
     public static String DATABASE_USER_NAME;
     public static String DATABASE_PASSWORD;
@@ -70,18 +69,18 @@ public class AppProperty {
         AppProperty.NOTIFICATION_TRIGGER_TIME = notificationTriggerTime;
         CALLBACK_PATH = "/v"+API_VERSION.split("\\.")[0]+"/notification-endpoints/receive/";
 
-        String evnApiRootUri = System.getenv("DB_HOST_IP");
-        if(evnApiRootUri != null){
-            AppProperty.DATABASE_URL = url.replace("localhost", evnApiRootUri) ;
+        String evnDbRootUri = System.getenv("DB_HOST_IP");
+        if(evnDbRootUri != null){
+            AppProperty.DATABASE_URL = url.replace("localhost", evnDbRootUri) ;
         }else{
             AppProperty.DATABASE_URL = url;
         }
         AppProperty.DATABASE_URL = AppProperty.DATABASE_URL.replace("r2dbc", "jdbc");
         AppProperty.DATABASE_URL = AppProperty.DATABASE_URL+"/"+dbName+"?currentSchema="+schema;
-
         AppProperty.DATABASE_USER_NAME = username;
         AppProperty.DATABASE_PASSWORD = password;
         AppProperty.UPLOAD_CONFIG_PATH = upload_config_path;
+
         makeUploadPath();
     }
 
@@ -95,19 +94,6 @@ public class AppProperty {
         }
     }
 
-    public static Connection getConnection() {
-        try {
-            if (connection == null) {
-                connection = DriverManager.getConnection(AppProperty.DATABASE_URL, AppProperty.DATABASE_USER_NAME, AppProperty.DATABASE_PASSWORD);
-                System.out.println("Connected to the database!");
-            } else {
-                System.out.println("Connection is initialized: "+connection);
-            }
-        } catch (SQLException e) {
-            System.out.println("Connection init error: "+e.getMessage());
-        }
-        return connection;
-    }
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         return new MultipartConfigElement("");
