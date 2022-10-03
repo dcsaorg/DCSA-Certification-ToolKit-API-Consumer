@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>org.dcsa</groupId>
 			<artifactId>dcsa_tnt</artifactId>
-			<version>${dcsa.tnt.version}${dcsa.artifacttype}</version>
+			<version>0.0.1-reactive</version>
 		</dependency>
 
 		<dependency>
