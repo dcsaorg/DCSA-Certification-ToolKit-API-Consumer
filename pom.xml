@@ -127,4 +127,19 @@
 		</repository>
 	</repositories>
 
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+		</pluginRepository>
+	</pluginRepositories>
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub OWNER Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/dcsaorg/DCSA-TNT</url>
+		</repository>
+	</distributionManagement>
+
 </project>
