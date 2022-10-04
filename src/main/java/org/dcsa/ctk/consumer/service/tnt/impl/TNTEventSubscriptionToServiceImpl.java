@@ -47,9 +47,14 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
     final CustomLogger customLogger;
 
     @Override
-    public Map<String, Object> create(TNTEventSubscriptionTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem)
+    public Map<String, Object> create(TNTEventSubscriptionTO req, ServerHttpResponse response, ServerHttpRequest request)
             throws ExecutionException, InterruptedException, JsonProcessingException {
-        String route = request.getPath().toString().replace("/v2", "");
+        String[] paths = request.getPath().toString().split("/");
+        String route = "/";
+        if(paths.length > 0){
+            route = route+paths[paths.length -1];
+        }
+        CheckListItem checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_SUB_CSM_201.getValue());
         boolean result = callBackService.doHeadRequest(req, true);
         Map<String, Object> responseMap = new HashMap<>();
         if(!checkApiVersion(req, response, request)){
@@ -60,10 +65,12 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             TNTEventSubscriptionTO res;
             if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
                 res = tntServer.create(req).toFuture().get();
+                customLogger.init(req, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(res), response, request, checkListItem);
                 if (checkListItem != null) {
                     checkListItem.setStatus(CheckListStatus.CONFORMANT);
                 }
+                customLogger.log(responseMap, response, request);
                 String timeStamp = ZonedDateTime.now().minus(1, ChronoUnit.HOURS).toString();
                 responseMap.put("eventDateTime",timeStamp);
                 responseMap.put("eventCreatedDateTime",timeStamp);
@@ -88,7 +95,9 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
             }
             responseMap.put("SUBSCRIPTION REGISTRATION FAILED", "THE CALLBACK URL DID NOT RESPOND");
+
         }
+        customLogger.log(responseMap, response, request);
         return responseMap;
     }
 
@@ -129,19 +138,32 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
     }
 
     @Override
-    public List<Map<String, Object>> findAll(ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
-        List<Map<String, Object>> responseList;
+    public List<Map<String, Object>> findAll(ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
+        String[] paths = request.getPath().toString().split("/");
+        String route = "/";
+        if(paths.length > 0){
+            route = route+paths[paths.length -1];
+        }
+        CheckListItem checkListItem = ConfigService.getCheckListItem(route, response, request);
+        customLogger.init(null, response, request, checkListItem, route);
+
+        List<Map<String, Object>> responseList = null;
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             List<TNTEventSubscriptionTO> actualResponse = tntServer.findAll(response, request).collectList().toFuture().get();
-            if (actualResponse.size() == 0) checkListItem = null;
+            if (actualResponse.size() == 0){
+                checkListItem = null;
+            }
             responseList = listDecorator.decorate(JsonUtility.convertToList(actualResponse), response, request, checkListItem);
-            if (checkListItem != null)
+            if (checkListItem != null) {
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
+            }
+            customLogger.log(responseList, response, request);
             return responseList;
         } else {
             Map<String, Object> responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
             responseMap = mapDecorator.decorate(responseMap, response, request, checkListItem);
             checkListItem.setStatus(CheckListStatus.CONFORMANT);
+            customLogger.log(responseList, response, request);
             throw new DecoratorException(responseMap);
         }
     }
@@ -178,7 +200,10 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
     }
 
     @Override
-    public Map<String, Object> update(UUID id, TNTEventSubscriptionTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
+    public Map<String, Object> update(UUID id, TNTEventSubscriptionTO req, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
+        String route = "/event-subscriptions/{id}";
+        CheckListItem checkListItem = ConfigService.getCheckListItem(route, response, request);
+        customLogger.init(req, response, request, checkListItem, route);
         Map<String, Object> responseMap  = new HashMap<>();
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             TNTEventSubscriptionTO actualResponse = tntServer.update(id, req).toFuture().get();
@@ -194,27 +219,36 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                 }
                 responseMap.put("404 (Not Found)", "EventSubscription not found");
             }
+            customLogger.log(responseMap, response, request);
             return responseMap;
         } else {
             responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
             responseMap = mapDecorator.decorate(responseMap, response, request, checkListItem);
             checkListItem.setStatus(CheckListStatus.CONFORMANT);
+            customLogger.log(responseMap, response, request);
             throw new DecoratorException(responseMap);
         }
     }
 
     @Override
-    public void updateSecret(UUID id, EventSubscriptionSecretUpdateTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
+    public void updateSecret(UUID id, EventSubscriptionSecretUpdateTO req, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
+        String route = "/event-subscriptions/{id}/secret";
+        CheckListItem checkListItem = ConfigService.getCheckListItem(route, response, request);
+        customLogger.init(req, response, request, checkListItem, route);
         Map<String, Object> responseMap;
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             tntServer.updateSecret(id, req).toFuture().get();
-            if (checkListItem != null)
+            if (checkListItem != null) {
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
+                responseMap = mapDecorator.decorate(JsonUtility.convertToMap(req), response, request, checkListItem);
+                customLogger.log(responseMap, response, request);
+            }
           callBackService.sendNotification(id, req);
         } else {
             responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
             responseMap = mapDecorator.decorate(responseMap, response, request, checkListItem);
             checkListItem.setStatus(CheckListStatus.CONFORMANT);
+            customLogger.log(responseMap, response, request);
             throw new DecoratorException(responseMap);
         }
     }

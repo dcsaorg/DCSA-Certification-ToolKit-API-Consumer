@@ -449,7 +449,7 @@
       }
     },
     {
-      "route": "/check/callback",
+      "route": "/conformance/callback/check",
       "variants": {
         "POST": [
           {
@@ -476,7 +476,7 @@
       }
     },
     {
-      "route": "/callback",
+      "route": "/conformance/callback",
       "variants": {
         "GET": [
           {

@@ -2,6 +2,7 @@ package org.dcsa.ctk.consumer.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.netty.handler.codec.DecoderException;
@@ -17,6 +18,8 @@ public class JsonUtility {
     public static <T> String getStringFormObject(T t) {
         ObjectMapper mapper = JsonMapper.builder()
                 .addModule(new JavaTimeModule())
+                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
                 .build();
         String inputJson = "";
         if (t != null) {
@@ -30,10 +33,12 @@ public class JsonUtility {
     }
 
     public static Map<String, Object> convertToMap(Object object) {
-        ObjectMapper mapObject = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         JavaTimeModule module = new JavaTimeModule();
-        mapObject.registerModule(module);
-        Map<String, Object> mapObj = mapObject.convertValue(object, Map.class);
+        mapper.registerModule(module);
+        Map<String, Object> mapObj = mapper.convertValue(object, Map.class);
         return mapObj;
     }
 
@@ -78,6 +83,8 @@ public class JsonUtility {
 
     public static <T> T getObjectFromJson(Class<T> t1, String jsonString) {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         T t = null;
         try {
             t = (T) mapper.readValue(jsonString, t1);
@@ -89,7 +96,8 @@ public class JsonUtility {
 
     public static <T> String getStringFormat(T t) {
         ObjectMapper mapper = new ObjectMapper();
-
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         String inputJson = "";
         if (t != null) {
             try {

@@ -16,14 +16,14 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.dcsa.ctk.consumer.controller.DataRequestController.REQUEST_URL;
+
 @RestController
-@RequestMapping(path = DataRequestController.API_VERSION, produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = REQUEST_URL, produces = {MediaType.APPLICATION_JSON_VALUE})
 public class DataRequestController {
-    public static final String API_VERSION = "/v2";
+    public static final String REQUEST_URL = "/conformance/data-management";
     private static final String POST_JSON_SHIPMENT = "/uploadShipment";
-
     private  static final String GET_JSON_SHIPMENT = "/example-data/full-shipment";
-
     private  static final String DELETE_LAST_SHIPMENT = "/removeLastShipment";
 
     private static final String DELETE_ALL_EVENTS = "/removeAllEvent";

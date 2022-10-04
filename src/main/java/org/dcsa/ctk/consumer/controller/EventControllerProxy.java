@@ -67,8 +67,6 @@ public class EventControllerProxy {
     ) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route="/events";
         CheckListItem checkListItem = ConfigService.getCheckListItem(route,response,request);
-      //  CheckListItem checkListItem= ConfigService.getCheckListItem(ConfigService.checkListItemMap, ValidationRequirementID.TNT_2_2_SUB_CSM_201.getValue());
-
         customLogger.init(null,response,request,checkListItem, route);
         List<Map<String, Object>> result =
                 eventControllerService.findAll(

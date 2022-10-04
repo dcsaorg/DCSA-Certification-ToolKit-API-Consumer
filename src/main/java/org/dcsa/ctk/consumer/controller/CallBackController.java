@@ -15,25 +15,26 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import static org.dcsa.ctk.consumer.controller.CallBackController.API_VERSION;
+import static org.dcsa.ctk.consumer.controller.CallBackController.REQUEST_URL;
 
 @RestController
-@RequestMapping(path = API_VERSION, produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = REQUEST_URL, produces = {MediaType.APPLICATION_JSON_VALUE})
 public class CallBackController {
-    public static final String API_VERSION = "/v2";
+
+    public static final String REQUEST_URL = "/conformance/callback";
     final ConsumerCallbackService consumerCallbackService;
 
     public CallBackController( ConsumerCallbackService consumerCallbackService) {
         this.consumerCallbackService = consumerCallbackService;
     }
 
-    @PostMapping({"/check/callback/{id}"})
+    @PostMapping({"/check/{id}"})
     public ResponseEntity<String> checkCallback(@PathVariable String id, @RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request)
             throws ExecutionException, InterruptedException, JsonProcessingException {
        return consumerCallbackService.checkCallback(UUID.fromString(id), JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj),
                response, request, ConfigService.checkListItemMap);
     }
-    @GetMapping(value = "/callback/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Map<String, Object>> callback(@PathVariable String id, ServerHttpResponse response, ServerHttpRequest request)
                   throws ExecutionException, InterruptedException, JsonProcessingException {
             return consumerCallbackService.callCallback(UUID.fromString(id),response, request);

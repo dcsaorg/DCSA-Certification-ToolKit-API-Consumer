@@ -2,6 +2,7 @@ package org.dcsa.ctk.consumer.service.callback.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dcsa.core.events.model.enums.EventType;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.ctk.consumer.notification.sender.NotificationFactory;
 import org.dcsa.ctk.consumer.notification.sender.NotificationSender;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -84,6 +86,9 @@ public class CallBackServiceImpl implements CallBackService {
     @Override
     public boolean sendNotification(UUID id, EventSubscriptionSecretUpdateTO secret) throws ExecutionException, InterruptedException {
         TNTEventSubscriptionTO req = tntServer.findById(id).toFuture().get();
+        if(req.getEventType().size() == 0){
+            req.setEventType( List.of(EventType.EQUIPMENT, EventType.SHIPMENT, EventType.TRANSPORT, EventType.OPERATIONS));
+        }
         req.setSecret(secret.getSecret());
         sendNotification(req);
         return true;

@@ -42,7 +42,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
     public ResponseEntity<String> checkCallback(UUID id, TNTEventSubscriptionTO reqTntEventSubscriptionTO, ServerHttpResponse response, ServerHttpRequest request, Map<String, List<CheckListItem>> checkListItemMap) throws ExecutionException, InterruptedException, JsonProcessingException {
         Map<String, Object> responseMap;
         String returnMsg = "";
-        String route = "/check/callback";
+        String route =  request.getPath().toString().substring(0, request.getPath().toString().lastIndexOf("/"));
         CheckListItem checkListItem = ConfigService.getCheckListItem(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_200.getValue());
         TNTEventSubscriptionTO dbTntEventSubscriptionTO = SqlUtility.getEventSubscriptionBySubscriptionId(id.toString());
 
@@ -89,7 +89,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
     public ResponseEntity<Map<String, Object>> callCallback(UUID id, ServerHttpResponse response, ServerHttpRequest request)
             throws ExecutionException, InterruptedException, JsonProcessingException{
         Map<String, Object> responseMap = new LinkedHashMap<>();
-        String route = "/callback";
+        String route = request.getPath().toString().substring(0, request.getPath().toString().lastIndexOf("/"));
         TNTEventSubscriptionTO tntEventSubscriptionTO = SqlUtility.getEventSubscriptionBySubscriptionId(id.toString());
         if(tntEventSubscriptionTO.getSubscriptionID() != null) {
             if(tntEventSubscriptionTO.getEventType() == null){
