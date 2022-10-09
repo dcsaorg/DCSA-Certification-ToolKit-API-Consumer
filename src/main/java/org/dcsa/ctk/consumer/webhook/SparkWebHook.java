@@ -26,7 +26,6 @@ public class SparkWebHook {
             log.info("INTERNAL CALLBACK SEVER RECEIVED HEAD UUID:: {} IS NEW SUBSCRIPTION REQUEST {}", req.params(":uuid"),
                     String.valueOf(newSubscription).toUpperCase());
             res.status(204);
-            res.body("{ \"Successful\": \"Callback HEAD received successfully! }");
             return res;
         });
         http.awaitInitialization();

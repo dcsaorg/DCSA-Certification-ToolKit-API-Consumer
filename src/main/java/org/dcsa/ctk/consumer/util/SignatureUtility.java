@@ -24,7 +24,7 @@ public class SignatureUtility {
         return notificationSignature;
     }
 
-    private static byte[]   computeSignature(byte[] secretKey, byte[] payload) throws Exception {
+    private static byte[] computeSignature(byte[] secretKey, byte[] payload) throws Exception {
         final String javaAlgorithmName = "HmacSHA256";
         Mac mac = Mac.getInstance(javaAlgorithmName);
         mac.init(new SecretKeySpec(secretKey, javaAlgorithmName));
