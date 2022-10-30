@@ -39,7 +39,7 @@ public class CustomLoggerImpl implements CustomLogger {
         List<String> routeKeyHeader = response.getHeaders().get("routeKey");
         CheckListItem checkListItem = null;
         if (checkListItemHeader != null) {
-            checkListItem = ConfigService.getCheckListItem(checkListItemHeader.get(0));
+            checkListItem = ConfigService.getCheckListItemByRequirementId(checkListItemHeader.get(0));
             response.getHeaders().remove("checkListItemKey");
         }
         CustomerLogger customerLogger = null;

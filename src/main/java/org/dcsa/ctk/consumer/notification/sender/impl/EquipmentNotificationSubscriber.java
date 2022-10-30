@@ -36,7 +36,7 @@ public class EquipmentNotificationSubscriber implements NotificationSubscriber {
         log.info("POST NOTIFICATION SENT");
         try {
             HttpStatus statusCode=restTemplate.exchange(callbackUrl, HttpMethod.POST,entity,String.class).getStatusCode();
-            if(statusCode == HttpStatus.CREATED) {
+            if(statusCode == HttpStatus.NO_CONTENT) {
                 log.info("NOTIFICATION RECEIVED RESPONSE: {}",statusCode);
             }else if( statusCode == HttpStatus.METHOD_NOT_ALLOWED){
                 log.error("ERROR NOTIFICATION RECEIVED RESPONSE:{}",statusCode);

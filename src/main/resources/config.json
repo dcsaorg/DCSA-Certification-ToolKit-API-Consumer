@@ -6,43 +6,8 @@
         "POST": [
           {
             "httpCode": 201,
-            "requirementID": "TNT.2.2.SUB.CSM.201",
-            "description": "POST /event-subscriptions-notification check"
-          },
-          {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.API.CSM.200",
-            "description": "POST /event-subscriptions with header API-Version",
-            "requestMatcher": {
-              "header": [
-                "API-Version"
-              ]
-            }
-          },
-          {
-            "httpCode": 404,
-            "requirementID": "TNT.2.2.SUB.CSM.HEAD.404",
-            "description": "POST /event-subscriptions callback head request no response check"
-          },
-          {
-            "httpCode": 400,
-            "requirementID": "TNT.2.2.API.CSM.400",
-            "description": "POST /event-subscriptions with header wrong API-Version check",
-            "requestMatcher": {
-              "header": [
-                "API-Version"
-              ]
-            }
-          },
-          {
-            "httpCode": 400,
             "requirementID": "TNT.2.2.SUB.CSM.2",
-            "description": "POST /event-subscriptions-notification fail check"
-          },
-          {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.SUB.CSM.TIME.200",
-            "description": "POST /event-subscriptions check event time in the past"
+            "description": "POST /event-subscriptions-notification check"
           },
           {
             "httpCode": 201,
