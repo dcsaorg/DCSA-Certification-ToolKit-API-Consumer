@@ -54,7 +54,7 @@ public class TNTEventSubscriptionTOControllerProxy {
     @PostMapping(EVENT_SUBSCRIPTION)
     @ResponseStatus(HttpStatus.CREATED)
     public Map<String, Object> create(@RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
-        String route = "/event-subscriptions";
+        String route = APIUtility.getRoute(request);
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(obj, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
@@ -65,7 +65,7 @@ public class TNTEventSubscriptionTOControllerProxy {
     @GetMapping(EVENT_SUBSCRIPTION)
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> findAll(ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
-        String route = "/event-subscriptions";
+        String route = APIUtility.getRoute(request);
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(null, response, request, checkListItem, route);
         List<Map<String, Object>> responseList = tntEventSubscriptionToService.findAll(response, request, checkListItem);
@@ -77,6 +77,7 @@ public class TNTEventSubscriptionTOControllerProxy {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateSecret(@PathVariable String id, @RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions/{id}/secret";
+        String route2 = APIUtility.getRoute(request)+"/{id}/secret";
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(obj, response, request, checkListItem, route);
         tntEventSubscriptionToService.updateSecret(UUID.fromString(id), JsonUtility.convertTo(EventSubscriptionSecretUpdateTO.class, obj), response, request, checkListItem);

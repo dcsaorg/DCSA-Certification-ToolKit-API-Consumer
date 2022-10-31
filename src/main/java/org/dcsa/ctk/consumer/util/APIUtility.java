@@ -5,6 +5,7 @@ import lombok.extern.java.Log;
 import org.dcsa.ctk.consumer.model.*;
 import org.dcsa.ctk.consumer.webhook.SparkWebHook;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.validation.annotation.Validated;
 
 import java.text.ParseException;
@@ -87,4 +88,13 @@ public class APIUtility {
         }
          return uuid;
     }
+    public static String getRoute(ServerHttpRequest request){
+        String[] paths = request.getPath().toString().split("/");
+        String route = "/";
+        if(paths.length > 0){
+            route = route+paths[paths.length -1];
+        }
+        return route;
+    }
+
 }

@@ -1,5 +1,6 @@
 package org.dcsa.ctk.consumer.service.tnt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.ctk.consumer.model.CheckListItem;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
@@ -13,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 
 public interface TNTEventSubscriptionToService<T> {
 
-    T create(TNTEventSubscriptionTO obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException;
+    T create(TNTEventSubscriptionTO obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException, JsonProcessingException;
 
     List<T> findAll(ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException;
 
