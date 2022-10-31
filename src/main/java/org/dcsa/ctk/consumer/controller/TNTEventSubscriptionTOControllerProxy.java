@@ -51,23 +51,18 @@ public class TNTEventSubscriptionTOControllerProxy {
         APIUtility.runWebHook();
     }
 
-    @PostMapping("/event-subscriptions")
+    @PostMapping(EVENT_SUBSCRIPTION)
     @ResponseStatus(HttpStatus.CREATED)
     public Map<String, Object> create(@RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions";
-        Map<String, Object> responseMap = new HashMap<>();
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
-        if(checkListItem == null){
-            responseMap.put("RESPONSE MESSAGE", "ALL RESPONSE SCENARIOS DONE");
-            return responseMap;
-        }
         customLogger.init(obj, response, request, checkListItem, route);
-        responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
+        Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
         customLogger.log(responseMap, response, request);
         return responseMap;
     }
 
-    @GetMapping("/event-subscriptions")
+    @GetMapping(EVENT_SUBSCRIPTION)
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> findAll(ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions";
@@ -78,7 +73,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         return responseList;
     }
 
-    @PutMapping({"/event-subscriptions/{id}/secret"})
+    @PutMapping({EVENT_SUBSCRIPTION+"/{id}/secret"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateSecret(@PathVariable String id, @RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions/{id}/secret";
@@ -88,7 +83,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.log(null, response, request);
     }
 
-    @GetMapping({"/event-subscriptions/{id}"})
+    @GetMapping({EVENT_SUBSCRIPTION+"/{id}"})
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> findById(@PathVariable String id, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions/{id}";
@@ -99,7 +94,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         return responseMap;
     }
 
-    @PutMapping({"/event-subscriptions/{id}"})
+    @PutMapping({EVENT_SUBSCRIPTION+"/{id}"})
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> update(@PathVariable String id, @RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions/{id}";
@@ -110,7 +105,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         return responseMap;
     }
 
-    @DeleteMapping({"/event-subscriptions/{id}"})
+    @DeleteMapping({EVENT_SUBSCRIPTION+"/{id}"})
     @ResponseStatus(HttpStatus.OK)
     public void deleteById(@PathVariable String id, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions/{id}";

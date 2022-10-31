@@ -87,3 +87,8 @@ extent:
     spark:
       start: 'true'
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

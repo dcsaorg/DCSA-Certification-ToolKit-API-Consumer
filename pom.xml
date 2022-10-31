@@ -38,6 +38,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.dcsa</groupId>
 			<artifactId>dcsa_tnt</artifactId>
 			<version>${dcsa.tnt.version}${dcsa.artifacttype}</version>
@@ -72,7 +77,6 @@
 			<version>4.5.13</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.aventstack/extentreports -->
 		<dependency>
 			<groupId>com.aventstack</groupId>
 			<artifactId>extentreports</artifactId>
