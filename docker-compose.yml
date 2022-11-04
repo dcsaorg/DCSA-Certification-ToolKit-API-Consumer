@@ -8,8 +8,6 @@ services:
            #  - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n"
         container_name: dcsa-consumer-ctk
         build: ./
-        volumes:
-            - C:\workspace\abc\ctk\reports:/ctk/reports
         ports:
             - 9092:9092
            # - 5005:5005
