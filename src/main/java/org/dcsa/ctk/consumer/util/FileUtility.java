@@ -84,4 +84,15 @@ public class FileUtility {
                 throw new IllegalStateException("Cannot find file " + resource);
             }
     }
+
+    public static InputStream getInputStream(String resource){
+        InputStream inputStream = null;
+        try{
+            Path filePath = Path.of(resource);
+            inputStream = Files.newInputStream(filePath.toAbsolutePath());
+        } catch (IOException e) {
+            log.log(Level.SEVERE, e.getMessage());
+        }
+        return inputStream;
+    }
 }

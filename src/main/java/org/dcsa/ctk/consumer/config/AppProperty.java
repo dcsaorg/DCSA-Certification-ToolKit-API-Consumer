@@ -13,9 +13,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 @Data
 @Log
@@ -23,13 +20,25 @@ import java.sql.SQLException;
 @Configuration
 @ConfigurationProperties( prefix = "spring")
 public class AppProperty {
-    private static final String API_VERSION =  "2.2.0";
+    public static String RESOURCE_FILENAME = "application.yml";
+    private static String API_VERSION =  "2.2.0";
     public static String DATABASE_URL;
     public static String DATABASE_USER_NAME;
     public static String DATABASE_PASSWORD;
     public static String UPLOAD_CONFIG_PATH;
-
     public static String CALLBACK_PATH;
+
+    public static String DATABASE_NAME;
+
+    public static String DATABASE_SCHEMA;
+
+    private static final String DATABASE_URL_KEY = "url";
+    private static final String DATABASE_SCHEMA_KEY = "schema";
+    private static final String DATABASE_NAME_KEY = "dbname";
+    private static final String DATABASE_USERNAME_KEY = "username";
+    private static final String DATABASE_PASSWORD_KEY = "password";
+    public String EVENTS_PATH_KEY="events_path";
+    @Value("${spring.upload_config_path}")
     private String upload_config_path;
     public static Path uploadPath;
     @Value("${spring.r2dbc.url}")
@@ -38,11 +47,10 @@ public class AppProperty {
     public String password;
     @Value("${spring.r2dbc.username}")
     public String username;
-    @Value("${spring.r2dbc.name}")
+    @Value("${spring.r2dbc.dbname}")
     public String dbName;
     @Value("${spring.r2dbc.properties.schema}")
     public String schema;
-
     private String api_root_uri;
     private String callback_uri;
     private int callback_port;
@@ -50,41 +58,57 @@ public class AppProperty {
     private String test_suite_name;
     private String event_subscription_simulation;
     private long notificationTriggerTime;
-
+    public static boolean isAppDataUploaded = false;
     public static String API_ROOT_URI;
     public static String CALLBACK_URI;
     public static int CALLBACK_PORT;
     public static int CALLBACK_WAIT;
-    public static boolean EVENT_SUBSCRIPTION_SIMULATION;
-    public static boolean PUB_SUB_FLAG;
     public static long NOTIFICATION_TRIGGER_TIME;
-
-
+    public static String EVENTS_PATH;
+    private String events_path;
     public void init(){
+        isAppDataUploaded = true;
+        makeUploadPath();
         AppProperty.API_ROOT_URI = api_root_uri;
         AppProperty.CALLBACK_URI = callback_uri;
         AppProperty.CALLBACK_PORT = callback_port;
         AppProperty.CALLBACK_WAIT = callback_wait;
         AppProperty.UPLOAD_CONFIG_PATH = upload_config_path;
         AppProperty.NOTIFICATION_TRIGGER_TIME = notificationTriggerTime;
-        CALLBACK_PATH = "/v"+API_VERSION.split("\\.")[0]+"/notification-endpoints/receive/";
-
-        String evnDbRootUri = System.getenv("DB_HOST_IP");
-        if(evnDbRootUri != null){
-            AppProperty.DATABASE_URL = url.replace("localhost", evnDbRootUri) ;
-        }else{
-            AppProperty.DATABASE_URL = url;
-        }
-        AppProperty.DATABASE_URL = AppProperty.DATABASE_URL.replace("r2dbc", "jdbc");
-        AppProperty.DATABASE_URL = AppProperty.DATABASE_URL+"/"+dbName+"?currentSchema="+schema;
+        AppProperty.DATABASE_URL = url;
+        AppProperty.DATABASE_NAME = dbName;
         AppProperty.DATABASE_USER_NAME = username;
         AppProperty.DATABASE_PASSWORD = password;
-        AppProperty.UPLOAD_CONFIG_PATH = upload_config_path;
-
-        makeUploadPath();
+        AppProperty.DATABASE_SCHEMA = schema;
+        AppProperty.CALLBACK_PATH = "/v"+ AppProperty.API_VERSION.split("\\.")[0]+"/notification-endpoints/receive/";
+        String evnEventsPath = System.getenv("EVENTS_PATH");
+        if(evnEventsPath != null){
+            AppProperty.EVENTS_PATH = evnEventsPath;
+        } else if(!PropertyLoader.getProperty(EVENTS_PATH_KEY).isBlank()){
+            AppProperty.EVENTS_PATH = PropertyLoader.getProperty(EVENTS_PATH_KEY);
+        }else{
+            AppProperty.EVENTS_PATH = events_path;
+        }
+        initDatabaseProperties();
     }
 
-    private static void makeUploadPath(){
+    private static void initDatabaseProperties(){
+        String evnDbRootUri = System.getenv("DB_HOST_IP");
+        AppProperty.DATABASE_USER_NAME = PropertyLoader.getProperty(DATABASE_USERNAME_KEY);
+        AppProperty.DATABASE_PASSWORD = PropertyLoader.getProperty(DATABASE_PASSWORD_KEY);
+        AppProperty.DATABASE_NAME = PropertyLoader.getProperty(DATABASE_NAME_KEY);
+        AppProperty.DATABASE_SCHEMA = PropertyLoader.getProperty(DATABASE_SCHEMA_KEY);
+
+        if(evnDbRootUri != null){
+            AppProperty.DATABASE_URL = PropertyLoader.getProperty(DATABASE_URL_KEY).replace("localhost", evnDbRootUri) ;
+        }else{
+            AppProperty.DATABASE_URL = PropertyLoader.getProperty(DATABASE_URL_KEY);
+        }
+        AppProperty.DATABASE_URL = AppProperty.DATABASE_URL.replace("r2dbc", "jdbc");
+    }
+
+    private void makeUploadPath(){
+        AppProperty.UPLOAD_CONFIG_PATH = upload_config_path;
         uploadPath = Paths.get(AppProperty.UPLOAD_CONFIG_PATH);
         try {
             Files.createDirectories(uploadPath);

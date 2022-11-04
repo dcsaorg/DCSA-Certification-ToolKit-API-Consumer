@@ -9,6 +9,8 @@ import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import lombok.Data;
+import org.dcsa.ctk.consumer.config.AppProperty;
+import org.dcsa.ctk.consumer.config.PropertyLoader;
 import org.dcsa.ctk.consumer.constant.CheckListStatus;
 import org.dcsa.ctk.consumer.constant.TestRequirement;
 import org.dcsa.ctk.consumer.model.CheckListItem;
@@ -52,8 +54,8 @@ public class ExtentReportManager {
 
     private static void setReportSystemInfo(){
         Properties properties = System.getProperties();
-        extentReports.setSystemInfo(COMPANY_KEY.toUpperCase(), PropertyLoader.getInstance().getProperty(COMPANY_KEY));
-        extentReports.setSystemInfo(AUTHOR_KEY.toUpperCase(), PropertyLoader.getInstance().getProperty(AUTHOR_KEY));
+        extentReports.setSystemInfo(COMPANY_KEY.toUpperCase(), PropertyLoader.getInstance(AppProperty.RESOURCE_FILENAME).getProperty(COMPANY_KEY));
+        extentReports.setSystemInfo(AUTHOR_KEY.toUpperCase(), PropertyLoader.getInstance(AppProperty.RESOURCE_FILENAME).getProperty(AUTHOR_KEY));
         extentReports.setSystemInfo(OS_NAME.toUpperCase().replaceAll("\\."," "),
                                                 (String)properties.get(OS_NAME));
         extentReports.setSystemInfo(USER_LANGUAGE.toUpperCase().replaceAll("\\."," "),
@@ -75,21 +77,21 @@ public class ExtentReportManager {
 
     public static ExtentSparkReporter getExtentSparkReporter(){
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy__hh-mm-ss");
-        reportName = PropertyLoader.getInstance().getProperty(NAME_KEY) +
+        reportName = PropertyLoader.getInstance(AppProperty.RESOURCE_FILENAME).getProperty(NAME_KEY) +
                     "_" +dateFormat.format(Calendar.getInstance().getTime()) + ".html";
         reportPath = System.getProperty("user.dir")+"/"+
-                    PropertyLoader.getInstance().getProperty(LOCATION_KEY)+"/" + reportName;
+                    PropertyLoader.getInstance(AppProperty.RESOURCE_FILENAME).getProperty(LOCATION_KEY)+"/" + reportName;
 
         ExtentSparkReporter reporter = new ExtentSparkReporter( reportPath);
 
-        reporter.config().setReportName(PropertyLoader.getInstance().getProperty(NAME_KEY));
-        reporter.config().setDocumentTitle(PropertyLoader.getInstance().getProperty(TITLE_KEY));
+        reporter.config().setReportName(PropertyLoader.getInstance(AppProperty.RESOURCE_FILENAME).getProperty(NAME_KEY));
+        reporter.config().setDocumentTitle(PropertyLoader.getInstance(AppProperty.RESOURCE_FILENAME).getProperty(TITLE_KEY));
         reporter.config().setTheme(
-                Objects.equals(PropertyLoader.getInstance().getProperty(THEME_KEY), Theme.DARK.getName()) ?
+                Objects.equals(PropertyLoader.getInstance(AppProperty.RESOURCE_FILENAME).getProperty(THEME_KEY), Theme.DARK.getName()) ?
                         Theme.DARK : Theme.STANDARD);
         reporter.config().setTimelineEnabled(Boolean.parseBoolean(
-                PropertyLoader.getInstance().getProperty(ENABLED_KEY)));
-        reporter.config().setTimeStampFormat(PropertyLoader.getInstance().getProperty(FORMAT_KEY));
+                PropertyLoader.getInstance(AppProperty.RESOURCE_FILENAME).getProperty(ENABLED_KEY)));
+        reporter.config().setTimeStampFormat(PropertyLoader.getInstance(AppProperty.RESOURCE_FILENAME).getProperty(FORMAT_KEY));
         return reporter;
     }
 

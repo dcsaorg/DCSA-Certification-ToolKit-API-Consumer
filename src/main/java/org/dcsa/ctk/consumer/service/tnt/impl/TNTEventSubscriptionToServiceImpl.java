@@ -59,11 +59,14 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
                 res = tntServer.create(req).toFuture().get();
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(res), response, request, checkListItem);
-                if (checkListItem != null)
+                if (checkListItem != null) {
                     checkListItem.setStatus(CheckListStatus.CONFORMANT);
-                String timeStamp = ZonedDateTime.now().minus(1, ChronoUnit.HOURS).toString();
-                responseMap.put("eventDateTime",timeStamp);
-                responseMap.put("eventCreatedDateTime",timeStamp);
+                }
+                if(responseMap.size() != 0) {
+                    String timeStamp = ZonedDateTime.now().minus(1, ChronoUnit.HOURS).toString();
+                    responseMap.put("eventDateTime", timeStamp);
+                    responseMap.put("eventCreatedDateTime", timeStamp);
+                }
                 callBackService.sendNotification(req);//async call, triggered after config time
                 return responseMap;
             } else {
@@ -125,8 +128,9 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             List<TNTEventSubscriptionTO> actualResponse = tntServer.findAll(response, request).collectList().toFuture().get();
             if (actualResponse.size() == 0) checkListItem = null;
             responseList = listDecorator.decorate(JsonUtility.convertToList(actualResponse), response, request, checkListItem);
-            if (checkListItem != null)
+            if (checkListItem != null) {
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
+            }
             return responseList;
         } else {
             Map<String, Object> responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
@@ -142,8 +146,9 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             TNTEventSubscriptionTO actualResponse = tntServer.findById(id).toFuture().get();
             responseMap = mapDecorator.decorate(JsonUtility.convertToMap(actualResponse), response, request, checkListItem);
-            if (checkListItem != null)
+            if (checkListItem != null) {
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
+            }
             return responseMap;
         } else {
             responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
@@ -158,8 +163,9 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
         List<Map<Class<?>, String>> parametersList = null;
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             tntServer.deleteById(id).toFuture().get();
-            if (checkListItem != null)
+            if (checkListItem != null) {
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
+            }
         } else {
             Map<String, Object> responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
             responseMap = mapDecorator.decorate(responseMap, response, request, checkListItem);
@@ -199,8 +205,9 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
         Map<String, Object> responseMap;
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
             tntServer.updateSecret(id, req).toFuture().get();
-            if (checkListItem != null)
+            if (checkListItem != null) {
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
+            }
             callBackService.sendNotification(id, req);
         } else {
             responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);

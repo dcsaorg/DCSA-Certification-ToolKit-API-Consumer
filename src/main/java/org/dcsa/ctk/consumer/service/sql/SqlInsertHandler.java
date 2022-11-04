@@ -492,7 +492,7 @@ public class SqlInsertHandler {
                 StringUtils.quote(transportCall.getVesselIMONumber()) + ")";
         int rows = SqlUtility.updateRow(transportCallSql);
         if (rows > 0) {
-            log.log(Level.INFO, "A transportCall has been inserted.");
+            log.log(Level.INFO, "A transportCall has been inserted with ID: "+transportCall.getId().toString());
             return "\nA new transportCall is inserted with id: "+transportCall.getId().toString();
         } else {
             throw new Exception("Json file processing exception for booking " + transportCall.getFacilityID().toString());
@@ -510,7 +510,7 @@ public class SqlInsertHandler {
                 StringUtils.quote(equipmentEvent.getEquipmentEventTypeCode().name()) + ")";
         int rows = SqlUtility.updateRow(equipmentEventSql);
         if (rows > 0) {
-            log.log(Level.INFO, "A new equipmentEvent has been inserted.");
+            log.log(Level.INFO, "A new equipmentEvent has been inserted with ID: "+equipmentEvent.getEvent_id().toString());
             return "\nA new equipmentEvent is inserted with id: "+equipmentEvent.getEvent_id().toString();
         } else {
             throw new Exception("Json file processing exception for equipmentEvent " + equipmentEvent.getEvent_id().toString());

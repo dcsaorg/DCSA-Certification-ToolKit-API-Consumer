@@ -1,0 +1,67 @@
+pagination:
+  defaultPageSize: 20
+
+spring:
+  application:
+    name: dcsa-ctk-consumer
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/dcsa_openapi?currentSchema=dcsa_im_v3_0
+    dbname: dcsa_openapi
+    properties:
+      schema: dcsa_im_v3_0
+    username: dcsa_db_owner
+    password: 9c072fe8-c59c-11ea-b8d1-7b6577e9f3f5
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dcsa.eu.auth0.com/
+  webflux:
+    base-path: ${dcsa.url.prefix:}
+  upload_config_path: config/uploaded
+  events_path: config/uploaded/events/v2
+  callback_port: 9999
+  callback_uri: http://localhost
+  test_data: config/v2/testdata.json
+  event_subscription_simulation: 'true'
+  config_data: config/v2/config.json
+  test_suite_name: TNT-TestSuite.xml
+  api_root_uri: http://localhost:9090
+  callback_wait: 3000
+  notificationTriggerTime: 1000
+  externalCallback: false
+
+auth0:
+  audience: localhost
+  enabled: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    # swagger-ui custom path
+    path: /docs
+
+server:
+  port: ${SERVER_PORT:9092}
+
+report:
+  theme: standard
+  file:
+    name: Consumer-CTK-Report
+    location: reports
+  title: Consumer Report
+  timeline:
+    enabled: 'false'
+  time:
+    stamp:
+      format: yyyy-MM-dd_HH-mm-ss
+  author: Masum Islam
+  company: DCSA
+  name: Consumer CTK Report
+extent:
+  reporter:
+    spark:
+      start: 'true'
+

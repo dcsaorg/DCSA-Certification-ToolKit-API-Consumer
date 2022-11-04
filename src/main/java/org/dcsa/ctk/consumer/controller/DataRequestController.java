@@ -52,7 +52,7 @@ public class DataRequestController {
     }
     @GetMapping( path = GET_JSON_SHIPMENT)
     public ResponseEntity<byte[]> getFullShipmentTimeOffset(@RequestParam(defaultValue = "plus0h") String timeOffset){
-        byte[] jsonByte = sqlInsertHandler.getJsonData( UploadType.JsonFullShipment, timeOffset).getBytes();
+            byte[] jsonByte = sqlInsertHandler.getJsonData( UploadType.JsonFullShipment, timeOffset).getBytes();
         String headerValues = "attachment;filename="+UploadType.JsonFullShipment.name()+".json";
         return ResponseEntity
                 .ok()
