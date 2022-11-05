@@ -29,7 +29,7 @@ spring:
     name: dcsa-ctk-consumer
   r2dbc:
     url: r2dbc:postgresql://localhost/dcsa_openapi?currentSchema=dcsa_im_v3_0
-    name: dcsa_openapi
+    dbname: dcsa_openapi
     properties:
       schema: dcsa_im_v3_0
     username: dcsa_db_owner
