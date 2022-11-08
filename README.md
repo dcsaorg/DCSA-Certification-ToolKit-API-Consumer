@@ -2,6 +2,11 @@
 
 Status
 -------------------------------------
+This certification toolkit is targeted at DCSA standard for Track and Trace v2.2.
+
+This certification toolkit is currently in a "pre-alpha" development stage. It must not be used to validate implementations of the standard.
+
+It is made available in order to allow early feedback on the toolkit itself.
 
 
 Building and Running the project,
