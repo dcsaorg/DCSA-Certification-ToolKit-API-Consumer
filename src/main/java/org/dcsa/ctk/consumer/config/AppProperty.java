@@ -104,7 +104,7 @@ public class AppProperty {
 
         if(evnDbUrl != null){
             System.out.println("evnDbUrl: "+evnDbUrl);
-            AppProperty.DATABASE_URL = PropertyLoader.getProperty(DATABASE_URL_KEY).replace("localhost", evnDbUrl);
+            AppProperty.DATABASE_URL = evnDbUrl;
             System.out.println("Replaced evnDbUrl in the localhost with "+evnDbUrl);
         }else{
             System.out.println("evnDbUrl was null");
