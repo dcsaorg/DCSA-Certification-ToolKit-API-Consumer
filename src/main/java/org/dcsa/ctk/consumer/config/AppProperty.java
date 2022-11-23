@@ -94,19 +94,35 @@ public class AppProperty {
     }
 
     private static void initDatabaseProperties(){
-        String evnDbRootUri = System.getenv("DB_HOST_IP");
+        String evnDbUrl = System.getenv("DB_URL");
+        String evnDbPassword = System.getenv("DB_PASSWORD");
+        String evnDbUsername = System.getenv("DB_USERNAME");
         AppProperty.DATABASE_USER_NAME = PropertyLoader.getProperty(DATABASE_USERNAME_KEY);
         AppProperty.DATABASE_PASSWORD = PropertyLoader.getProperty(DATABASE_PASSWORD_KEY);
         AppProperty.DATABASE_NAME = PropertyLoader.getProperty(DATABASE_NAME_KEY);
         AppProperty.DATABASE_SCHEMA = PropertyLoader.getProperty(DATABASE_SCHEMA_KEY);
 
-        if(evnDbRootUri != null){
-            System.out.println("evnDbRootUri: "+evnDbRootUri);
-            AppProperty.DATABASE_URL = PropertyLoader.getProperty(DATABASE_URL_KEY).replace("localhost", evnDbRootUri);
-            System.out.println("Replaced evnDbRootUri in the localhost with "+evnDbRootUri);
+        if(evnDbUrl != null){
+            System.out.println("evnDbUrl: "+evnDbUrl);
+            AppProperty.DATABASE_URL = PropertyLoader.getProperty(DATABASE_URL_KEY).replace("localhost", evnDbUrl);
+            System.out.println("Replaced evnDbUrl in the localhost with "+evnDbUrl);
         }else{
-            System.out.println("evnDbRootUri was null");
+            System.out.println("evnDbUrl was null");
             AppProperty.DATABASE_URL = PropertyLoader.getProperty(DATABASE_URL_KEY);
+        }
+        if(evnDbPassword != null){
+            System.out.println("evnDbPassword: "+evnDbPassword);
+            AppProperty.DATABASE_PASSWORD = evnDbPassword;
+        }else{
+            System.out.println("evnDbPassword was null");
+            AppProperty.DATABASE_URL = PropertyLoader.getProperty(DATABASE_URL_KEY);
+        }
+        if(evnDbUsername != null){
+            System.out.println("evnDbUsername: "+evnDbUsername);
+            AppProperty.DATABASE_USER_NAME = evnDbUsername;
+        }else{
+            System.out.println("evnDbUsername was null");
+            AppProperty.DATABASE_USER_NAME = PropertyLoader.getProperty(DATABASE_USERNAME_KEY);
         }
         AppProperty.DATABASE_URL = AppProperty.DATABASE_URL.replace("r2dbc", "jdbc");
         SqlUtility.getConnection();
