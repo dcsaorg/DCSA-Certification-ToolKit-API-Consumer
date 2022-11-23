@@ -101,8 +101,11 @@ public class AppProperty {
         AppProperty.DATABASE_SCHEMA = PropertyLoader.getProperty(DATABASE_SCHEMA_KEY);
 
         if(evnDbRootUri != null){
-            AppProperty.DATABASE_URL = PropertyLoader.getProperty(DATABASE_URL_KEY).replace("localhost", evnDbRootUri) ;
+            System.out.println("evnDbRootUri: "+evnDbRootUri);
+            AppProperty.DATABASE_URL = PropertyLoader.getProperty(DATABASE_URL_KEY).replace("localhost", evnDbRootUri);
+            System.out.println("Replaced evnDbRootUri in the localhost with "+evnDbRootUri);
         }else{
+            System.out.println("evnDbRootUri was null");
             AppProperty.DATABASE_URL = PropertyLoader.getProperty(DATABASE_URL_KEY);
         }
         AppProperty.DATABASE_URL = AppProperty.DATABASE_URL.replace("r2dbc", "jdbc");
