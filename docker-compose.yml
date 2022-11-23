@@ -4,7 +4,7 @@ services:
         environment:
              - DB_HOSTNAME=db
              - AUTH0_ENABLED=true
-             - DB_HOST_IP=192.168.68.108 # change this to host IP
+             - DB_HOST_IP=192.168.10.1 # change this to host IP
            #  - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n"
         container_name: dcsa-consumer-ctk
         build: ./
@@ -15,10 +15,10 @@ services:
             options:
                 max-file: '10'
                 max-size: 200k
-    db:
-        container_name: dcsa_db_ctk
-        environment:
-            POSTGRES_PASSWORD: "change_this_password"
-        build: ./DCSA-Information-Model/datamodel/
-        ports:
-            - 5432:5432
+#    db:
+#        container_name: dcsa_db_ctk
+#        environment:
+#            POSTGRES_PASSWORD: "change_this_password"
+#        build: ./DCSA-Information-Model/datamodel/
+#        ports:
+#            - 5432:5432

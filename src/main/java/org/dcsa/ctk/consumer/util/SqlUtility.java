@@ -6,8 +6,10 @@ import org.dcsa.ctk.consumer.config.AppProperty;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.util.StringUtils;
 
+import java.awt.*;
 import java.sql.*;
 import java.util.*;
+import java.util.List;
 
 @Log
 public class SqlUtility {
@@ -49,6 +51,7 @@ public class SqlUtility {
     public static Connection getConnection() {
         try {
             if (connection == null) {
+                logDbProperty();
                 connection = DriverManager.getConnection(AppProperty.DATABASE_URL, AppProperty.DATABASE_USER_NAME, AppProperty.DATABASE_PASSWORD);
                 System.out.println("CONNECTED TO THE DATABASE!");
             } else {
@@ -59,6 +62,12 @@ public class SqlUtility {
             throw  new RuntimeException("CONNECTION INIT ERROR: "+e.getMessage());
         }
         return connection;
+    }
+    public static void logDbProperty(){
+        System.out.println("DB URL: "+AppProperty.DATABASE_URL);
+        System.out.println("DB DATABASE_USER_NAME: "+AppProperty.DATABASE_USER_NAME);
+        System.out.println("DB DATABASE_PASSWORD: "+AppProperty.DATABASE_PASSWORD);
+        System.out.println("DB DATABASE_SCHEMA: "+AppProperty.DATABASE_SCHEMA);
     }
 
     static public String getSubscriptionCallBackUuid(String subscriptionId){
