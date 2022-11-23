@@ -41,7 +41,6 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
     @Override
     public ResponseEntity<String> checkCallback(UUID id, TNTEventSubscriptionTO reqTntEventSubscriptionTO, ServerHttpResponse response, ServerHttpRequest request, Map<String, List<CheckListItem>> checkListItemMap) throws ExecutionException, InterruptedException, JsonProcessingException {
         Map<String, Object> responseMap;
-        String returnMsg = "";
         String route = request.getPath().toString().substring(0, request.getPath().toString().lastIndexOf("/"));
         CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(route, Objects.requireNonNull(request.getMethod()).name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_200.getValue());
         TNTEventSubscriptionTO dbTntEventSubscriptionTO = SqlUtility.getEventSubscriptionBySubscriptionId(id.toString());
@@ -74,8 +73,6 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
                 return  new ResponseEntity<>("Correct event subscription id "+id+" found.\n"+checkResult,
                         HttpStatus.NO_CONTENT);
             }
-
-
       }else {
             checkListItem = ConfigService.getCheckListItemByRequirementId(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_SUB_CSM_400.getValue()    );
             customLogger.init(reqTntEventSubscriptionTO, response, request, checkListItem, route);
@@ -137,7 +134,7 @@ public class ConsumerCallbackServiceImpl implements ConsumerCallbackService {
     private String checkSameSecret(TNTEventSubscriptionTO bdTntEventSubscriptionTO, TNTEventSubscriptionTO reqTNTEventSubscriptionTO ){
         String dbSecret = Base64.getEncoder().encodeToString(bdTntEventSubscriptionTO.getSecret());
         String reqSecret = Base64.getEncoder().encodeToString(reqTNTEventSubscriptionTO.getSecret());
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         if(dbSecret.equalsIgnoreCase(reqSecret)){
             result.append("Correct secret found. ");
         }else {

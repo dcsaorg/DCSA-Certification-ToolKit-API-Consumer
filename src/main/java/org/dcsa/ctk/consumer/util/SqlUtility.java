@@ -50,12 +50,13 @@ public class SqlUtility {
         try {
             if (connection == null) {
                 connection = DriverManager.getConnection(AppProperty.DATABASE_URL, AppProperty.DATABASE_USER_NAME, AppProperty.DATABASE_PASSWORD);
-                System.out.println("Connected to the database!");
+                System.out.println("CONNECTED TO THE DATABASE!");
             } else {
-                System.out.println("Connection is initialized: "+connection);
+                System.out.println("CONNECTION IS INITIALIZED ALREADY: "+connection);
             }
         } catch (SQLException e) {
-            System.out.println("Connection init error: "+e.getMessage());
+            System.out.println("CONNECTION INIT ERROR: "+e.getMessage());
+            throw  new RuntimeException("CONNECTION INIT ERROR: "+e.getMessage());
         }
         return connection;
     }

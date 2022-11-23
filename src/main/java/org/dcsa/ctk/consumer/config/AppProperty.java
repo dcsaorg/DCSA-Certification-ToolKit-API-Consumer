@@ -2,6 +2,7 @@ package org.dcsa.ctk.consumer.config;
 
 import lombok.Data;
 import lombok.extern.java.Log;
+import org.dcsa.ctk.consumer.util.SqlUtility;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -105,6 +106,7 @@ public class AppProperty {
             AppProperty.DATABASE_URL = PropertyLoader.getProperty(DATABASE_URL_KEY);
         }
         AppProperty.DATABASE_URL = AppProperty.DATABASE_URL.replace("r2dbc", "jdbc");
+        SqlUtility.getConnection();
     }
 
     private void makeUploadPath(){
