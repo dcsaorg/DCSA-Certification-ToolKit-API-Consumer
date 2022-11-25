@@ -210,6 +210,7 @@ public class SqlInsertHandler {
            }
         } catch (Exception e) {
             log.warning("failed process fullShipment: " + e.getMessage());
+            e.printStackTrace();
             return "failed process fullShipment: " + e.getMessage();
         }
         return fullShipmentJson;
