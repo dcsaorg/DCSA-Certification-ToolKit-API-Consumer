@@ -11,7 +11,7 @@ public interface CustomLogger {
 
     CustomerLogger init(Object obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem, String route);
 
-    CustomerLogger log(Object obj, ServerHttpResponse response, ServerHttpRequest request) throws JsonProcessingException;
-
+  //  CustomerLogger log(Object obj, ServerHttpResponse response, ServerHttpRequest request) throws JsonProcessingException;
+    CustomerLogger log(CheckListItem checkListItem, Object obj, ServerHttpResponse response, ServerHttpRequest request) throws JsonProcessingException;
 
 }

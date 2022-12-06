@@ -115,7 +115,7 @@ public class AppProperty {
             AppProperty.DATABASE_PASSWORD = evnDbPassword;
         }else{
             System.out.println("evnDbPassword was null");
-            AppProperty.DATABASE_URL = PropertyLoader.getProperty(DATABASE_URL_KEY);
+            AppProperty.DATABASE_PASSWORD = PropertyLoader.getProperty(DATABASE_PASSWORD_KEY);
         }
         if(evnDbUsername != null){
             System.out.println("evnDbUsername: "+evnDbUsername);

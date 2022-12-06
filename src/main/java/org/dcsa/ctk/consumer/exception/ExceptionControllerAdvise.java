@@ -38,7 +38,7 @@ public class ExceptionControllerAdvise {
     @ExceptionHandler({DecoratorException.class})
     public ResponseEntity<Map<String, Object>> handleDecoratorException(Exception ex, ServerHttpResponse response, ServerHttpRequest request) throws JsonProcessingException {
         Map<String, Object> responseMap = ((DecoratorException) ex).getErrorResponse();
-        log.info(JsonUtility.beautify(customLogger.log(responseMap, response, request)));
+        log.info(JsonUtility.beautify(customLogger.log(null, responseMap, response, request)));
         return new ResponseEntity<>(responseMap, Objects.requireNonNull(response.getStatusCode()));
     }
 
@@ -56,15 +56,16 @@ public class ExceptionControllerAdvise {
             response.setStatusCode(httpCode);
         response.getHeaders().remove("checkListItemKey");
         List<String> routeKeyHeader = response.getHeaders().get("routeKey");
+        CheckListItem checkListItem = null;
         if (routeKeyHeader != null) {
-            CheckListItem checkListItem = ConfigService.getCheckListItemForHttpCode(routeKeyHeader.get(0), httpCode.value());
+            checkListItem = ConfigService.getCheckListItemForHttpCode(routeKeyHeader.get(0), httpCode.value());
             if (checkListItem != null) {
                 response.getHeaders().add("checkListItemKey", checkListItem.getId());
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
             }
         }
         Map<String, Object> responseMap = getMockedErrorResponse(ex, response, request);
-        log.info(JsonUtility.beautify(customLogger.log(responseMap, response, request)));
+        log.info(JsonUtility.beautify(customLogger.log(checkListItem, responseMap, response, request)));
         return new ResponseEntity<>(responseMap, Objects.requireNonNull(response.getStatusCode()));
     }
 

@@ -1,7 +1,6 @@
 package org.dcsa.ctk.consumer.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
 import org.dcsa.ctk.consumer.config.AppProperty;
@@ -18,7 +17,6 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -58,7 +56,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(obj, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
-        customLogger.log(responseMap, response, request);
+        customLogger.log(checkListItem, responseMap, response, request);
         return responseMap;
     }
 
@@ -69,7 +67,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(null, response, request, checkListItem, route);
         List<Map<String, Object>> responseList = tntEventSubscriptionToService.findAll(response, request, checkListItem);
-        customLogger.log(responseList, response, request);
+        customLogger.log(checkListItem, responseList, response, request);
         return responseList;
     }
 
@@ -77,11 +75,10 @@ public class TNTEventSubscriptionTOControllerProxy {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateSecret(@PathVariable String id, @RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = "/event-subscriptions/{id}/secret";
-        String route2 = APIUtility.getRoute(request)+"/{id}/secret";
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(obj, response, request, checkListItem, route);
         tntEventSubscriptionToService.updateSecret(UUID.fromString(id), JsonUtility.convertTo(EventSubscriptionSecretUpdateTO.class, obj), response, request, checkListItem);
-        customLogger.log(null, response, request);
+        customLogger.log(checkListItem, null, response, request);
     }
 
     @GetMapping({EVENT_SUBSCRIPTION+"/{id}"})
@@ -91,7 +88,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(null, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.findById(UUID.fromString(id), response, request, checkListItem);
-        customLogger.log(responseMap, response, request);
+        customLogger.log(checkListItem, responseMap, response, request);
         return responseMap;
     }
 
@@ -102,7 +99,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(obj, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.update(UUID.fromString(id), JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
-        customLogger.log(responseMap, response, request);
+        customLogger.log(checkListItem, responseMap, response, request);
         return responseMap;
     }
 
@@ -113,7 +110,7 @@ public class TNTEventSubscriptionTOControllerProxy {
         CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(null, response, request, checkListItem, route);
         tntEventSubscriptionToService.delete(UUID.fromString(id), response, request, checkListItem);
-        customLogger.log(null, response, request);
+        customLogger.log(checkListItem, null, response, request);
     }
 
 }

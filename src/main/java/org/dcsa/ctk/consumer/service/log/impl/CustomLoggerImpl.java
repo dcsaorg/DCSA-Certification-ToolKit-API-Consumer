@@ -31,17 +31,9 @@ public class CustomLoggerImpl implements CustomLogger {
             response.getHeaders().add("routeKey", APIUtility.generateKey(route,request.getMethod().name()));
         return customerLogger;
     }
-
-    public  CustomerLogger log(Object obj, ServerHttpResponse response, ServerHttpRequest request) throws JsonProcessingException {
-
+    public  CustomerLogger log(CheckListItem checkListItem, Object obj, ServerHttpResponse response, ServerHttpRequest request) throws JsonProcessingException {
         List<String> customerLoggerHeader = response.getHeaders().get("customerLogger");
-        List<String> checkListItemHeader = response.getHeaders().get("checkListItemKey");
         List<String> routeKeyHeader = response.getHeaders().get("routeKey");
-        CheckListItem checkListItem = null;
-        if (checkListItemHeader != null) {
-            checkListItem = ConfigService.getCheckListItemByRequirementId(checkListItemHeader.get(0));
-            response.getHeaders().remove("checkListItemKey");
-        }
         CustomerLogger customerLogger = null;
         if (customerLoggerHeader != null) {
             response.getHeaders().remove("customerLogger");

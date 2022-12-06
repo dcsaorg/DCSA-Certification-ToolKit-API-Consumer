@@ -7,7 +7,7 @@ import org.dcsa.ctk.consumer.constant.CheckListStatus;
 import org.dcsa.ctk.consumer.constant.ResponseMockType;
 import org.dcsa.ctk.consumer.exception.DecoratorException;
 import org.dcsa.ctk.consumer.model.CheckListItem;
-import org.dcsa.ctk.consumer.model.enums.ValidationRequirementID;
+import org.dcsa.ctk.consumer.model.enums.ValidationRequirementId;
 import org.dcsa.ctk.consumer.service.callback.CallBackService;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
 import org.dcsa.ctk.consumer.service.decorator.Decorator;
@@ -27,7 +27,8 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Validated
@@ -60,6 +61,8 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                 res = tntServer.create(req).toFuture().get();
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(res), response, request, checkListItem);
                 if (checkListItem != null) {
+                    customLogger.init(null, response, request, checkListItem, null);
+                    customLogger.log(checkListItem, responseMap, response, request);
                     checkListItem.setStatus(CheckListStatus.CONFORMANT);
                 }
                 if(responseMap.size() != 0) {
@@ -67,7 +70,13 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                     responseMap.put("eventDateTime", timeStamp);
                     responseMap.put("eventCreatedDateTime", timeStamp);
                 }
-                callBackService.sendNotification(req);//async call, triggered after config time
+                //async call, triggered after config time
+                if(callBackService.sendNotification(req)){
+                    checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_1.getId());
+                    customLogger.init(null, response, request, checkListItem, null);
+                    customLogger.log(checkListItem, responseMap, response, request);
+                    checkListItem.setStatus(CheckListStatus.CONFORMANT);
+                }
                 return responseMap;
             } else {
                 responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
@@ -76,7 +85,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                 throw new DecoratorException(responseMap);
             }
         }else{
-            checkListItem = ConfigService.getCheckListItemByRequirementId(APIUtility.getRoute(request), Objects.requireNonNull(request.getMethod()).name(), ValidationRequirementID.TNT_2_2_SUB_CSM_HEAD_404.getValue()) ;
+            checkListItem = ConfigService.getCheckListItemBId(APIUtility.getRoute(request), Objects.requireNonNull(request.getMethod()).name(), ValidationRequirementId.TNT_2_2_SUB_CSM_HEAD_404.getId()) ;
             if (checkListItem != null) {
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
             }
@@ -86,39 +95,25 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
     }
 
     private boolean checkApiVersion(TNTEventSubscriptionTO tntEventSubscriptionTO,ServerHttpResponse response, ServerHttpRequest request ) throws JsonProcessingException {
+        Pattern urlVersionPattern = Pattern.compile("v[0-9]");
+        Matcher m = urlVersionPattern.matcher(request.getPath().toString());
         Map<String, Object> responseMap = new LinkedHashMap<>();
         String route = "/event-subscriptions";
-        AtomicBoolean correctApiVersion = new AtomicBoolean(false);
-        var apiVersion = request.getHeaders().get("X-Api-Key");
-        if(apiVersion != null){
-            apiVersion.forEach( e -> {
-                if(e.equalsIgnoreCase("2")){
-                    correctApiVersion.set(true);
-                }
-            });
-        }else {
-            return true;
-        }
-        if(correctApiVersion.get()){
-            CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_CSM_200.getValue());
-            if (checkListItem != null) {
-                customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
-                responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
-                checkListItem.setStatus(CheckListStatus.CONFORMANT);
+        CheckListItem checkListItem = null;
+        boolean result = false;
+        if (m.find()) {
+            if(!m.group(0).isBlank()){
+                checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_API_CHK_1.getId());
+                result = true;
+            }else{
+                checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_API_CHK_2.getId());
             }
-            customLogger.log(responseMap, response, request);
-            correctApiVersion.set(true);
-        }else {
-            CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(route, request.getMethod().name(), ValidationRequirementID.TNT_2_2_API_CSM_400.getValue());
-            if (checkListItem != null) {
-                customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
-                responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
-                checkListItem.setStatus(CheckListStatus.CONFORMANT);
-            }
-            customLogger.log(responseMap, response, request);
-            correctApiVersion.set(false);
         }
-        return  correctApiVersion.get();
+        customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
+        responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
+        checkListItem.setStatus(CheckListStatus.CONFORMANT);
+        customLogger.log(checkListItem, responseMap, response, request);
+        return result;
     }
 
     @Override

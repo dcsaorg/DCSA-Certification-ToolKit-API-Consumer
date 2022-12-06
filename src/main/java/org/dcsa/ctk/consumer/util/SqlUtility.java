@@ -51,7 +51,7 @@ public class SqlUtility {
     public static Connection getConnection() {
         try {
             if (connection == null) {
-                logDbProperty();
+               // logDbProperty();
                 connection = DriverManager.getConnection(AppProperty.DATABASE_URL, AppProperty.DATABASE_USER_NAME, AppProperty.DATABASE_PASSWORD);
                 System.out.println("CONNECTED TO THE DATABASE!");
             } else {

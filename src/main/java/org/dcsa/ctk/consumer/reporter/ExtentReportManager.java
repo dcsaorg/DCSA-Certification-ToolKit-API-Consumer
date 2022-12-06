@@ -115,6 +115,7 @@ public class ExtentReportManager {
             ExtentTest extentTest = ExtentReportManager.getExtentTest(checkListItem.getResponseDecoratorWrapper().getRequirementID()+ " " +
                                     checkListItem.getResponseDecoratorWrapper().getDescription());
             extentTest.assignCategory(checkListItem.getResponseDecoratorWrapper().getRequirementID());
+            extentTest.info("REQUIREMENT CHECK: "+checkListItem.getResponseDecoratorWrapper().getDescription());
             if(checkListItem.getStatus().equals(CheckListStatus.CONFORMANT)){
                 extentTest.pass(checkListItem.getResponseDecoratorWrapper().getDescription()+ " ");
                 extentTest.info(TestRequirement.getRequirement(checkListItem.getResponseDecoratorWrapper().getRequirementID()));

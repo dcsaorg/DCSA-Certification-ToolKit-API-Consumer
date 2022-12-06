@@ -16,9 +16,9 @@ import java.util.Set;
 
 public interface ConfigService {
     TestConfig testConfig = JsonUtility.loadTestConfig("config.json");
-    Map<String, List<CheckListItem>> checkListItemMap = APIUtility.populateCheckList(testConfig);
+        Map<String, List<CheckListItem>> checkListItemMap = APIUtility.populateCheckList(testConfig);
 
-    static CheckListItem getCheckListItemByRequirementId(String key) {
+    static CheckListItem getCheckListItemBId(String key) {
         Collection<List<CheckListItem>> checkListItems = checkListItemMap.values();
         for (List<CheckListItem> items : checkListItems) {
             for (CheckListItem item : items) {
@@ -27,6 +27,17 @@ public interface ConfigService {
             }
         }
         return null;
+    }
+
+    static CheckListItem getCheckListItemByRequirementId(String key) {
+        Collection<List<CheckListItem>> checkListItems = checkListItemMap.values();
+        for (List<CheckListItem> items : checkListItems) {
+            for (CheckListItem item : items) {
+                if (item.getResponseDecoratorWrapper().getRequirementID().equals(key))
+                    return item;
+            }
+        }
+            return null;
     }
 
     static CheckListItem getNextCheckListItem(String route, ServerHttpResponse response, ServerHttpRequest request) {
@@ -46,7 +57,7 @@ public interface ConfigService {
         return listItem;
     }
 
-    static CheckListItem getCheckListItemByRequirementId(String route, String httpVerb, int httpCode) {
+    static CheckListItem getCheckListItemBId(String route, String httpVerb, int httpCode) {
         CheckListItem listItem = new CheckListItem();
         List<CheckListItem> checkListItemList = checkListItemMap.get(APIUtility.generateKey(route, httpVerb));
         if (checkListItemList != null) {
@@ -57,11 +68,11 @@ public interface ConfigService {
         return listItem;
     }
 
-    static CheckListItem getCheckListItemByRequirementId(String route, String httpVerb, String requirementID) {
+    static CheckListItem getCheckListItemBId(String route, String httpVerb, String requirementID) {
         CheckListItem listItem = new CheckListItem();
         List<CheckListItem> checkListItemList = checkListItemMap.get(APIUtility.generateKey(route, httpVerb));
         if (checkListItemList != null) {
-            listItem = getCheckListItemByRequirementId(checkListItemList, requirementID);
+            listItem = getCheckListItemBId(checkListItemList, requirementID);
             if (listItem != null)
                 return listItem;
         }
@@ -79,7 +90,7 @@ public interface ConfigService {
         return null;
     }
 
-    private  static CheckListItem getCheckListItemByRequirementId(List<CheckListItem> checkListItemList, String  requirementID){
+    private  static CheckListItem getCheckListItemBId(List<CheckListItem> checkListItemList, String  requirementID){
         if(checkListItemList != null){
             for (CheckListItem checkListItem : checkListItemList) {
                 if( checkListItem.getResponseDecoratorWrapper().getRequirementID().equalsIgnoreCase(requirementID)){

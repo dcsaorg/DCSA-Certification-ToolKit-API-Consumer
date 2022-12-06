@@ -3,6 +3,7 @@ package org.dcsa.ctk.consumer.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.dcsa.ctk.consumer.model.CheckListItem;
+import org.dcsa.ctk.consumer.model.enums.ValidationRequirementId;
 import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
 import org.dcsa.ctk.consumer.service.log.CustomLogger;
 import org.dcsa.ctk.consumer.service.tnt.EventControllerService;
@@ -57,14 +58,14 @@ public class EventControllerProxy {
             ServerHttpRequest request
     ) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route="/events";
-        CheckListItem checkListItem= ConfigService.getNextCheckListItem(route,response,request);
+        CheckListItem  checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_EVN_PRV_1.getId());
         customLogger.init(null,response,request,checkListItem, route);
         List<Map<String, Object>> result =
                 eventControllerService.findAll(
                 eventType,shipmentEventTypeCode,carrierBookingReference,transportDocumentReference,transportDocumentTypeCode
                 ,transportEventTypeCode,transportCallID,vesselIMONumber,carrierVoyageNumber,carrierServiceCode,equipmentEventTypeCode,equipmentReference,limit,
                 response, request,checkListItem);
-        customLogger.log(result,response,request);
+        customLogger.log(checkListItem, result,response,request);
         return result;
 
     }
