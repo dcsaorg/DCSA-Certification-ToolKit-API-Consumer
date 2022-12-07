@@ -16,6 +16,7 @@ import org.dcsa.ctk.consumer.service.mock.MockService;
 import org.dcsa.ctk.consumer.service.tnt.TNTEventSubscriptionToService;
 import org.dcsa.ctk.consumer.util.APIUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;
+import org.dcsa.ctk.consumer.util.SqlUtility;
 import org.dcsa.tnt.controller.TNTEventSubscriptionTOController;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -65,6 +66,13 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                     customLogger.log(checkListItem, responseMap, response, request);
                     checkListItem.setStatus(CheckListStatus.CONFORMANT);
                 }
+                TNTEventSubscriptionTO dbTntEventSubscriptionTO = SqlUtility.getEventSubscriptionBySubscriptionId(res.getSubscriptionID().toString());
+                if(checkSameSecret(dbTntEventSubscriptionTO, req)){
+                    checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_3.getId());
+                    customLogger.init(null, response, request, checkListItem, null);
+                    customLogger.log(checkListItem, responseMap, response, request);
+                    checkListItem.setStatus(CheckListStatus.CONFORMANT);
+                }
                 if(responseMap.size() != 0) {
                     String timeStamp = ZonedDateTime.now().minus(1, ChronoUnit.HOURS).toString();
                     responseMap.put("eventDateTime", timeStamp);
@@ -72,7 +80,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                 }
                 //async call, triggered after config time
                 if(callBackService.sendNotification(req)){
-                    checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_1.getId());
+                    checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_2.getId());
                     customLogger.init(null, response, request, checkListItem, null);
                     customLogger.log(checkListItem, responseMap, response, request);
                     checkListItem.setStatus(CheckListStatus.CONFORMANT);
@@ -114,6 +122,16 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
         checkListItem.setStatus(CheckListStatus.CONFORMANT);
         customLogger.log(checkListItem, responseMap, response, request);
         return result;
+    }
+
+    private boolean checkSameSecret(TNTEventSubscriptionTO bdTntEventSubscriptionTO, TNTEventSubscriptionTO reqTNTEventSubscriptionTO ){
+        String dbSecret = Base64.getEncoder().encodeToString(bdTntEventSubscriptionTO.getSecret());
+        String reqSecret = Base64.getEncoder().encodeToString(reqTNTEventSubscriptionTO.getSecret());
+        if(dbSecret.equalsIgnoreCase(reqSecret)){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     @Override

@@ -6,18 +6,23 @@
         "POST": [
           {
             "httpCode": 201,
-            "requirementID": "TNT.2.2.SUB.CSM.2",
-            "description": "POST /event-subscriptions creates a new subscription check"
+            "requirementID": "TNT.2.2.API.CHK.1",
+            "description": "POST /event-subscriptions creates a new subscription with major API version provided in the URI"
           },
           {
             "httpCode": 201,
             "requirementID": "TNT.2.2.SUB.CSM.1",
-            "description": "POST /event-subscriptions Must provide a valid callback URL"
+            "description": "POST /event-subscriptions creates a new subscription check"
           },
           {
             "httpCode": 201,
             "requirementID": "TNT.2.2.SUB.CSM.2",
-            "description": "POST /event-subscriptions must provide a valid callback URL",
+            "description": " POST /event-subscriptions Must provide a valid callback URL"
+          },
+          {
+            "httpCode": 201,
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "POST /event-subscriptions Must provide a valid secret",
             "responseDecorator": {
               "body": {
               }
@@ -79,8 +84,8 @@
         "GET": [
           {
             "httpCode": 200,
-            "requirementID": "TNT.2.2.SUB.CSM.3",
-            "description": "POST /event-subscriptions-response with additional enum",
+            "requirementID": "TNT.2.2.API.2",
+            "description": "GET /event-subscriptions-response with additional enum",
             "responseDecorator": {
               "patch": {
                 "eventType": [
@@ -301,8 +306,8 @@
         "GET": [
           {
             "httpCode": 200,
-            "requirementID": "TNT.2.2.EVN.PRV.1",
-            "description": "GET /events-request with Query Parameters eventType",
+            "requirementID": "TNT.2.2.API.1",
+            "description": "GET /events request with Query Parameters eventType",
             "requestMatcher": {
               "queryParameter": [
                 "eventType"
@@ -422,11 +427,6 @@
       "route": "/conformance/callback/check/{subscriptionId}",
       "variants": {
         "POST": [
-          {
-            "httpCode": 201,
-            "requirementID": "TNT.2.2.API.CHK.1",
-            "description": "POST /conformance/callback/check/{subscriptionId} creates a new subscription with API version provided in the URI"
-          },
           {
             "httpCode": 201,
             "requirementID": "TNT.2.2.API.CHK.2",

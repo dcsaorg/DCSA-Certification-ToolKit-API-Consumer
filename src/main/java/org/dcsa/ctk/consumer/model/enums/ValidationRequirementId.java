@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ValidationRequirementId {
-    TNT_2_2_EVN_PRV_1("TNT.2.2.EVN.PRV.1", "GET /events request with Query Parameters eventType"),
+    TNT_2_2_API_1("TNT.2.2.API.1", "GET /events request with Query Parameters eventType"),
+    TNT_2_2_API_2("TNT.2.2.API.2", "GET /event-subscriptions-response with additional enum"),
     TNT_2_2_API_CSM_1("TNT.2.2.API.CSM.1", "HTTP verbs (GET, PUT, PATCH, POST, DELETE, HEAD) must be in request"),
     TNT_2_2_API_CSM_2("TNT.2.2.API.CSM.2", "URL must adhere to Kebab-case"),
-    TNT_2_2_SUB_CSM_1("TNT.2.2.SUB.CSM.1", "POST /event-subscriptions Must provide a valid callback URL"),
-    TNT_2_2_SUB_CSM_2("TNT.2.2.SUB.CSM.2", "POST /event-subscriptions Must provide a valid secret"),
+    TNT_2_2_SUB_CSM_1("TNT.2.2.SUB.CSM.1", "POST /event-subscriptions creates a new subscription check"),
+    TNT_2_2_SUB_CSM_2("TNT.2.2.SUB.CSM.2", " POST /event-subscriptions Must provide a valid callback URL"),
+    TNT_2_2_SUB_CSM_3("TNT.2.2.SUB.CSM.3", "POST /event-subscriptions Must provide a valid secret"),
     TNT_2_2_API_CHK_1("TNT.2.2.API.CHK.1", "POST /conformance/callback/check/{subscriptionId} creates a new subscription with API version provided in the URI"),
     TNT_2_2_API_CHK_2("TNT.2.2.API.CHK.2", "POST /conformance/callback/check/{subscriptionId} fails to creates  a new subscription if API version not provided in the URI"),
     TNT_2_2_API_CSM_3("TNT.2.2.API.CSM.3", "POST /event-subscriptionsFails to creates  a new subscription if API version not provided in the URI"),
@@ -29,7 +31,7 @@ public enum ValidationRequirementId {
     TNT_2_2_SUB_CSM_201("TNT.2.2.SUB.CSM.201", ""),
     TNT_2_2_API_CSM_400("TNT.2.2.API.CSM.400", ""),
     TNT_2_2_API_CSM_200("TNT.2.2.API.CSM.200", ""),
-    TNT_2_2_SUB_CSM_3("TNT.2.2.SUB.CSM.3", ""),
+    TNT_2_2_SUB_CSM_4("TNT.2.2.SUB.CSM.4", ""),
     TNT_2_2_API_SUB_CSM_200("TNT.2.2.API.SUB.CSM.200", ""),
     TNT_2_2_API_SUB_CSM_202("TNT.2.2.API.SUB.CSM.202", ""),
     TNT_2_2_API_SUB_CSM_403("TNT.2.2.API.SUB.CSM.403", ""),
