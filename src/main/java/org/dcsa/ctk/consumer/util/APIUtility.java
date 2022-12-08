@@ -11,6 +11,8 @@ import org.springframework.validation.annotation.Validated;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Log
@@ -102,4 +104,19 @@ public class APIUtility {
         checkListItem.getResponseDecoratorWrapper().setDescription(description);
     }
 
+    public static boolean verifySignature(String secret){
+        String notificationBody = EventUtility.getEquipmentEvent();
+        String signature = SignatureUtility.getSignature(secret, notificationBody);
+        if(signature != null){
+            return true;
+        }else{
+           return false;
+        }
+    }
+    public static boolean isBase64Encoded(String s) {
+        String pattern = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(s);
+        return m.find();
+    }
 }

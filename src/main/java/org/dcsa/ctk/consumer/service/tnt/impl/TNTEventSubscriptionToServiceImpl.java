@@ -59,8 +59,8 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             responseMap.put("WRONG API VERSION", "ONLY TNT API VERSION 2 SUPPORTED");
             return responseMap;
         }
+        TNTEventSubscriptionTO res = null;
         if(result) {
-            TNTEventSubscriptionTO res;
             if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
                 res = tntServer.create(req).toFuture().get();
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(res), response, request, checkListItem);
@@ -69,12 +69,13 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                     customLogger.log(checkListItem, responseMap, response, request);
                     checkListItem.setStatus(CheckListStatus.CONFORMANT);
                 }
+                verifySecretFormat(res.getSecret(), response, request, responseMap);
                 TNTEventSubscriptionTO dbTntEventSubscriptionTO = SqlUtility.getEventSubscriptionBySubscriptionId(res.getSubscriptionID().toString());
                 if(checkSameSecret(dbTntEventSubscriptionTO, req)){
                     checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_API_CHK_8.getId());
                     customLogger.init(null, response, request, checkListItem, null);
                     customLogger.log(checkListItem, responseMap, response, request);
-                    checkListItem.setStatus(CheckListStatus.CONFORMANT);
+                    Objects.requireNonNull(checkListItem).setStatus(CheckListStatus.CONFORMANT);
                 }
                 if(responseMap.size() != 0) {
                     String timeStamp = ZonedDateTime.now().minus(1, ChronoUnit.HOURS).toString();
@@ -88,7 +89,6 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                     customLogger.log(checkListItem, responseMap, response, request);
                     checkListItem.setStatus(CheckListStatus.CONFORMANT);
                 }
-                return responseMap;
             } else {
                 responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
                 responseMap = mapDecorator.decorate(responseMap, response, request, checkListItem);
@@ -104,6 +104,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             }
             responseMap.put("SUBSCRIPTION REGISTRATION FAILED", "THE CALLBACK URL DID NOT RESPOND");
         }
+        callCallback(Objects.requireNonNull(res).getSubscriptionID(), response, request);
         return responseMap;
     }
 
@@ -138,6 +139,38 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             return false;
         }
     }
+    private void verifySecretFormat(byte[] secretByte, ServerHttpResponse response, ServerHttpRequest request, Map<String, Object> responseMap) throws JsonProcessingException {
+        if( APIUtility.isBase64Encoded(Base64.getEncoder().encodeToString(secretByte)) ){
+            CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_3.getId());
+            if(checkListItem != null){
+                customLogger.init(null, response, request, checkListItem, null);
+                customLogger.log(checkListItem, responseMap, response, request);
+                checkListItem.setStatus(CheckListStatus.CONFORMANT);
+            }
+        }else{
+            CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_6.getId());
+            if(checkListItem != null){
+                customLogger.init(null, response, request, checkListItem, null);
+                customLogger.log(checkListItem, responseMap, response, request);
+                checkListItem.setStatus(CheckListStatus.CONFORMANT);
+            }
+        }
+        if(APIUtility.verifySignature(Base64.getEncoder().encodeToString(secretByte))){
+            CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_4.getId());
+            if(checkListItem != null){
+                customLogger.init(null, response, request, checkListItem, null);
+                customLogger.log(checkListItem, responseMap, response, request);
+                checkListItem.setStatus(CheckListStatus.CONFORMANT);
+            }
+        }else{
+            CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_5.getId());
+            if(checkListItem != null){
+                customLogger.init(null, response, request, checkListItem, null);
+                customLogger.log(checkListItem, responseMap, response, request);
+                checkListItem.setStatus(CheckListStatus.CONFORMANT);
+            }
+        }
+    }
 
     @Override
     public List<Map<String, Object>> findAll(ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
@@ -159,10 +192,10 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
     }
 
     @Override
-    public Map<String, Object> findById(UUID id, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
+    public Map<String, Object> findById(UUID subscriptionId, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
         Map<String, Object> responseMap;
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
-            TNTEventSubscriptionTO actualResponse = tntServer.findById(id).toFuture().get();
+            TNTEventSubscriptionTO actualResponse = tntServer.findById(subscriptionId).toFuture().get();
             responseMap = mapDecorator.decorate(JsonUtility.convertToMap(actualResponse), response, request, checkListItem);
             if (checkListItem != null) {
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
@@ -177,10 +210,9 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
     }
 
     @Override
-    public void delete(UUID id, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
-        List<Map<Class<?>, String>> parametersList = null;
+    public void delete(UUID subscriptionId, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
-            tntServer.deleteById(id).toFuture().get();
+            tntServer.deleteById(subscriptionId).toFuture().get();
             if (checkListItem != null) {
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
             }
@@ -193,10 +225,10 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
     }
 
     @Override
-    public Map<String, Object> update(UUID id, TNTEventSubscriptionTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
+    public Map<String, Object> update(UUID subscriptionId, TNTEventSubscriptionTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
         Map<String, Object> responseMap  = new HashMap<>();
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
-            TNTEventSubscriptionTO actualResponse = tntServer.update(id, req).toFuture().get();
+            TNTEventSubscriptionTO actualResponse = tntServer.update(subscriptionId, req).toFuture().get();
             if(actualResponse != null){
                 callBackService.doHeadRequest(actualResponse,false);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(actualResponse), response, request, checkListItem);
@@ -219,14 +251,16 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
     }
 
     @Override
-    public void updateSecret(UUID id, EventSubscriptionSecretUpdateTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException {
-        Map<String, Object> responseMap;
+    public void updateSecret(UUID subscriptionId, EventSubscriptionSecretUpdateTO req, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException, JsonProcessingException {
+        Map<String, Object> responseMap = new HashMap<>();
         if (checkListItem == null || APIUtility.isReferenceCallRequired(checkListItem.getResponseDecoratorWrapper().getHttpCode())) {
-            tntServer.updateSecret(id, req).toFuture().get();
+            verifySecretFormat(req.getSecret(), response,request, responseMap);
+            tntServer.updateSecret(subscriptionId, req).toFuture().get();
             if (checkListItem != null) {
+                APIUtility.setDescription(checkListItem, subscriptionId.toString());
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
             }
-            callBackService.sendNotification(id, req);
+            callBackService.sendNotification(subscriptionId, req);
         } else {
             responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
             responseMap = mapDecorator.decorate(responseMap, response, request, checkListItem);
@@ -244,7 +278,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                 tntEventSubscriptionTO.setEventType( List.of(EventType.EQUIPMENT, EventType.SHIPMENT, EventType.TRANSPORT, EventType.OPERATIONS));
             }
             if(callBackService.doHeadRequest(tntEventSubscriptionTO, false)){
-                CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CBK_1.getId());
+                CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_1.getId());
                 APIUtility.setDescription(Objects.requireNonNull(checkListItem), subscriptionId.toString());
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
@@ -253,7 +287,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                 customLogger.log(checkListItem, responseMap, response, request);
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
             }else {
-                CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CBK_2.getId());
+                CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_8.getId());
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
                 customLogger.log(checkListItem, responseMap, response, request);
@@ -261,7 +295,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
             }
             //async call
             if (callBackService.sendNotification(tntEventSubscriptionTO)) {
-                CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CBK_3.getId());
+                CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_1.getId());
                 APIUtility.setDescription(Objects.requireNonNull(checkListItem), subscriptionId.toString());
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
@@ -270,7 +304,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                 customLogger.log(checkListItem, responseMap, response, request);
                 checkListItem.setStatus(CheckListStatus.CONFORMANT);
             } else {
-                CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CBK_4.getId());
+                CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_8.getId());
                 customLogger.init(tntEventSubscriptionTO, response, request, checkListItem, route);
                 responseMap = mapDecorator.decorate(JsonUtility.convertToMap(tntEventSubscriptionTO), response, request, checkListItem);
                 customLogger.log(checkListItem, responseMap, response, request);

@@ -35,7 +35,7 @@ public class ShipmentNotificationSubscriber implements NotificationSubscriber {
         HttpEntity<String> entity = new HttpEntity<>(notificationBody,headers);
         HttpStatus statusCode=restTemplate
                 .exchange(callbackUrl, HttpMethod.POST,entity,String.class).getStatusCode();
-        if(statusCode!=HttpStatus.OK)
+        if(statusCode!=HttpStatus.NO_CONTENT)
         {
             log.error("Error received while sending notification:{}",statusCode);
         }

@@ -36,8 +36,8 @@
           },
           {
             "httpCode": 201,
-            "requirementID": "TNT.2.2.SUB.CSM.3",
-            "description": "POST /event-subscriptions-response with additional enum",
+            "requirementID": "TNT.2.2.API.CHK.2",
+            "description": "POST /event-subscriptions response with additional enum",
             "responseDecorator": {
               "patch": {
                 "eventType": [
@@ -48,7 +48,7 @@
           },
           {
             "httpCode": 201,
-            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "requirementID": "TNT.2.2.API.CHK.11",
             "description": "POST /event-subscriptions-response with optional field",
             "responseDecorator": {
               "patch": {
@@ -58,8 +58,8 @@
           },
           {
             "httpCode": 400,
-            "requirementID": "TNT.2.2.ERR.PRV.400",
-            "description": "POST /event-subscriptions-response with httpCode 400",
+            "requirementID": "TNT.2.2.API.CHK.12",
+            "description": "POST /event-subscriptions response with httpCode 400",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -73,8 +73,8 @@
           },
           {
             "httpCode": 500,
-            "requirementID": "TNT.2.2.ERR.PRV.500",
-            "description": "POST /event-subscriptions-Response with httpCode 500",
+            "requirementID": "TNT.2.2.API.CHK.13",
+            "description": "POST /event-subscriptions Response with httpCode 500",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -90,35 +90,13 @@
         "GET": [
           {
             "httpCode": 200,
-            "requirementID": "TNT.2.2.SUB.CBK.1",
-            "description": "GET /callback/{subscriptionId} check correct callback HEAD response received"
+            "requirementID": "TNT.2.2.SUB.CSM.1",
+            "description": "/event-subscriptions/{subscriptionId} Respond to a HEAD request with a HTTP 204 success status to facilitate validation"
           },
           {
             "httpCode": 200,
-            "requirementID": "TNT.2.2.SUB.CBK.2",
-            "description": "GET /callback/{subscriptionId} check HEAD response not received "
-          },
-          {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.SUB.CBK.3",
-            "description": "GET /callback/{subscriptionId} check correct post response received"
-          },
-          {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.SUB.CBK.4",
-            "description": "GET /callback/{subscriptionId} check correct no post response received"
-          },
-          {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.API.CHK.2",
-            "description": "GET /event-subscriptions-response with additional enum",
-            "responseDecorator": {
-              "patch": {
-                "eventType": [
-                  "DUMMY"
-                ]
-              }
-            }
+            "requirementID": "TNT.2.2.SUB.CSM.8",
+            "description": "The callback endpoint is not reachable"
           },
           {
             "httpCode": 404,
@@ -179,34 +157,9 @@
       }
     },
     {
-      "route": "/event-subscriptions/{id}",
+      "route": "/event-subscriptions/{subscriptionId}",
       "variants": {
         "PUT": [
-          {
-            "httpCode": 201,
-            "requirementID": "TNT.2.2.SUB.CSM.3",
-            "description": "PUT /event-subscriptions-response with additional enum",
-            "responseDecorator": {
-              "patch": {
-                "eventType": [
-                  "DUMMY"
-                ]
-              }
-            }
-          },
-          {
-            "httpCode": 201,
-            "requirementID": "TNT.2.2.SUB.CSM.3",
-            "description": "PUT /event-subscriptions-response with optional field",
-            "responseDecorator": {
-              "header": {
-                "API-Version": "2.2.0"
-              },
-              "patch": {
-                "DummyField": "DummyValue"
-              }
-            }
-          },
           {
             "httpCode": 400,
             "requirementID": "TNT.2.2.ERR.PRV.400",
@@ -240,24 +193,9 @@
         ],
         "GET": [
           {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.SUB.CSM.3",
-            "description": "GET /event-subscriptions-response with additional enum",
-            "responseDecorator": {
-              "header": {
-                "API-Version": "2.2.0"
-              },
-              "patch": {
-                "eventType": [
-                  "DUMMY"
-                ]
-              }
-            }
-          },
-          {
             "httpCode": 404,
             "requirementID": "TNT.2.2.ERR.PRV.404",
-            "description": "GET /event-subscriptions/{id}-response with httpCode 404",
+            "description": "GET /event-subscriptions/{subscriptionId} response with httpCode 404",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -290,28 +228,53 @@
       }
     },
     {
-      "route": "/event-subscriptions/{id}/secret",
+      "route": "/event-subscriptions/{subscriptionId}/secret",
       "variants": {
         "PUT": [
           {
-            "httpCode": 400,
-            "requirementID": "TNT.2.2.ERR.PRV.400",
-            "description": "PUT /event-subscriptions/{id}/secret-response with httpCode 400",
-            "responseDecorator": {
-              "patch": {
-                "errors": {
-                  "reason": "BadRequest",
-                  "message": "Bad request"
-                },
-                "statusCode": 400,
-                "statusCodeText": "Bad request"
-              }
-            }
+            "httpCode": 204,
+            "requirementID": "TNT.2.2.SUB.CSM.2",
+            "description": "PUT /event-subscriptions/{subscriptionId}/secret there is rotation or update of the shared secret key possibility"
+          },
+          {
+            "httpCode": 204,
+            "requirementID": "TNT.2.2.SUB.CSM.3",
+            "description": "the secret shared by subscriber in base64 format and has a minimum of 32 bytes"
+          },
+          {
+            "httpCode": 204,
+            "requirementID": "TNT.2.2.SUB.CSM.4",
+            "description": "The callback endpoint must respond to a correctly formatted and signed notification with response code in the 2XX range for successful responses"
+          },
+          {
+            "httpCode": 204,
+            "requirementID": "TNT.2.2.SUB.CSM.5",
+            "description": "The callback endpoint must respond to an incorrectly signed notification with a response code in the 4XX range, where 401 is recommended"
+          },
+          {
+            "httpCode": 204,
+            "requirementID": "TNT.2.2.SUB.CSM.6",
+            "description": "The callback endpoint must respond to an incorrectly formatted notification with a response code in the 4XX range"
+          },
+          {
+            "httpCode": 204,
+            "requirementID": "TNT.2.2.SUB.CSM.7",
+            "description": "The callback endpoint must reject notifications where eventCreatedDateTime is more than 10 seconds in the future with a response code in the 4XX range"
+          },
+          {
+            "httpCode": 204,
+            "requirementID": "TNT.2.2.SUB.CSM.8",
+            "description": "The callback endpoint is not reachable"
+          },
+          {
+            "httpCode": 204,
+            "requirementID": "TNT.2.2.SUB.CSM.9",
+            "description": "check correct post response with a HTTP 204 no content success status facilitate validation"
           },
           {
             "httpCode": 404,
             "requirementID": "TNT.2.2.ERR.PRV.404",
-            "description": "PUT /event-subscriptions/{id}/secret-response with httpCode 404",
+            "description": "PUT /event-subscriptions/{subscriptionId}/secret-response with httpCode 404",
             "responseDecorator": {
               "patch": {
                 "errors": {
@@ -338,42 +301,6 @@
               "queryParameter": [
                 "eventType"
               ]
-            }
-          },
-          {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.SUB.CSM.3",
-            "description": "GET /events-response with optional field",
-            "responseDecorator": {
-              "patch": {
-                "DummyField": "DummyValue"
-              }
-            }
-          },
-          {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.SUB.CSM.3",
-            "description": "GET /events-response with timeStamp without millisecond",
-            "responseDecorator": {
-              "format": {
-                "date": {
-                  "eventCreatedDateTime": "yyyy-MM-dd'T'HH:mm:ss",
-                  "eventDateTime": "yyyy-MM-dd'T'HH:mm:ss"
-                }
-              }
-            }
-          },
-          {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.SUB.CSM.3",
-            "description": "GET /events-response with timeStamp with millisecond",
-            "responseDecorator": {
-              "format": {
-                "date": {
-                  "eventCreatedDateTime": "yyyy-MM-dd'T'HH:mm:ss:SSS",
-                  "eventDateTime": "yyyy-MM-dd'T'HH:mm:ss:SSS"
-                }
-              }
             }
           },
           {
@@ -445,60 +372,6 @@
                 "API-Version"
               ]
             }
-          }
-        ]
-      }
-    },
-    {
-      "route": "/conformance/callback/check/{subscriptionId}",
-      "variants": {
-        "POST": [
-          {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.API.CHK.3",
-            "description": "POST /conformance/callback/check/{subscriptionId} check correct secret allows to invoke callback"
-          },
-          {
-            "httpCode": 403,
-            "requirementID": "TNT.2.2.API.CHK.4",
-            "description": "POST /event-subscriptions fails to creates  a new subscription if API version not provided in the URI"
-          }
-        ]
-      }
-    },
-    {
-      "route": "/conformance/callback/{subscriptionId}",
-      "variants": {
-        "GET": [
-          {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.API.CBK.1",
-            "description": "GET /conformance/callback/{subscriptionId} check correct subscription ID check"
-          },
-          {
-            "httpCode": 403,
-            "requirementID": "TNT.2.2.API.CBK.3",
-            "description": "GET /conformance/callback/{subscriptionId} check HEAD response not received"
-          },
-          {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.API.CBK.4",
-            "description": "GET /conformance/callback/{subscriptionId} check correct post response received"
-          },
-          {
-            "httpCode": 400,
-            "requirementID": "TNT.2.2.API.CBK.5",
-            "description": "GET /conformance/callback/{subscriptionId} check correct post response not received"
-          },
-          {
-            "httpCode": 202,
-            "requirementID": "TNT.2.2.API.CBK.6",
-            "description": "GET /conformance/callback/{subscriptionId} check correct secret allows to invoke callback"
-          },
-          {
-            "httpCode": 403,
-            "requirementID": "TNT.2.2.API.CBK.7",
-            "description": "GET /conformance/callback/{subscriptionId} check wrong secret forbidden to invoke callback"
           }
         ]
       }

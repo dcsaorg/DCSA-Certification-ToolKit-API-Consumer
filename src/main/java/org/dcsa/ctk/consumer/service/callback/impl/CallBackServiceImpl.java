@@ -57,7 +57,7 @@ public class CallBackServiceImpl implements CallBackService {
         return result;
     }
     boolean performHttpHead(String callbackUrl, boolean newSubscription){
-        boolean result;
+        boolean result = false;
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.set("newSubscription", ""+newSubscription);
@@ -66,8 +66,10 @@ public class CallBackServiceImpl implements CallBackService {
         try {
             HttpStatus statusCode = restTemplate.exchange(callbackUrl, HttpMethod.HEAD, entity, String.class)
                     .getStatusCode();
-            log.info("GOT HEAD RESPONSE STATUS: " + statusCode);
-            result = true;
+           if( statusCode == HttpStatus.NO_CONTENT ){
+               log.info("GOT HEAD RESPONSE STATUS: " + statusCode);
+               result = true;   
+           }
         } catch (Exception e) {
             log.warn("THE CALLBACK URL RESPONDED "+e.getMessage().toUpperCase());
              result = false;

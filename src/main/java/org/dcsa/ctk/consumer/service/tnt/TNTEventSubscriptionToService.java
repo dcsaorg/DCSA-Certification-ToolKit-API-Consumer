@@ -19,14 +19,14 @@ public interface TNTEventSubscriptionToService<T> {
 
     List<T> findAll(ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException;
 
-    Map<String, Object> findById(UUID id, ServerHttpResponse response, ServerHttpRequest request,CheckListItem checkListItem) throws ExecutionException, InterruptedException;
+    Map<String, Object> findById(UUID subscriptionId, ServerHttpResponse response, ServerHttpRequest request,CheckListItem checkListItem) throws ExecutionException, InterruptedException;
 
-    void delete(UUID id, ServerHttpResponse response, ServerHttpRequest request,CheckListItem checkListItem) throws ExecutionException, InterruptedException;
+    void delete(UUID subscriptionId, ServerHttpResponse response, ServerHttpRequest request,CheckListItem checkListItem) throws ExecutionException, InterruptedException;
 
-    T update(UUID id, TNTEventSubscriptionTO obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException;
+    T update(UUID subscriptionId, TNTEventSubscriptionTO obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException;
 
-    void updateSecret(UUID id, EventSubscriptionSecretUpdateTO obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException;
+    void updateSecret(UUID subscriptionId, EventSubscriptionSecretUpdateTO obj, ServerHttpResponse response, ServerHttpRequest request, CheckListItem checkListItem) throws ExecutionException, InterruptedException, JsonProcessingException;
 
-    ResponseEntity<Map<String, Object>> callCallback(UUID id, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException;
+    ResponseEntity<Map<String, Object>> callCallback(UUID subscriptionId, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException;
 
 }
