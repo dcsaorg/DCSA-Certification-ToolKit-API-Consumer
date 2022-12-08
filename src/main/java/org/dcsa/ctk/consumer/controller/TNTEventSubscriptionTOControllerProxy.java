@@ -14,6 +14,7 @@ import org.dcsa.ctk.consumer.util.JsonUtility;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +55,7 @@ public class TNTEventSubscriptionTOControllerProxy {
     @ResponseStatus(HttpStatus.CREATED)
     public Map<String, Object> create(@RequestBody Object obj, ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = APIUtility.getRoute(request);
-        CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_1.getId());
+        CheckListItem checkListItem = ConfigService.getNextCheckListItem(route, response, request);
         customLogger.init(obj, response, request, checkListItem, route);
         Map<String, Object> responseMap = tntEventSubscriptionToService.create(JsonUtility.convertTo(TNTEventSubscriptionTO.class, obj), response, request, checkListItem);
         customLogger.log(checkListItem, responseMap, response, request);
@@ -65,7 +66,7 @@ public class TNTEventSubscriptionTOControllerProxy {
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> findAll(ServerHttpResponse response, ServerHttpRequest request) throws ExecutionException, InterruptedException, JsonProcessingException {
         String route = APIUtility.getRoute(request);
-        CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_API_2.getId());
+        CheckListItem checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_API_CHK_2.getId());
         customLogger.init(null, response, request, checkListItem, route);
         List<Map<String, Object>> responseList = tntEventSubscriptionToService.findAll(response, request, checkListItem);
         customLogger.log(checkListItem, responseList, response, request);
@@ -112,6 +113,11 @@ public class TNTEventSubscriptionTOControllerProxy {
         customLogger.init(null, response, request, checkListItem, route);
         tntEventSubscriptionToService.delete(UUID.fromString(id), response, request, checkListItem);
         customLogger.log(checkListItem, null, response, request);
+    }
+    @GetMapping("/callback/{id}")
+    public ResponseEntity<Map<String, Object>> callback(@PathVariable String id, ServerHttpResponse response, ServerHttpRequest request)
+            throws ExecutionException, InterruptedException, JsonProcessingException {
+        return tntEventSubscriptionToService.callCallback(UUID.fromString(id),response, request);
     }
 
 }

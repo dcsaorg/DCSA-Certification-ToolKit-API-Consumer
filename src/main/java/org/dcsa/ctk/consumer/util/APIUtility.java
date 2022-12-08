@@ -96,5 +96,10 @@ public class APIUtility {
         }
         return route;
     }
+    public static void setDescription(CheckListItem checkListItem, String subscriptionId){
+        String  description = checkListItem.getResponseDecoratorWrapper().getDescription()
+                                .replaceAll("\\{subscriptionId\\}", subscriptionId);
+        checkListItem.getResponseDecoratorWrapper().setDescription(description);
+    }
 
 }

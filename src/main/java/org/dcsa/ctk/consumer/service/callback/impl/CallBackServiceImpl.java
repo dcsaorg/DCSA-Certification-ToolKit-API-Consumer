@@ -47,7 +47,7 @@ public class CallBackServiceImpl implements CallBackService {
         String dbCallbackUrl = SqlUtility.getCallbackUrlBySubscriptionId(tntEventSubscriptionTO.getSubscriptionID().toString());
         String dbCallbackUuid = APIUtility.getCallBackUuid(dbCallbackUrl);
         String callbackUuid = APIUtility.getCallBackUuid(tntEventSubscriptionTO.getCallbackUrl());
-        if (dbCallbackUuid.equals(dbCallbackUuid)) {
+        if (callbackUuid.equals(dbCallbackUuid)) {
             log.info("FOUND CORRECT REQUEST CALLBACK UUID: {}", dbCallbackUuid);
             result = performHttpHead(dbCallbackUrl, newSubscription);
         }else {

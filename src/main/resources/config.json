@@ -6,27 +6,33 @@
         "POST": [
           {
             "httpCode": 201,
-            "requirementID": "TNT.2.2.API.CHK.1",
-            "description": "POST /event-subscriptions creates a new subscription with major API version provided in the URI"
-          },
-          {
-            "httpCode": 201,
-            "requirementID": "TNT.2.2.SUB.CSM.1",
+            "requirementID": "TNT.2.2.API.CHK.5",
             "description": "POST /event-subscriptions creates a new subscription check"
           },
           {
             "httpCode": 201,
-            "requirementID": "TNT.2.2.SUB.CSM.2",
+            "requirementID": "TNT.2.2.API.CHK.6",
             "description": " POST /event-subscriptions Must provide a valid callback URL"
           },
           {
             "httpCode": 201,
-            "requirementID": "TNT.2.2.SUB.CSM.3",
-            "description": "POST /event-subscriptions Must provide a valid secret",
-            "responseDecorator": {
-              "body": {
-              }
-            }
+            "requirementID": "TNT.2.2.API.CHK.7",
+            "description": "POST /event-subscriptions creates a new subscription with major API version provided in the URI"
+          },
+          {
+            "httpCode": 201,
+            "requirementID": "TNT.2.2.API.CHK.8",
+            "description": "POST /event-subscriptions Must provide a valid secret"
+          },
+          {
+            "httpCode": 201,
+            "requirementID": "TNT.2.2.API.CHK.9",
+            "description": "POST /event-subscriptions fails to creates  a new subscription if API version not provided in the URI"
+          },
+          {
+            "httpCode": 201,
+            "requirementID": "TNT.2.2.API.CHK.10",
+            "description": "POST /event-subscriptions fails to creates  a new subscription if no callback  response"
           },
           {
             "httpCode": 201,
@@ -84,7 +90,27 @@
         "GET": [
           {
             "httpCode": 200,
-            "requirementID": "TNT.2.2.API.2",
+            "requirementID": "TNT.2.2.SUB.CBK.1",
+            "description": "GET /callback/{subscriptionId} check correct callback HEAD response received"
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.SUB.CBK.2",
+            "description": "GET /callback/{subscriptionId} check HEAD response not received "
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.SUB.CBK.3",
+            "description": "GET /callback/{subscriptionId} check correct post response received"
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.SUB.CBK.4",
+            "description": "GET /callback/{subscriptionId} check correct no post response received"
+          },
+          {
+            "httpCode": 200,
+            "requirementID": "TNT.2.2.API.CHK.2",
             "description": "GET /event-subscriptions-response with additional enum",
             "responseDecorator": {
               "patch": {
@@ -306,7 +332,7 @@
         "GET": [
           {
             "httpCode": 200,
-            "requirementID": "TNT.2.2.API.1",
+            "requirementID": "TNT.2.2.API.CHK.1",
             "description": "GET /events request with Query Parameters eventType",
             "requestMatcher": {
               "queryParameter": [
@@ -428,11 +454,6 @@
       "variants": {
         "POST": [
           {
-            "httpCode": 201,
-            "requirementID": "TNT.2.2.API.CHK.2",
-            "description": "POST /conformance/callback/check/{subscriptionId} fails to creates  a new subscription if API version not provided in the URI"
-          },
-          {
             "httpCode": 200,
             "requirementID": "TNT.2.2.API.CHK.3",
             "description": "POST /conformance/callback/check/{subscriptionId} check correct secret allows to invoke callback"
@@ -453,11 +474,6 @@
             "httpCode": 200,
             "requirementID": "TNT.2.2.API.CBK.1",
             "description": "GET /conformance/callback/{subscriptionId} check correct subscription ID check"
-          },
-          {
-            "httpCode": 200,
-            "requirementID": "TNT.2.2.API.CBK.2",
-            "description": "GET /conformance/callback/{subscriptionId} check correct callback HEAD response received"
           },
           {
             "httpCode": 403,
