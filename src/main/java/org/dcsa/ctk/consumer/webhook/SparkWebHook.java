@@ -8,8 +8,9 @@ import static spark.Service.ignite;
 
 @Slf4j
 public class SparkWebHook {
+    static Service http;
     public void  startServer() {
-        Service http = ignite()
+        http = ignite()
                     .port(AppProperty.CALLBACK_PORT)
                     .threadPool(20);
 
@@ -30,5 +31,9 @@ public class SparkWebHook {
         });
         http.awaitInitialization();
         log.info("Spark server started listening on port: "+ AppProperty.CALLBACK_PORT);
+    }
+
+    public static void stopServer(){
+        http.stop();
     }
 }
