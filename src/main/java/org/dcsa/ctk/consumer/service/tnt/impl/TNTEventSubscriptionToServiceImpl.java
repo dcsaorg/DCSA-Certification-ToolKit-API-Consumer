@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.dcsa.core.events.model.enums.EventType;
 import org.dcsa.core.events.model.transferobjects.EventSubscriptionSecretUpdateTO;
+import org.dcsa.ctk.consumer.config.AppProperty;
 import org.dcsa.ctk.consumer.constant.CheckListStatus;
 import org.dcsa.ctk.consumer.constant.ResponseMockType;
 import org.dcsa.ctk.consumer.exception.DecoratorException;
@@ -16,6 +17,7 @@ import org.dcsa.ctk.consumer.service.log.CustomLogger;
 import org.dcsa.ctk.consumer.service.mock.MockService;
 import org.dcsa.ctk.consumer.service.tnt.TNTEventSubscriptionToService;
 import org.dcsa.ctk.consumer.util.APIUtility;
+import org.dcsa.ctk.consumer.util.EventUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;
 import org.dcsa.ctk.consumer.util.SqlUtility;
 import org.dcsa.tnt.controller.TNTEventSubscriptionTOController;
@@ -77,6 +79,13 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                     customLogger.log(checkListItem, responseMap, response, request);
                     Objects.requireNonNull(checkListItem).setStatus(CheckListStatus.CONFORMANT);
                 }
+                if(EventUtility.checkEventDateDateAfterNow(AppProperty.EVENT_PATH)){
+                    checkListItem = ConfigService.getCheckListItemByRequirementId(ValidationRequirementId.TNT_2_2_SUB_CSM_7.getId());
+                    customLogger.init(null, response, request, checkListItem, null);
+                    customLogger.log(checkListItem, responseMap, response, request);
+                    Objects.requireNonNull(checkListItem).setStatus(CheckListStatus.CONFORMANT);
+                }
+
                 if(responseMap.size() != 0) {
                     String timeStamp = ZonedDateTime.now().minus(1, ChronoUnit.HOURS).toString();
                     responseMap.put("eventDateTime", timeStamp);

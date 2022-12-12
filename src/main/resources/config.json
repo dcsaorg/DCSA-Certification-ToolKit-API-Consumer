@@ -85,6 +85,11 @@
                 "statusCodeText": "Internal Server Exception"
               }
             }
+          },
+          {
+            "httpCode": 204,
+            "requirementID": "TNT.2.2.SUB.CSM.7",
+            "description": "The callback endpoint must reject notifications where eventCreatedDateTime is more than 10 seconds in the future with a response code in the 4XX range"
           }
         ],
         "GET": [
@@ -255,11 +260,6 @@
             "httpCode": 204,
             "requirementID": "TNT.2.2.SUB.CSM.6",
             "description": "The callback endpoint must respond to an incorrectly formatted notification with a response code in the 4XX range"
-          },
-          {
-            "httpCode": 204,
-            "requirementID": "TNT.2.2.SUB.CSM.7",
-            "description": "The callback endpoint must reject notifications where eventCreatedDateTime is more than 10 seconds in the future with a response code in the 4XX range"
           },
           {
             "httpCode": 204,

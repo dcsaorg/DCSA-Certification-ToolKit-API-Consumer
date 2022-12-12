@@ -31,6 +31,7 @@ spring:
   callback_wait: 3000
   notificationTriggerTime: 1000
   externalCallback: false
+  event_path: config/uploaded/events/v2/EquipmentEvent.json
 
 auth0:
   audience: localhost

@@ -27,6 +27,8 @@ public class AppProperty {
     public static String DATABASE_USER_NAME;
     public static String DATABASE_PASSWORD;
     public static String UPLOAD_CONFIG_PATH;
+
+    public static String EVENT_PATH;
     public static String CALLBACK_PATH;
 
     public static String DATABASE_NAME;
@@ -39,8 +41,11 @@ public class AppProperty {
     private static final String DATABASE_USERNAME_KEY = "username";
     private static final String DATABASE_PASSWORD_KEY = "password";
     public String EVENTS_PATH_KEY="events_path";
-    @Value("${spring.upload_config_path}")
+
+    public String EVENT_PATH_KEY="event_path";
     private String upload_config_path;
+
+    private String event_path;
     public static Path uploadPath;
     @Value("${spring.r2dbc.url}")
     public String url;
@@ -75,6 +80,7 @@ public class AppProperty {
         AppProperty.CALLBACK_PORT = callback_port;
         AppProperty.CALLBACK_WAIT = callback_wait;
         AppProperty.UPLOAD_CONFIG_PATH = upload_config_path;
+        AppProperty.EVENTS_PATH = event_path;
         AppProperty.NOTIFICATION_TRIGGER_TIME = notificationTriggerTime;
         AppProperty.DATABASE_URL = url;
         AppProperty.DATABASE_NAME = dbName;
@@ -89,6 +95,14 @@ public class AppProperty {
             AppProperty.EVENTS_PATH = PropertyLoader.getProperty(EVENTS_PATH_KEY);
         }else{
             AppProperty.EVENTS_PATH = events_path;
+        }
+        String evnEventPath = System.getenv("EVENT_PATH");
+        if(evnEventPath != null){
+            AppProperty.EVENT_PATH = evnEventPath;
+        } else if(!PropertyLoader.getProperty(EVENT_PATH_KEY).isBlank()){
+            AppProperty.EVENT_PATH = PropertyLoader.getProperty(EVENT_PATH_KEY);
+        }else{
+            AppProperty.EVENT_PATH = event_path;
         }
         initDatabaseProperties();
     }

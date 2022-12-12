@@ -23,7 +23,7 @@ public class FileUtility {
         }
         return "";
     }
-    public static String loadFileAsString(String resource) {
+    public static String loadFileAsStringV2(String resource) {
         return parseResourceWithStream(resource, inputStream -> {
             Reader dataInputStream = new BufferedReader(new InputStreamReader(inputStream));
             StringBuilder stringBuilder = new StringBuilder();
@@ -34,6 +34,17 @@ public class FileUtility {
             return stringBuilder.toString().trim();
         });
     }
+
+    public static String loadFileAsString(String resource) {
+        File file = new File(resource);
+        Path path = Paths.get(file.getAbsolutePath());
+        try {
+            return Files.readString(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static <T> T parseResourceWithStream(String classpath, ParserFunction<InputStream, T> reader) {
         InputStream inputStream = null;
         try {
@@ -79,8 +90,7 @@ public class FileUtility {
                 Path path = Paths.get(file.getAbsolutePath());
                 ByteArrayResource byteArrayResource = new ByteArrayResource(Files.readAllBytes(path));
                 return byteArrayResource;
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new IllegalStateException("Cannot find file " + resource);
             }
     }
