@@ -114,10 +114,10 @@ public class TNTEventSubscriptionTOControllerProxy {
         tntEventSubscriptionToService.delete(UUID.fromString(subscriptionId), response, request, checkListItem);
         customLogger.log(checkListItem, null, response, request);
     }
-    @GetMapping("/callback/{id}")
-    public ResponseEntity<Map<String, Object>> callback(@PathVariable String id, ServerHttpResponse response, ServerHttpRequest request)
+    @GetMapping("/callback/{subscriptionId}")
+    public ResponseEntity<Map<String, Object>> callback(@PathVariable String subscriptionId, ServerHttpResponse response, ServerHttpRequest request)
             throws ExecutionException, InterruptedException, JsonProcessingException {
-        return tntEventSubscriptionToService.callCallback(UUID.fromString(id),response, request);
+        return tntEventSubscriptionToService.callCallback(UUID.fromString(subscriptionId),response, request);
     }
 
 }
