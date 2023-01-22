@@ -1,0 +1,889 @@
+---
+openapi: 3.0.3
+info:
+  version: 1.0.1
+  title: 'DCSA Consumer Conformance Test Kit (CTK)'
+  description: |
+    This certification toolkit is targeted at the DCSA standard for Track and Trace v2.2.
+    
+    This certification toolkit is currently in a "pre-alpha" development stage. It must not be used to establish conformance of implementations of the standard.
+
+    It is made available in order to allow early feedback on the toolkit itself.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  contact:
+    name: Digital Container Shipping Association (DCSA)
+    url: https://dcsa.org
+    email: info@dcsa.org
+
+paths:
+  "/tnt/v2/event-subscriptions/{subscriptionId}/secret":
+    put:
+      tags:
+      - tnt-event-subscription-to-controller-proxy
+      summary: Resets the Secret on an existing subscription.
+      description: |
+        Updates secret for the given subscription ID. It checks and generates report as conformant or not conformant.
+      operationId: updateSecret
+      parameters:
+      - name: subscriptionId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Parameters used to update the secret of subscription
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    secret:
+                      $ref: 'https://api.swaggerhub.com/domains/dcsaorg/EVENT_DOMAIN/1.0.4#/components/schemas/secret'
+        
+      responses:
+        '204':
+          description: No Content
+  "/tnt/v2/event-subscriptions/{subscriptionId}":
+    get:
+      tags:
+      - tnt-event-subscription-to-controller-proxy
+      summary: Get single subscription for the given id
+      description: This return one subscription as given id.  It checks and generates report as conformant or not conformant. 
+      operationId: findById
+      parameters:
+      - name: subscriptionId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+    put:
+      tags:
+      - tnt-event-subscription-to-controller-proxy
+      summary: Update single subscription for the given id
+      description: Update single subscription for the given id. It checks and generates report as conformant or not conformant.
+      
+      operationId: update
+      parameters:
+      - name: subscriptionId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+    delete:
+      tags:
+      - tnt-event-subscription-to-controller-proxy
+      summary: It deletes single subscription for the given id
+      description: It deletes single subscription for the given id. It checks and generates report as conformant or not conformant.      
+      operationId: deleteById
+      parameters:
+      - name: subscriptionId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+
+
+
+  "/conformance/data-management/uploadShipment":
+    post:
+      tags:
+      - data-request-controller
+      summary: create a full shipment event
+      description: This expect a fullshipment.json as request body. GET "/conformance/data-management/example-data/full-shipment" returns a fullshipment.json file. A parameter timeOffset can be passed as well. 
+      operationId: upload
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FullShipment'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FullShipment'
+        description: Created a full shipment event
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  
+  
+  "/v2/events":
+    get:
+      tags:
+      - event-controller-proxy
+      summary: Get all Track and Trace  events.
+      description: Get all Track and Trace  events.      
+      operationId: findAll
+      parameters:
+      - name: eventType
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: shipmentEventTypeCode
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: carrierBookingReference
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: transportDocumentReference
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: transportDocumentTypeCode
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: transportEventTypeCode
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: transportCallID
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: vesselIMONumber
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: carrierVoyageNumber
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: carrierServiceCode
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: equipmentEventTypeCode
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: equipmentReference
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties:
+                    type: object
+  "/tnt/v2/callback/{subscriptionId}":
+    get:
+      tags:
+      - tnt-event-subscription-to-controller-proxy
+      summary: It calls the callback URL
+      description: It calls the callback URL to check whether it envokes or fails.  It checks and generates report as conformant or not conformant.        
+      operationId: callback
+      parameters:
+      - name: subscriptionId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+  "/restart":
+    get:
+      tags:
+      - restart-controller
+      summary: Restart the complete CTK service.
+      description: Restart the complete CTK service without removing any database entry.
+      operationId: restart
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/conformance/report":
+    get:
+      tags:
+      - report-controller
+      summary: Retrun a HTML document.
+      description: Retrun a HTML document. This document is a single HTML report that contains a complete report. This report has a conformance check with the requirement id. 
+      operationId: downloadReport
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  "/conformance/data-management/example-data/full-shipment":
+    get:
+      tags:
+      - data-request-controller
+      summary: Get fullshipment.json file
+      description: Get fullshipment.json file with given timeOffset parameter.
+      operationId: getFullShipmentTimeOffset
+      parameters:
+      - name: timeOffset
+        description: Paramereter timeOffset accepts  string as plus1d or minus1m after plus or minus any digit. After digit a character as ‘d' (day) or ‘m’ (month) or ‘y’ (year) or 'h’ (hour). For examle, minus1m  represents 1 month in the  past from the current date. Again plus10d represents  10 days in the future from the current date. 
+        in: query
+        required: false
+        schema:
+          type: string
+          default: plus0h
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+  "/conformance/data-management/removeLastShipment":
+    delete:
+      tags:
+      - data-request-controller
+      summary: Remove last shipment
+      description: This delete last shipment from the database. 
+      operationId: removeLastShipment
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  "/conformance/data-management/removeAllEvent":
+    delete:
+      tags:
+      - data-request-controller
+      summary: Remove all evnets
+      description: This deletes all events from the database. 
+      operationId: removeAllEvent
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    FullShipment:
+      type: object
+      properties:
+          shipmentEvent:
+            "$ref": '#/components/schemas/ShipmentEvent'
+          equipmentEvent:
+            "$ref": "#/components/schemas/EquipmentEvent"  
+          transportEvent:
+            "$ref": "#/components/schemas/TransportEvent"  
+      xml:
+        name: FullShipment
+    Address:
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          minLength: 0
+          type: string
+        street:
+          maxLength: 100
+          minLength: 0
+          type: string
+        streetNumber:
+          maxLength: 50
+          minLength: 0
+          type: string
+        floor:
+          maxLength: 50
+          minLength: 0
+          type: string
+        city:
+          maxLength: 65
+          minLength: 0
+          type: string
+        stateRegion:
+          maxLength: 75
+          minLength: 0
+          type: string
+        country:
+          maxLength: 75
+          minLength: 0
+          type: string
+        postCode:
+          maxLength: 10
+          minLength: 0
+          type: string
+    DocumentReferenceTO:
+      type: object
+      properties:
+        documentReferenceType:
+          type: string
+          enum:
+          - BKG
+          - TRD
+        documentReferenceValue:
+          type: string
+    EquipmentEvent:
+      type: object
+      allOf:
+      - "$ref": "#/components/schemas/Event"
+      - type: object
+        properties:
+          equipmentEventTypeCode:
+            type: string
+            enum:
+            - LOAD
+            - DISC
+            - GTIN
+            - GTOT
+            - STUF
+            - STRP
+          equipmentReference:
+            type: string
+          emptyIndicatorCode:
+            type: string
+            enum:
+            - EMPTY
+            - LADEN
+          transportCallID:
+            type: string
+          transportCall:
+            "$ref": "#/components/schemas/TransportCallTO"
+          documentReferences:
+            type: array
+            items:
+              "$ref": "#/components/schemas/DocumentReferenceTO"
+          references:
+            type: array
+            items:
+              "$ref": "#/components/schemas/Reference"
+          seals:
+            type: array
+            items:
+              "$ref": "#/components/schemas/Seal"
+          ISOEquipmentCode:
+            type: string
+          eventTypeCode:
+            type: string
+            deprecated: true
+            enum:
+            - LOAD
+            - DISC
+            - GTIN
+            - GTOT
+            - STUF
+            - STRP
+    Event:
+      type: object
+      properties:
+        eventID:
+          type: string
+          format: uuid
+        eventType:
+          type: string
+          enum:
+          - SHIPMENT
+          - TRANSPORT
+          - EQUIPMENT
+          - OPERATIONS
+        eventDateTime:
+          type: string
+          format: date-time
+        eventCreatedDateTime:
+          type: string
+          format: date-time
+        eventClassifierCode:
+          type: string
+          enum:
+          - PLN
+          - ACT
+          - EST
+          - REQ
+      discriminator:
+        propertyName: eventType
+    IdentifyingCode:
+      type: object
+      properties:
+        codeListResponsibleAgencyCode:
+          type: string
+        partyCode:
+          type: string
+        codeListName:
+          type: string
+    LocationTO:
+      type: object
+      properties:
+        locationName:
+          maxLength: 100
+          minLength: 0
+          type: string
+        latitude:
+          maxLength: 10
+          minLength: 0
+          type: string
+        longitude:
+          maxLength: 11
+          minLength: 0
+          type: string
+        address:
+          "$ref": "#/components/schemas/Address"
+        UNLocationCode:
+          maxLength: 5
+          minLength: 0
+          type: string
+    OperationsEvent:
+      type: object
+      allOf:
+      - "$ref": "#/components/schemas/Event"
+      - type: object
+        properties:
+          operationsEventTypeCode:
+            type: string
+            enum:
+            - STRT
+            - CMPL
+            - ARRI
+            - DEPA
+          publisherRole:
+            type: string
+            enum:
+            - CA
+            - AG
+            - VSL
+            - ATH
+            - PLT
+            - TR
+          portCallServiceTypeCode:
+            type: string
+            enum:
+            - PILO
+            - MOOR
+            - CRGO
+            - TOWG
+            - BUNK
+            - WSDP
+          facilityTypeCode:
+            type: string
+            enum:
+            - BOCR
+            - CLOC
+            - COFS
+            - COYA
+            - OFFD
+            - DEPO
+            - INTE
+            - POTE
+            - PBPL
+            - BRTH
+          remark:
+            type: string
+          delayReasonCode:
+            type: string
+          transportCall:
+            "$ref": "#/components/schemas/TransportCallTO"
+          eventLocation:
+            "$ref": "#/components/schemas/LocationTO"
+          vesselPosition:
+            "$ref": "#/components/schemas/LocationTO"
+          publisher:
+            "$ref": "#/components/schemas/PartyTO"
+    PartyTO:
+      type: object
+      properties:
+        partyName:
+          maxLength: 100
+          minLength: 0
+          type: string
+        taxReference1:
+          maxLength: 20
+          minLength: 0
+          type: string
+        taxReference2:
+          maxLength: 20
+          minLength: 0
+          type: string
+        publicKey:
+          maxLength: 500
+          minLength: 0
+          type: string
+        nmftaCode:
+          type: string
+        address:
+          "$ref": "#/components/schemas/Address"
+        identifyingCodes:
+          type: array
+          items:
+            "$ref": "#/components/schemas/IdentifyingCode"
+        partyID:
+          type: string
+    Reference:
+      type: object
+      properties:
+        referenceType:
+          type: string
+          enum:
+          - FF
+          - SI
+          - PO
+          - CR
+          - AAO
+        referenceValue:
+          maxLength: 100
+          minLength: 0
+          type: string
+    Seal:
+      type: object
+      properties:
+        sealNumber:
+          maxLength: 15
+          minLength: 0
+          type: string
+        sealSource:
+          maxLength: 5
+          minLength: 0
+          type: string
+        sealType:
+          maxLength: 5
+          minLength: 0
+          type: string
+    ShipmentEvent:
+      type: object
+      allOf:
+      - "$ref": "#/components/schemas/Event"
+      - type: object
+        properties:
+          shipmentEventTypeCode:
+            type: string
+            enum:
+            - RECE
+            - DRFT
+            - PENA
+            - PENU
+            - REJE
+            - APPR
+            - ISSU
+            - SURR
+            - SUBM
+            - VOID
+            - CONF
+          documentTypeCode:
+            type: string
+            enum:
+            - BKG
+            - BOK
+            - SHI
+            - VGM
+            - SRM
+            - TRD
+            - ARN
+          documentID:
+            maxLength: 100
+            minLength: 0
+            type: string
+          reason:
+            maxLength: 100
+            minLength: 0
+            type: string
+          references:
+            type: array
+            items:
+              "$ref": "#/components/schemas/Reference"
+          shipmentInformationTypeCode:
+            type: string
+            enum:
+            - BKG
+            - BOK
+            - SHI
+            - VGM
+            - SRM
+            - TRD
+            - ARN
+          shipmentID:
+            type: string
+            format: uuid
+          eventTypeCode:
+            type: string
+            deprecated: true
+            enum:
+            - RECE
+            - DRFT
+            - PENA
+            - PENU
+            - REJE
+            - APPR
+            - ISSU
+            - SURR
+            - SUBM
+            - VOID
+            - CONF
+    TransportCallTO:
+      type: object
+      properties:
+        transportCallID:
+          type: string
+        transportCallSequenceNumber:
+          type: integer
+          format: int32
+        facilityTypeCode:
+          maxLength: 4
+          minLength: 0
+          type: string
+          enum:
+          - BOCR
+          - CLOC
+          - COFS
+          - COYA
+          - OFFD
+          - DEPO
+          - INTE
+          - POTE
+          - PBPL
+          - BRTH
+        otherFacility:
+          maxLength: 50
+          minLength: 0
+          type: string
+        carrierServiceCode:
+          type: string
+        carrierVoyageNumber:
+          type: string
+        facilityCode:
+          maxLength: 6
+          minLength: 0
+          type: string
+        facilityCodeListProvider:
+          type: string
+          enum:
+          - SMDG
+          - BIC
+        vessel:
+          "$ref": "#/components/schemas/Vessel"
+        location:
+          "$ref": "#/components/schemas/LocationTO"
+        modeOfTransport:
+          type: string
+          enum:
+          - VESSEL
+          - RAIL
+          - TRUCK
+          - BARGE
+        UNLocationCode:
+          maxLength: 5
+          minLength: 0
+          type: string
+    TransportEvent:
+      type: object
+      allOf:
+      - "$ref": "#/components/schemas/Event"
+      - type: object
+        properties:
+          transportEventTypeCode:
+            type: string
+            enum:
+            - ARRI
+            - DEPA
+          delayReasonCode:
+            type: string
+          changeRemark:
+            type: string
+          transportCallID:
+            type: string
+          transportCall:
+            "$ref": "#/components/schemas/TransportCallTO"
+          documentReferences:
+            type: array
+            items:
+              "$ref": "#/components/schemas/DocumentReferenceTO"
+          references:
+            type: array
+            items:
+              "$ref": "#/components/schemas/Reference"
+          vesselScheduleChangeRemark:
+            type: string
+            deprecated: true
+          eventTypeCode:
+            type: string
+            deprecated: true
+            enum:
+            - ARRI
+            - DEPA
+    Vessel:
+      type: object
+      properties:
+        vesselIMONumber:
+          type: string
+        vesselName:
+          maxLength: 35
+          minLength: 0
+          type: string
+        vesselFlag:
+          maxLength: 2
+          minLength: 0
+          type: string
+        vesselCallSignNumber:
+          maxLength: 10
+          minLength: 0
+          type: string
+        vesselOperatorCarrierCode:
+          type: string
+        vesselOperatorCarrierCodeListProvider:
+          type: string
+          enum:
+          - SMDG
+          - NMFTA
+    EventSubscriptionSecretUpdateTO:
+      type: object
+      properties:
+        secret:
+          type: array
+          writeOnly: true
+          items:
+            type: string
+            format: byte
+    TNTEventSubscriptionTO:
+      required:
+      - callbackUrl
+      type: object
+      properties:
+        subscriptionID:
+          type: string
+          format: uuid
+        callbackUrl:
+          type: string
+        secret:
+          type: array
+          writeOnly: true
+          items:
+            type: string
+            format: byte
+        eventType:
+          type: array
+          items:
+            type: string
+            enum:
+            - SHIPMENT
+            - TRANSPORT
+            - EQUIPMENT
+            - OPERATIONS
+        shipmentEventTypeCode:
+          type: array
+          items:
+            type: string
+            enum:
+            - RECE
+            - DRFT
+            - PENA
+            - PENU
+            - REJE
+            - APPR
+            - ISSU
+            - SURR
+            - SUBM
+            - VOID
+            - CONF
+        carrierBookingReference:
+          type: string
+        transportDocumentReference:
+          type: string
+        transportDocumentTypeCode:
+          type: array
+          items:
+            type: string
+            enum:
+            - BOL
+            - SWB
+        transportEventTypeCode:
+          type: array
+          items:
+            type: string
+            enum:
+            - ARRI
+            - DEPA
+        transportCallID:
+          type: string
+        vesselIMONumber:
+          type: string
+        carrierVoyageNumber:
+          type: string
+        carrierServiceCode:
+          type: string
+        equipmentEventTypeCode:
+          type: array
+          items:
+            type: string
+            enum:
+            - LOAD
+            - DISC
+            - GTIN
+            - GTOT
+            - STUF
+            - STRP
+        equipmentReference:
+          type: string
