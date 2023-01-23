@@ -326,18 +326,20 @@ public class SqlInsertHandler {
                 if(reference.getShipmentID() == null){
                     reference.setShipmentID(SqlUtility.getShipmentIdByReferenceType(reference.getReferenceType().name()));
                 }
-                if(!SqlUtility.isShipmentExist(reference.getShipmentID())) {
-                    result.get().append(SqlUtility.insertShipment(reference.getShipmentID(),
-                            equipmentEvent.getEventCreatedDateTime().toString(),
-                            equipmentEvent.getEventCreatedDateTime().toString()));
-                }
-                try {
-                    if(!SqlUtility.isReferenceExist(reference.getShipmentID())) {
-                        result.get().append(insetIntoReferences(reference));
+                if( !reference.getShipmentID().isEmpty()) {
+                    if (!SqlUtility.isShipmentExist(reference.getShipmentID())) {
+                        result.get().append(SqlUtility.insertShipment(reference.getShipmentID(),
+                                equipmentEvent.getEventCreatedDateTime().toString(),
+                                equipmentEvent.getEventCreatedDateTime().toString()));
                     }
-                } catch (Exception e) {
-                    log.severe("Failed to insert into equipmentEvent");
-                    result.get().append("Failed to insert into equipmentEvent ").append(e.getMessage());
+                    try {
+                        if(!SqlUtility.isReferenceExist(reference.getShipmentID())) {
+                            result.get().append(insetIntoReferences(reference));
+                        }
+                    } catch (Exception e) {
+                        log.severe("Failed to insert into equipmentEvent");
+                        result.get().append("Failed to insert into equipmentEvent ").append(e.getMessage());
+                    }
                 }
             });
             var seals =  equipmentEvent.getSeals();
@@ -360,7 +362,17 @@ public class SqlInsertHandler {
             if(SqlUtility.isEquipmentEventExist(equipmentEvent.getEvent_id().toString())){
                 result.get().append("\nThe equipmentEvent already existed with eventId: ").append(equipmentEvent.getEvent_id().toString()).append(". ");
             }else {
-                result.get().append(insetIntoEquipmentEvent(equipmentEvent));
+                if(SqlUtility.isEquipmentReferenceExist(equipmentEvent.getEquipmentReference())){
+                    if(SqlUtility.isTransportCallIdExist(equipmentEvent.getTransportCallID().toString())){
+                        result.get().append(insetIntoEquipmentEvent(equipmentEvent));
+                    }else{
+                        result.get().append("TransportCallID "+equipmentEvent.getTransportCallID().toString()).append(" does not exist in TransportCall table");
+                    }
+
+                }else{
+                    result.get().append("equipment_reference not exist in equipment");
+                }
+
             }
         } catch (Exception e) {
             log.warning("failed process event: " + equipmentEvent.getEvent_id().toString());
@@ -386,7 +398,16 @@ public class SqlInsertHandler {
     private String processTransportCall(TransportCall transportCall) throws Exception {
         StringBuilder result = new StringBuilder();
         SqlUtility.checkDeleteTransportCallIfExist((transportCall.getId().toString()));
-        result.append(insetIntoTransportCall(transportCall));
+        if(transportCall.getTransportCallID() != null){
+            if(SqlUtility.isFacilityIdExist(transportCall.getFacilityID())){
+                result.append(insetIntoTransportCall(transportCall));
+            }else{
+                result.append("\nfacility id "+transportCall.getFacilityID()).append(" does not exit.\n");
+            }
+        }else{
+            result.append("TransportCall has null facility_id");
+        }
+
         return result.toString();
     }
 
@@ -590,7 +611,12 @@ public class SqlInsertHandler {
                 SqlUtility.deleteTransportEventByTransportCallId(List.of(transportEvent.getTransportCall().getTransportCallID().toString()));
             }
             result.append(processTransportCall(transportEvent.getTransportCall()));
-            result.append(insetIntoTransportEvent(transportEvent));
+            if(SqlUtility.isTransportCallIdExist(transportEvent.getTransportCallID().toString())){
+                result.append(insetIntoTransportEvent(transportEvent));
+            }else{
+                result.append("TransportCallId "+transportEvent.getTransportCallID().toString()).append(" does not exist in TransportCall table");
+            }
+
         } catch (Exception e) {
             log.severe("Failed to insert transportEvent: "+transportEvent.getEvent_id()+" "+e.getMessage());
             result.append("Failed to insert transportEvent: ").append(transportEvent.getEvent_id())

@@ -339,6 +339,61 @@ public class SqlUtility {
             return false;
         }
     }
+    public static boolean isFacilityIdExist(String facilityId) {
+        String dbFacilityId = "";
+        String selectEquipmentEvent = "SELECT id FROM dcsa_im_v3_0.facility where id = " +
+                StringUtils.quote(facilityId);
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectEquipmentEvent);
+            while (resultSet.next()) {
+                dbFacilityId = resultSet.getString("id");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (dbFacilityId.length() > 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isEquipmentReferenceExist(String equipmentReference) {
+        String dbEquipmentReference = "";
+        String selectEquipmentEvent = "SELECT equipment_reference FROM dcsa_im_v3_0.equipment where equipment_reference = " +
+                StringUtils.quote(equipmentReference);
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectEquipmentEvent);
+            while (resultSet.next()) {
+                dbEquipmentReference = resultSet.getString("equipment_reference");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (dbEquipmentReference.length() > 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static boolean isTransportCallIdExist(String transportCallId) {
+        String dbEquipmentReference = "";
+        String selectEquipmentEvent = "SELECT id FROM dcsa_im_v3_0.transport_call where id = " +
+                StringUtils.quote(transportCallId);
+        try (Statement statement = SqlUtility.getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectEquipmentEvent);
+            while (resultSet.next()) {
+                dbEquipmentReference = resultSet.getString("id");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (dbEquipmentReference.length() > 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public static boolean isTransportEventExist(String transportEventId) {
         String eventId = "";
