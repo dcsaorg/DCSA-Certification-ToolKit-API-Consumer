@@ -4,11 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.dcsa.ctk.consumer.config.AppProperty;
 import spark.Service;
 
+import java.util.UUID;
+
 import static spark.Service.ignite;
 
 @Slf4j
 public class SparkWebHook {
     static Service http;
+
+    static UUID subscriptionID;
+
     public void  startServer() {
         http = ignite()
                     .port(AppProperty.CALLBACK_PORT)
@@ -31,9 +36,18 @@ public class SparkWebHook {
         });
         http.awaitInitialization();
         log.info("Spark server started listening on port: "+ AppProperty.CALLBACK_PORT);
+
+        http.get("/getSubscriptionId", (req, res) -> subscriptionID);
     }
 
     public static void stopServer(){
         http.stop();
+    }
+    public static UUID getSubscriptionID() {
+        return subscriptionID;
+    }
+
+    public static void setSubscriptionID(UUID subscriptionID) {
+        SparkWebHook.subscriptionID = subscriptionID;
     }
 }

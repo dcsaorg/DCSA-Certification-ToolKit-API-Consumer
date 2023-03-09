@@ -20,6 +20,7 @@ import org.dcsa.ctk.consumer.util.APIUtility;
 import org.dcsa.ctk.consumer.util.EventUtility;
 import org.dcsa.ctk.consumer.util.JsonUtility;
 import org.dcsa.ctk.consumer.util.SqlUtility;
+import org.dcsa.ctk.consumer.webhook.SparkWebHook;
 import org.dcsa.tnt.controller.TNTEventSubscriptionTOController;
 import org.dcsa.tnt.model.transferobjects.TNTEventSubscriptionTO;
 import org.springframework.http.HttpStatus;
@@ -97,6 +98,7 @@ public class TNTEventSubscriptionToServiceImpl implements TNTEventSubscriptionTo
                     customLogger.init(null, response, request, checkListItem, null);
                     customLogger.log(checkListItem, responseMap, response, request);
                     checkListItem.setStatus(CheckListStatus.CONFORMANT);
+                    SparkWebHook.setSubscriptionID(res.getSubscriptionID());
                 }
             } else {
                 responseMap = mockService.getMockedResponse(ResponseMockType.ERROR_RESPONSE, request);
