@@ -34,6 +34,9 @@ public class SparkWebHook {
             res.status(204);
             return res;
         });
+
+        http.get("/getSubscriptionId", (req, res) -> subscriptionID);
+
         http.awaitInitialization();
         log.info("Spark server started listening on port: "+ AppProperty.CALLBACK_PORT);
 
