@@ -2,7 +2,6 @@ package org.dcsa.ctk.consumer.controller;
 
 import org.dcsa.ctk.consumer.config.AppProperty;
 import org.dcsa.ctk.consumer.model.enums.UploadType;
-import org.dcsa.ctk.consumer.service.config.impl.ConfigService;
 import org.dcsa.ctk.consumer.service.sql.SqlInsertHandler;
 import org.dcsa.ctk.consumer.service.sql.SqlRemoveHandler;
 import org.dcsa.ctk.consumer.service.uploader.FileUploadService;
