@@ -53,7 +53,23 @@ docker tag <image_name>:latest docker.pkg.github.com/<user_name>/<repo_name>/ctk
 docker push docker.pkg.github.com/<user_name>/<repo_name>/ctk-db:<tagname>
 ```
 
-Utility for generating and loading test data. Primarily for use with conformance tooling.
+Consumer CTK Extension
+-------------------------------------
+
+We need a way to generate test shipment events. This test event time should be configurable event time in the past, present, and future. 
+That is why this new extension was implemented.
+
+| Endpoints for this extension                     | 
+|--------------------------------------------------| 
+| POST /conformance/data-management/uploadShipment | 
+| GET /conformance/data-management/example-data/full-shipment |
+| GET /conformance/data-management/example-data/full-shipment?timeOffset=plus4d (with time offset) |
+| DELETE /conformance/data-management/removeLastShipment |
+| DELETE /conformance/data-management/removeAllEvent |
+
+<mark>Note that the above endpoint won't work out of the box. Because the DCSA information model changes frequently. We have to update according to the updates</mark>
+
+Powershell script for generating and loading test data. Primarily used with conformance tooling.
 
 It will find all JSON file recursively and perform POST request from  current directory   
 `.\upload.ps1`
@@ -61,9 +77,7 @@ It will find all JSON file recursively and perform POST request from  current di
 Pass the json file as parameter (-Param1 jsonFullShipment.json)   
 `.\uploadShipmentEvent.ps1 -Param1 jsonFullShipment.json`
 
-
-We have already a repo for this, we can cintinue to use the same 
-https://github.com/deepakdcsa/ctk-docker-registry.git
+Users can upload shipment event either by these powershell script or calling above rest endpoints by postman.
 
 Referenc: 
 

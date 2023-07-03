@@ -5,7 +5,7 @@
 )
 
 $CurlExecutable = "C:\WINDOWS\system32\curl.exe"
-$uri = "http://localhost:9001/v2/uploadShipment"
+$uri = "http://localhost:9092//conformance/data-management/uploadShipment"
 $fullPath = $PSScriptRoot.ToString() + "\" + $Param1.ToString().Trim();
 
 $CurlArguments = '--request', 'POST',

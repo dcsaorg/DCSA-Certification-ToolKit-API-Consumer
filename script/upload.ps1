@@ -1,5 +1,5 @@
 ﻿$CurlExecutable = "C:\WINDOWS\system32\curl.exe"
-$uri = "http://localhost:9001/v2/uploadShipment"
+$uri = "http://localhost:9092//conformance/data-management/uploadShipment"
 $files = Get-ChildItem -Recurse -Path $PSScriptRoot -Filter *.json
 
 foreach ($file in $files) {
