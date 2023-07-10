@@ -26,7 +26,7 @@ pagination:
 
 spring:
   application:
-    name: dcsa-ctk-consumer
+    name: dcsa-tnt-consumer-ctk
   r2dbc:
     url: r2dbc:postgresql://localhost:5432/dcsa_openapi?currentSchema=dcsa_im_v3_0
     dbname: dcsa_openapi

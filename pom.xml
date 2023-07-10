@@ -53,6 +53,7 @@
 			<artifactId>dcsa_core</artifactId>
 			<version>${dcsa.version}${dcsa.core.tag}${dcsa.artifacttype}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.dcsa</groupId>
 			<artifactId>dcsa_event_core</artifactId>

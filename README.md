@@ -14,16 +14,15 @@ Building and Running the project,
 
 If you would like to build required DCSA packages individually, begin with step 1.
 
-1) Build **DCSA-TNT** as described in [DCSA-TNT/README.md](https://github.com/dcsaorg/DCSA-TNT/blob/b7d1cbde029c3e6dbe8c7ca71f1fcf36b30f9b65/README.md), then
+1) Build **DCSA-TNT** as described in [DCSA-TNT/README.md](https://github.com/dcsaorg/DCSA-TNT/blob/b7d1cbde029c3e6dbe8c7ca71f1fcf36b30f9b65/README.md) 
+   For TNT 2.2 we have to checkout tag 0.0.1-reactive ``git checkout tags/0.0.1-reactive``
+   Build it as a library by commenting out the build plugin in the pom.xml. 
 
 2) Clone **DCSA-Certification-ToolKit-API-Consumer** (with ``--recurse-submodules`` option.)
 
-3) update **DCSA-TNT** as dependency in pom file and Build using, ``mvn package``
+3) Build using ``mvn clean install``
 
-4) Initialize your local postgresql database as described in [datamodel/README.md](https://github.com/dcsaorg/DCSA-Information-Model/blob/master/README.md) \
-   or If you have docker installed, you may skip this step and use the docker-compose command mentioned below to set it up (This will initialize the application along with the database).
-
-5) Run application,
+4) Run application
 ```
 mvn spring-boot:run [options] 
 
@@ -38,7 +37,7 @@ docker-compose up -d -V --build
 ```
 **Publish the docker images using github package**
 
-Along with Consumer Compatibility kit, we need a running database intance loaded with test data. Hence, we need below two docker images to publish.
+Along with Consumer conformance toolkit, we need a running database intance loaded with test data. Hence, we need below two docker images to publish.
 
 Assuming you have docker images availabe at your local and github repo created
 1. Consumer Compatibility kit: 

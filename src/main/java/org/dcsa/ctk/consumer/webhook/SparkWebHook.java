@@ -35,12 +35,16 @@ public class SparkWebHook {
             return res;
         });
 
-        http.get("/getSubscriptionId", (req, res) -> subscriptionID);
+        http.get("/getSubscriptionId", (req, res) -> {
+               if(subscriptionID == null){
+                   return "No subscription ID found. Try to subscribe by POST /tnt/v2/event-subscriptions";
+               } else {
+                   return subscriptionID;
+               }
+           });
 
         http.awaitInitialization();
         log.info("Spark server started listening on port: "+ AppProperty.CALLBACK_PORT);
-
-        http.get("/getSubscriptionId", (req, res) -> subscriptionID);
     }
 
     public static void stopServer(){

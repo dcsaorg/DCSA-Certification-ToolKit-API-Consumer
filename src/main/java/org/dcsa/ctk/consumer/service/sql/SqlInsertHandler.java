@@ -4,11 +4,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.java.Log;
-import org.dcsa.core.events.model.Booking;
-import org.dcsa.core.events.model.OperationsEvent;
-import org.dcsa.core.events.model.Reference;
-import org.dcsa.core.events.model.Seal;
+import org.dcsa.core.events.model.*;
 import org.dcsa.core.events.model.enums.EmptyIndicatorCode;
+import org.dcsa.core.events.model.transferobjects.TransportCallTO;
 import org.dcsa.ctk.consumer.model.*;
 import org.dcsa.ctk.consumer.model.enums.UploadType;
 import org.dcsa.ctk.consumer.util.EventTimeUtility;
@@ -265,16 +263,16 @@ public class SqlInsertHandler {
                 event.getEventDateTime() + ")";
         int rows = SqlUtility.updateRow(eventSql);
         if (rows > 0) {
-            log.log(Level.INFO, "A new event has been inserted. "+event.getEvent_id().toString());
-            return "\nA new event has been inserted "+event.getEvent_id().toString();
+            log.log(Level.INFO, "A new event has been inserted. "+event.getEventID().toString());
+            return "\nA new event has been inserted "+event.getEventID().toString();
         } else {
-            throw new Exception("Json file processing exception for event " + event.getEvent_id().toString());
+            throw new Exception("Json file processing exception for event " + event.getEventID().toString());
         }
     }
     private String insetIntoShipmentEvent(ShipmentEvent shipmentEvent) {
        // String shipmentId =  SqlUtility.getShipmentIdByCarrierBookingReference(shipmentEvent.getDocumentID());
         String result = "";
-        String shipmentEventSql = SHIPMENT_EVENT_INSERT_INTO + StringUtils.quote(shipmentEvent.getEvent_id().toString()) + "," +
+        String shipmentEventSql = SHIPMENT_EVENT_INSERT_INTO + StringUtils.quote(shipmentEvent.getEventID().toString()) + "," +
                                 StringUtils.quote(shipmentEvent.getEventClassifierCode().name()) + "," +
                                 "TIMESTAMP "+StringUtils.quote(shipmentEvent.getEventCreatedDateTime().toString()) + "," +
                                 "TIMESTAMP "+StringUtils.quote(shipmentEvent.getEventDateTime().toString()) + "," +
@@ -285,9 +283,9 @@ public class SqlInsertHandler {
         int rows = SqlUtility.updateRow(shipmentEventSql);
         if (rows > 0) {
             log.log(Level.INFO, "A new shipmentEvent has been inserted.");
-            result = "A new shipmentEvent is inserted with id: " + shipmentEvent.getEvent_id().toString();
+            result = "A new shipmentEvent is inserted with id: " + shipmentEvent.getEventID().toString();
         } else {
-            result = "shipmentEvent processing exception for shipmentEvent " + shipmentEvent.getEvent_id().toString();
+            result = "shipmentEvent processing exception for shipmentEvent " + shipmentEvent.getEventID().toString();
         }
         return  result;
     }
@@ -354,13 +352,13 @@ public class SqlInsertHandler {
                     result.get().append("Failed to insert into seal ").append(e.getMessage());
                 }
             });
-            TransportCall transportCall = equipmentEvent.getTransportCall();
+            TransportCallTO transportCall = equipmentEvent.getTransportCall();
             if(transportCall.getTransportCallID() == null){
-                transportCall.setTransportCallID(UUID.randomUUID());
+                transportCall.setTransportCallID(UUID.randomUUID().toString());
             }
             result.get().append(processTransportCall(transportCall));
-            if(SqlUtility.isEquipmentEventExist(equipmentEvent.getEvent_id().toString())){
-                result.get().append("\nThe equipmentEvent already existed with eventId: ").append(equipmentEvent.getEvent_id().toString()).append(". ");
+            if(SqlUtility.isEquipmentEventExist(equipmentEvent.getEventID().toString())){
+                result.get().append("\nThe equipmentEvent already existed with eventId: ").append(equipmentEvent.getEventID().toString()).append(". ");
             }else {
                 if(SqlUtility.isEquipmentReferenceExist(equipmentEvent.getEquipmentReference())){
                     if(SqlUtility.isTransportCallIdExist(equipmentEvent.getTransportCallID().toString())){
@@ -375,7 +373,7 @@ public class SqlInsertHandler {
 
             }
         } catch (Exception e) {
-            log.warning("failed process event: " + equipmentEvent.getEvent_id().toString());
+            log.warning("failed process event: " + equipmentEvent.getEventID().toString());
             return "failed process "+e.getMessage();
         }
         return result.get().toString();
@@ -383,9 +381,9 @@ public class SqlInsertHandler {
     private String processJsonTransportCall(String json) {
         StringBuilder result = new StringBuilder();
         try {
-            TransportCall transportCall = mapper.readValue(json, TransportCall.class);
-            if(transportCall.getId() == null){
-                transportCall.setTransportCallID(UUID.randomUUID());
+            TransportCallTO transportCall = mapper.readValue(json, TransportCallTO.class);
+            if(transportCall.getTransportCallID() == null){
+                transportCall.setTransportCallID(UUID.randomUUID().toString());
             }
             result.append(processTransportCall(transportCall));
         } catch (Exception e) {
@@ -395,11 +393,11 @@ public class SqlInsertHandler {
         return result.toString();
     }
 
-    private String processTransportCall(TransportCall transportCall) throws Exception {
+    private String processTransportCall(TransportCallTO transportCall) throws Exception {
         StringBuilder result = new StringBuilder();
-        SqlUtility.checkDeleteTransportCallIfExist((transportCall.getId().toString()));
+        SqlUtility.checkDeleteTransportCallIfExist((transportCall.getTransportCallID()));
         if(transportCall.getTransportCallID() != null){
-            if(SqlUtility.isFacilityIdExist(transportCall.getFacilityID())){
+            if(SqlUtility.isFacilityIdExist(transportCall.getFacilityID().toString())){
                 result.append(insetIntoTransportCall(transportCall));
             }else{
                 result.append("\nfacility id "+transportCall.getFacilityID()).append(" does not exit.\n");
@@ -492,7 +490,7 @@ public class SqlInsertHandler {
         String vesselSql = VESSEL_INSERT_INTO + StringUtils.quote(vessel.getVesselIMONumber()) + "," +
                 StringUtils.quote(vessel.getVesselName()) + "," +
                 StringUtils.quote(vessel.getVesselFlag()) + "," +
-                StringUtils.quote(vessel.getVesselCallSign()) + "," +
+                StringUtils.quote(vessel.getVesselCallSignNumber()) + "," +
                 StringUtils.quote(vessel.getVesselOperatorCarrierID().toString()) + ")";
         int rows = SqlUtility.updateRow(vesselSql);
         if (rows > 0) {
@@ -503,8 +501,8 @@ public class SqlInsertHandler {
         }
     }
 
-    private String insetIntoTransportCall(TransportCall transportCall) throws Exception {
-        String transportCallSql = TRANSPORT_CALL_INSERT_INTO + StringUtils.quote(transportCall.getId().toString()) + "," +
+    private String insetIntoTransportCall(TransportCallTO transportCall) throws Exception {
+        String transportCallSql = TRANSPORT_CALL_INSERT_INTO + StringUtils.quote(transportCall.getTransportCallID()) + "," +
                 transportCall.getTransportCallSequenceNumber() + "," +
                 StringUtils.quote(transportCall.getFacilityID().toString()) + "," +
                 StringUtils.quote(transportCall.getFacilityTypeCode().name()) + "," +
@@ -514,15 +512,15 @@ public class SqlInsertHandler {
                 StringUtils.quote(transportCall.getVesselIMONumber()) + ")";
         int rows = SqlUtility.updateRow(transportCallSql);
         if (rows > 0) {
-            log.log(Level.INFO, "A transportCall has been inserted with ID: "+transportCall.getId().toString());
-            return "\nA new transportCall is inserted with id: "+transportCall.getId().toString();
+            log.log(Level.INFO, "A transportCall has been inserted with ID: "+transportCall.getTransportCallID());
+            return "\nA new transportCall is inserted with id: "+transportCall.getTransportCallID();
         } else {
             throw new Exception("Json file processing exception for booking " + transportCall.getFacilityID().toString());
         }
     }
 
     private String insetIntoEquipmentEvent(EquipmentEvent equipmentEvent) throws Exception {
-        String equipmentEventSql = EQUIPMENT_EVENT_INSERT_INTO + StringUtils.quote(equipmentEvent.getEvent_id().toString()) + "," +
+        String equipmentEventSql = EQUIPMENT_EVENT_INSERT_INTO + StringUtils.quote(equipmentEvent.getEventID().toString()) + "," +
                 StringUtils.quote(equipmentEvent.getEventClassifierCode().name()) + "," +
                 "TIMESTAMP "+StringUtils.quote(equipmentEvent.getEventCreatedDateTime().toString()) + "," +
                 "TIMESTAMP "+StringUtils.quote(equipmentEvent.getEventDateTime().toString()) + "," +
@@ -532,10 +530,10 @@ public class SqlInsertHandler {
                 StringUtils.quote(equipmentEvent.getEquipmentEventTypeCode().name()) + ")";
         int rows = SqlUtility.updateRow(equipmentEventSql);
         if (rows > 0) {
-            log.log(Level.INFO, "A new equipmentEvent has been inserted with ID: "+equipmentEvent.getEvent_id().toString());
-            return "\nA new equipmentEvent is inserted with id: "+equipmentEvent.getEvent_id().toString();
+            log.log(Level.INFO, "A new equipmentEvent has been inserted with ID: "+equipmentEvent.getEventID().toString());
+            return "\nA new equipmentEvent is inserted with id: "+equipmentEvent.getEventID().toString();
         } else {
-            throw new Exception("Json file processing exception for equipmentEvent " + equipmentEvent.getEvent_id().toString());
+            throw new Exception("Json file processing exception for equipmentEvent " + equipmentEvent.getEventID().toString());
         }
     }
 
@@ -564,7 +562,7 @@ public class SqlInsertHandler {
     }
 
     private String insetIntoTransportEvent(TransportEvent transportEvent) throws Exception {
-        String transportEventSql = TRANSPORT_EVENT_INSERT_INTO + StringUtils.quote(transportEvent.getEvent_id().toString()) + "," +
+        String transportEventSql = TRANSPORT_EVENT_INSERT_INTO + StringUtils.quote(transportEvent.getEventID().toString()) + "," +
                 StringUtils.quote(transportEvent.getEventClassifierCode().name()) + "," +
                 "TIMESTAMP "+StringUtils.quote(transportEvent.getEventCreatedDateTime().toString()) + "," +
                 "TIMESTAMP "+StringUtils.quote(transportEvent.getEventDateTime().toString()) + "," +
@@ -574,10 +572,10 @@ public class SqlInsertHandler {
                 StringUtils.quote(transportEvent.getTransportEventTypeCode().name()) + ")";
         int rows = SqlUtility.updateRow(transportEventSql);
         if (rows > 0) {
-            log.log(Level.INFO, "A new transportEvent has been inserted."+transportEvent.getEvent_id().toString());
-            return "\nA new transportEvent is inserted with Id: "+transportEvent.getEvent_id().toString();
+            log.log(Level.INFO, "A new transportEvent has been inserted."+transportEvent.getEventID().toString());
+            return "\nA new transportEvent is inserted with Id: "+transportEvent.getEventID().toString();
         } else {
-            throw new Exception("transportEvent processing exception  " + transportEvent.getEvent_id().toString());
+            throw new Exception("transportEvent processing exception  " + transportEvent.getEventID().toString());
         }
     }
 
@@ -594,21 +592,21 @@ public class SqlInsertHandler {
         StringBuilder result = new StringBuilder();
         ShipmentEvent shipmentEvent = fullShipment.getShipmentEvent();
         try {
-            if(SqlUtility.isShipmentEventExist(shipmentEvent.getEvent_id().toString())){
-                SqlUtility.deleteShipmentEventByEventId(shipmentEvent.getEvent_id().toString());
+            if(SqlUtility.isShipmentEventExist(shipmentEvent.getEventID().toString())){
+                SqlUtility.deleteShipmentEventByEventId(shipmentEvent.getEventID().toString());
             }
             result.append(insetIntoShipmentEvent(shipmentEvent));
         } catch (Exception e) {
-            log.severe("Failed to insert shipmentEvent: "+shipmentEvent.getEvent_id());
-            return "\nFailed to insert shipmentEvent: "+shipmentEvent.getEvent_id()+" "+e.getMessage();
+            log.severe("Failed to insert shipmentEvent: "+shipmentEvent.getEventID());
+            return "\nFailed to insert shipmentEvent: "+shipmentEvent.getEventID()+" "+e.getMessage();
         }
         EquipmentEvent equipmentEvent = fullShipment.getEquipmentEvent();
         result.append(processEquipmentEvent(equipmentEvent));
 
         TransportEvent transportEvent = fullShipment.getTransportEvent();
         try {
-            if(SqlUtility.isTransportEventExist(transportEvent.getEvent_id().toString())){
-                SqlUtility.deleteTransportEventByTransportCallId(List.of(transportEvent.getTransportCall().getTransportCallID().toString()));
+            if(SqlUtility.isTransportEventExist(transportEvent.getEventID().toString())){
+                SqlUtility.deleteTransportEventByTransportCallId(List.of(transportEvent.getTransportCall().getTransportCallID()));
             }
             result.append(processTransportCall(transportEvent.getTransportCall()));
             if(SqlUtility.isTransportCallIdExist(transportEvent.getTransportCallID().toString())){
@@ -618,8 +616,8 @@ public class SqlInsertHandler {
             }
 
         } catch (Exception e) {
-            log.severe("Failed to insert transportEvent: "+transportEvent.getEvent_id()+" "+e.getMessage());
-            result.append("Failed to insert transportEvent: ").append(transportEvent.getEvent_id())
+            log.severe("Failed to insert transportEvent: "+transportEvent.getEventID()+" "+e.getMessage());
+            result.append("Failed to insert transportEvent: ").append(transportEvent.getEventID())
                     .append(" ").append(e.getMessage());
         }
         return result.toString();

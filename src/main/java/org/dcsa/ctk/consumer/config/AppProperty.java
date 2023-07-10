@@ -107,6 +107,8 @@ public class AppProperty {
         initDatabaseProperties();
     }
 
+    // TODO this is based on r2dbc connection for TNT 2.2
+    // For TNT 3.0 it is jpa. Update it according for TNT 3.0
     private static void initDatabaseProperties(){
         String evnDbUrl = System.getenv("DB_URL");
         String evnDbPassword = System.getenv("DB_PASSWORD");
