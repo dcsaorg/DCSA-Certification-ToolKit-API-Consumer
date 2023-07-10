@@ -1,0 +1,531 @@
+{
+	"info": {
+		"_postman_id": "04a82e5a-c389-4e4d-bbd8-0b0f9081264a",
+		"name": "Consumer TNT CTK",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2551975",
+		"_collection_link": "https://www.postman.com/winter-trinity-270101/workspace/dcsa/collection/2551975-04a82e5a-c389-4e4d-bbd8-0b0f9081264a?action=share&creator=2551975&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Consumer Spark web server request",
+			"item": [
+				{
+					"name": "HEAD request to check callback is reachable or not",
+					"request": {
+						"method": "HEAD",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9999/v2/notification-endpoints/receive/456eacf9-8cda-412b-b801-4a41be7a6d000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"v2",
+								"notification-endpoints",
+								"receive",
+								"456eacf9-8cda-412b-b801-4a41be7a6d000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST request to check callback is reachable or not",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9999/v2/notification-endpoints/receive/456eacf9-8cda-412b-b801-4a41be7a6d000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"v2",
+								"notification-endpoints",
+								"receive",
+								"456eacf9-8cda-412b-b801-4a41be7a6d000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET subsciptoin ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9999/getSubscriptionId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"getSubscriptionId"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "post event-subscriptions for consumer",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJraWQiOiJkNCtqMFdCVUNNek1MdVwvc3JHVVFhYmVYQjZzVDBkYXliZlhwSmIzUUdaOD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI3MXI5MmNzZjhuc2JubHZpb3JnMmticGdqZiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiZGNzYVwvaW5mb3N5cyIsImF1dGhfdGltZSI6MTY2NjI3MDU3NSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmV1LXdlc3QtMS5hbWF6b25hd3MuY29tXC9ldS13ZXN0LTFfbW1FTUNaQVdZIiwiZXhwIjoxNjY2Mjc0MTc1LCJpYXQiOjE2NjYyNzA1NzUsInZlcnNpb24iOjIsImp0aSI6ImRkOWI3MTg2LTQ2ODMtNDQ1OC05Yzk1LTQzNzkwOTExZjhhZCIsImNsaWVudF9pZCI6IjcxcjkyY3NmOG5zYm5sdmlvcmcya2JwZ2pmIn0.JU-tZT7suDYOtYJL5teO4WlZ6zhAxfB-VCvdsLwu2J9qBZXID29Oihc-QwgfWUsNajz3oakSlLC9cGV0NEvMXbOJaQxjpeVr4EGRyz5yR9aCee_gpKHUSTo1H_lDfYoEQo2OtLLBim8u4H_cVoZYu0e_zzePxb9e_eU4C5AF4DpS8JSjoAScnIKH1lYLxkmGR0kNGhbzp3PXaoDopMs7Oq0TJHWllyiZw6Njqza9VQNWzcO1kDmHTks9Cw_YF5CNYFkMdJYFuEt6NGOOyc3W5qdH4gwBwblCQmK0S0WDQ2IuKZbqiBsBYouQNlr07YldKwbXkLk82iJmls9T9MRIrQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "2",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n  \"callbackUrl\": \"https://f12d95eb-6e7b-4516-ac10-7c3c9efe2887.mock.pstmn.io/456eacf9-8cda-412b-b801-4a41be7a6d000\",\r\n\r\n  \"eventType\": [\r\n\r\n    \"EQUIPMENT\"\r\n\r\n  ],\r\n  \"transportCallID\": \"979bafa8-e5b2-455b-a1eb-b678b6a2b6b2\",\r\n\r\n  \"vesselIMONumber\": \"9811000\",\r\n\r\n  \"carrierBookingReference\": \"ABC709951\",\r\n\r\n  \"carrierServiceCode\": \"FE1\",\r\n\r\n  \"equipmentReference\": \"APZU4812090\",\r\n\r\n  \"secret\": \"OG1wOWFaRW1HTTF1Y2NuaUN0RlAtaU9JMjM5N25vMWtWd25rS2Vkc2ktZms0c01zaTJQOElZRVNQN000000zzz==\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9092/tnt/v2/event-subscriptions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"tnt",
+						"v2",
+						"event-subscriptions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put event-subscriptions for consumer",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n  \"callbackUrl\": \"http://127.0.0.1:9999/v2/notification-endpoints/receive/76cef640-546d-11ed-bdc3-0242ac120002\",\r\n\r\n  \"eventType\": [\r\n\r\n    \"EQUIPMENT\"\r\n\r\n  ],\r\n  \"transportCallID\": \"ab84b6ba-f3a2-4be8-af57-303c00853050\",\r\n\r\n  \"vesselIMONumber\": \"9811000\",\r\n\r\n  \"carrierBookingReference\": \"ABC709951\",\r\n\r\n  \"carrierServiceCode\": \"FE1\",\r\n\r\n  \"equipmentReference\": \"APZU4812090\",\r\n  \"subscriptionID\": \"95d18c3e-cbdd-4e4f-a057-e47c60db0e31\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9092/tnt/v2/event-subscriptions/95d18c3e-cbdd-4e4f-a057-e47c60db0e31",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"tnt",
+						"v2",
+						"event-subscriptions",
+						"95d18c3e-cbdd-4e4f-a057-e47c60db0e31"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get event-subscriptions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9092/v2/event-subscriptions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"v2",
+						"event-subscriptions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get event-subscriptions by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9092/tnt/v2/event-subscriptions/95d18c3e-cbdd-4e4f-a057-e47c60db0e31",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"tnt",
+						"v2",
+						"event-subscriptions",
+						"95d18c3e-cbdd-4e4f-a057-e47c60db0e31"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload sql",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "put pudate secret",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"secret\": \"MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDM2NTc4NjIzODk3NDY5MDgyNzM0OTg3MTIzNzg2NA==\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9092/v2/event-subscriptions/0c9805e3-7cab-404c-954e-f7144f0d6870/secret",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"v2",
+						"event-subscriptions",
+						"0c9805e3-7cab-404c-954e-f7144f0d6870",
+						"secret"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete subscription",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9092/tnt/v2/event-subscriptions/95d18c3e-cbdd-4e4f-a057-e47c60db0e31",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"tnt",
+						"v2",
+						"event-subscriptions",
+						"95d18c3e-cbdd-4e4f-a057-e47c60db0e31"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get call callback",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9092/conformance/callback/eef847d9-119d-4b50-98fb-f5749c223168",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"conformance",
+						"callback",
+						"eef847d9-119d-4b50-98fb-f5749c223168"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET all events",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9092/v2/events",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"v2",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get ctk report",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9092/conformance/report",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"conformance",
+						"report"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "callback",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "restart app",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9092/restart",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"restart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get call callback id from callback server",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{callback_base_url}}/getSubscriptionId",
+					"host": [
+						"{{callback_base_url}}"
+					],
+					"path": [
+						"getSubscriptionId"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get SubscriptionId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9999/getSubscriptionId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"getSubscriptionId"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get full-shipment with optional time offset",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9092/conformance/data-management/example-data/full-shipment?timeOffset=plus4d",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"conformance",
+						"data-management",
+						"example-data",
+						"full-shipment"
+					],
+					"query": [
+						{
+							"key": "timeOffset",
+							"value": "plus4d"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete last shipment",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9092/conformance/data-management/removeLastShipment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"conformance",
+						"data-management",
+						"removeLastShipment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete all shipment events",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9092/conformance/data-management/removeAllEvent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"conformance",
+						"data-management",
+						"removeAllEvent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload full-shipment with a shipment json file",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/dev/Downloads/JsonFullShipment (16).json"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9092/conformance/data-management/uploadShipment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"conformance",
+						"data-management",
+						"uploadShipment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get CTK report",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9092/conformance/report",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9092",
+					"path": [
+						"conformance",
+						"report"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "callback_base_url",
+			"value": "localhost:9999",
+			"type": "string"
+		}
+	]
+}
